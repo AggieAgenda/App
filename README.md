@@ -7,9 +7,11 @@ Useful Commands:
 React:
 - npm install
 - npm run dev
+
 Python-Environment:
 - app_env\Scripts\activate # if your in the main directory
-- deactivate | once your in the environment run this if you want to cancel it 
+- deactivate # once your in the environment run this if you want to cancel it
+
 Django:
 - python manage.py runserver
 - python manage.py createapp ...
