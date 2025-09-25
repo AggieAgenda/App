@@ -1,7 +1,12 @@
 
 
+async function testButton(){
+  console.log("test being pressed")
+  return;
+}
 // src/pages/home.jsx
 export default function Home() {
+  
   return (
     <div className=" w-screen max-w-1920 h-screen bg-[#121212] text-white flex flex-col items-center">
       <div className="w-full max-w-5xl">
@@ -18,9 +23,10 @@ export default function Home() {
             <button className="ml-4 px-5 py-2 bg-maroon-600 hover:bg-maroon-700 rounded-lg transition">
               Coming Soon
             </button>
-          </div>
+            <button id onClick={testButton}> testing</button>
+          </div>  
         </nav>
-
+        
         {/* Hero */}
         <section className="flex flex-col lg:flex-row items-center gap-8 py-12">
           <div className="flex-1">
