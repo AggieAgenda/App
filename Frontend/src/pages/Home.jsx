@@ -1,4 +1,8 @@
-
+async function apiCall(){
+  console.log("Calling API")
+  
+  return
+}
 
 async function testButton(){
   console.log("test being pressed")
@@ -20,7 +24,7 @@ export default function Home() {
             <a href="/features" className="hover:text-maroon-400 transition">Features</a>
             <a href="/pricing" className="hover:text-maroon-400 transition">Pricing</a>
             <a href="/contact" className="hover:text-maroon-400 transition">Contact</a>
-            <button className="ml-4 px-5 py-2 bg-maroon-600 hover:bg-maroon-700 rounded-lg transition">
+            <button onClick = {apiCall} className="ml-4 px-5 py-2 bg-maroon-600 hover:bg-maroon-700 rounded-lg transition">
               Coming Soon
             </button>
             <button id onClick={testButton}> testing</button>
