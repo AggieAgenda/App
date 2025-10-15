@@ -5,7 +5,7 @@ import Contact from './pages/Contact.jsx';
 import Features from './pages/Features';
 import Pricing from './pages/Pricing';
 import NotFound from './pages/NotFound';
-
+import About from './pages/About.jsx';
  function App() {
       return (
         <Routes >
@@ -14,6 +14,7 @@ import NotFound from './pages/NotFound';
             <Route path="/contact" element={<Contact />} />
             <Route path ="/features" element = {<Features/>} />
             <Route path ="/pricing" element = {<Pricing/>} />
+            <Route path = "/about" element = {<About/>}></Route>
 
 
             
