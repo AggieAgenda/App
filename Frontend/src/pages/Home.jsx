@@ -3,7 +3,7 @@
 // src/pages/home.jsx
 export default function Home() {
   return (
-    <div className=" w-screen max-w-1920 h-screen bg-[#121212] text-white flex flex-col items-center">
+    <div className=" w-screen max-w-1920 h-screen bg-[#f4d7a9] text-black flex flex-col items-center">
       <div className="w-full max-w-5xl">
         
         {/* Navigation */}
@@ -13,8 +13,9 @@ export default function Home() {
           </a>
           <div className="space-x-6">
             <a href="/features" className="hover:text-maroon-400 transition">Features</a>
-            <a href="/pricing" className="hover:text-maroon-400 transition">Pricing</a>
             <a href="/contact" className="hover:text-maroon-400 transition">Contact</a>
+            <a href="/about" className="hover:text-maroon-400 transition">About</a>
+
             <button className="ml-4 px-5 py-2 bg-maroon-600 hover:bg-maroon-700 rounded-lg transition">
               Coming Soon
             </button>
@@ -27,7 +28,7 @@ export default function Home() {
             <h2 className="text-4xl md:text-5xl font-extrabold mb-4">
               Organize Your Day 
             </h2>
-            <p className="text-lg text-gray-300 mb-6">
+            <p className="text-lg text-black-300 mb-6">
               Aggie Agenda helps you stay on top of your classes, clubs, and events by putting them in your google calender
             </p>
             <button className="px-6 py-3 bg-maroon-600 hover:bg-maroon-700 rounded-2xl font-semibold transition">
@@ -52,7 +53,7 @@ export default function Home() {
           </div>
           <div>
             <h3 className="text-2xl font-semibold mb-2 text-maroon-600">Contact & Collaborate</h3>
-            <p className="text-gray-300">Discover clubs, campus events, and career fairs - and connect with opportunities around campus.</p>
+            <p className="">Discover clubs, campus events, and career fairs - and connect with opportunities around campus.</p>
           </div>
         </section>
 
@@ -65,7 +66,7 @@ export default function Home() {
         </section>
 
         {/* Footer */}
-        <section className="  bg-[#121212]  items-center text-center ">
+        <section className="    items-center text-center ">
            <div className="w-5xl " >
                 <a href="https://www.instagram.com/aggieagenda">Instagram   </a>
                 <a href="https://www.linkedin.com/company/aggie-agenda">LinkedIn</a>
