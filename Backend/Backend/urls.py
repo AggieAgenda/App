@@ -20,4 +20,5 @@ from django.urls import include, path
 urlpatterns = [
     path("Calendar/", include("Calendar.urls")),
     path('admin/', admin.site.urls),
+    
 ]
