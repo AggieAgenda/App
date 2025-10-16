@@ -6,6 +6,7 @@ import Features from './pages/Features';
 import Pricing from './pages/Pricing';
 import NotFound from './pages/NotFound';
 import About from './pages/About.jsx';
+import Template from './pages/Template.jsx'
  function App() {
       return (
         <Routes >
@@ -15,10 +16,7 @@ import About from './pages/About.jsx';
             <Route path ="/features" element = {<Features/>} />
             <Route path ="/pricing" element = {<Pricing/>} />
             <Route path = "/about" element = {<About/>}></Route>
-
-
-            
-            {/* Add more routes as needed */}
+            <Route path = "/template" element = {<Template/>}></Route>
            
         </Routes>
       );
