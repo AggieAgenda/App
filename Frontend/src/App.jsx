@@ -7,6 +7,7 @@ import Pricing from './pages/Pricing';
 import NotFound from './pages/NotFound';
 import About from './pages/About.jsx';
 import Template from './pages/Template.jsx'
+import Calendar from './pages/Calendar.jsx'
  function App() {
       return (
         <Routes >
@@ -15,6 +16,7 @@ import Template from './pages/Template.jsx'
             <Route path="/contact" element={<Contact />} />
             <Route path ="/features" element = {<Features/>} />
             <Route path ="/pricing" element = {<Pricing/>} />
+            <Route path ="/calendar" element = {<Calendar/>} />
             <Route path = "/about" element = {<About/>}></Route>
             
            
