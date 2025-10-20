@@ -56,7 +56,7 @@ export default function Home() {
           Sync all your academic events from multiple platforms into one clean, unified view. Never miss a deadline again.
         </p>
         <button className="px-8 py-3 bg-[#305d6f] text-white text-lg rounded-lg shadow-md hover:bg-[#3c7289] transition">
-          Get Started
+          Coming Soon
         </button>
       </section>
 
