@@ -1,69 +1,91 @@
-
+// src/pages/Home.jsx
 import homeImage from '../assets/home_Image.png';
-// src/pages/home.jsx
+
 export default function Home() {
   return (
-    <div className=" w-screen max-w-1920 h-screen bg-[#f4d8aa] text-black flex flex-col items-center">
-      <nav className="w-screen justify-between py-6 bg-[#305d6f]">
-            <a href = "/">
-            <h1  className="text-2xl font-bold text-maroon-600">Aggie Agenda</h1>
-          </a>
-          <div className="space-x-6">
-            <a href="/features" className="hover:text-maroon-400 transition">Features</a>
-            <a href="/contact" className="hover:text-maroon-400 transition">Contact</a>
-            <a href="/about" className="hover:text-maroon-400 transition">About</a>
+    <div className="relative min-h-screen flex flex-col overflow-hidden bg-gradient-to-b from-[#f4d8aa] to-white text-[#1a1a1a]">
+      
+      {/* --- Background Animation --- */}
+      <div className="absolute inset-0 -z-10 overflow-hidden">
+        {/* Floating gradient blobs */}
+        <div className="absolute w-72 h-72 bg-[#305d6f] rounded-full filter blur-3xl opacity-30 animate-float1 top-10 left-20"></div>
+<div className="absolute w-96 h-96 bg-[#f4d8aa] rounded-full filter blur-3xl opacity-40 animate-float2 bottom-20 right-10"></div>
+<div className="absolute w-64 h-64 bg-[#3c7289] rounded-full filter blur-3xl opacity-25 animate-float3 top-1/3 right-1/3"></div>
 
-            <button className="ml-4 px-5 py-2 bg-maroon-600 hover:bg-maroon-700 rounded-lg transition">
-              Coming Soon
-            </button>
-          </div>
-        </nav>
-      <div className="flex w-full max-w-1000 items-center ">
-        
-        {/* Navigation */}
-        
-
-        {/*Body*/}
-        <div classname = "flex max-w-7xl mx-auto items-center">
-          {/* Hero */}
-          <section className="flex items-center px-60 ">
-            <div className="flex-1 text-center lg:text-left">
-              <h1 className="py-4 ">
-                Aggie Agenda
-              </h1>
-              <h3 className="text-lg text-black-300 ">
-                The way to synchronize all your acedemic events
-              </h3>
-            </div>
-            <div className='flex-1'>
-              {/*Make this image farther to the left of the rest of this*/}
-              <img src={homeImage} alt = "Nice Photo"/>
-            </div>
-          
-          </section>
-
-          {/* Get Started Section*/}
-          <section id="features" className="flex-1 px-10 items-center">
-            <h1>One shot your calendar</h1>
-            <button className='bg-[#305d6f]'>Get Started</button> {/*Color this button*/ }
-          </section>
-
-        
-
-          {/* Footer 
-          <section className="bg-[#305d6f]    items-center text-center ">
-            <div className="w-5xl " >
-                  <a href="https://www.instagram.com/aggieagenda">Instagram   </a>
-                  <a href="https://www.linkedin.com/company/aggie-agenda">LinkedIn</a>
-                  
-
-                  
-              </div>
-            © {new Date().getFullYear()} Aggie Agenda. All rights reserved.
-            
-          </section> */}
-        </div>
       </div>
+
+      {/* --- Navbar --- */}
+      <nav className="flex justify-between items-center w-full px-10 py-6 bg-[#305d6f] text-white shadow-md">
+        <a href="/" className="text-3xl font-bold tracking-wide">
+          Aggie Agenda
+        </a>
+        <div className="space-x-8 text-lg">
+          <a href="/features" className="hover:text-[#f4d8aa] transition">Features</a>
+          <a href="/contact" className="hover:text-[#f4d8aa] transition">Contact</a>
+          <a href="/about" className="hover:text-[#f4d8aa] transition">About</a>
+        </div>
+      </nav>
+
+      {/* --- Hero Section --- */}
+      <section className="flex flex-col md:flex-row items-center justify-between px-10 md:px-20 py-20 max-w-7xl mx-auto w-full">
+        <div className="max-w-lg space-y-6 text-center md:text-left">
+          <h1 className="text-6xl font-extrabold text-[#305d6f] drop-shadow-md">
+            Aggie Agenda
+          </h1>
+          <p className="text-xl text-gray-700">
+            The smarter way to synchronize all your academic events organized, simple, and in sync.
+          </p>
+          
+        </div>
+
+        <div className="mt-10 md:mt-0 md:ml-10 flex justify-center">
+          <img
+            src={homeImage}
+            alt="Aggie Agenda Preview"
+            className="w-[400px] md:w-[500px] rounded-xl shadow-lg hover:scale-105 transition-transform duration-300"
+          />
+        </div>
+      </section>
+
+      {/* --- Features Section --- */}
+      <section id="features" className="flex flex-col items-center text-center py-16 px-6 bg-[#f0e1c1]/70 w-full backdrop-blur-sm">
+        <h2 className="text-4xl font-bold text-[#305d6f] mb-6">
+          One shot your calendar
+        </h2>
+        <p className="text-lg text-gray-700 max-w-2xl mb-10">
+          Sync all your academic events from multiple platforms into one clean, unified view. Never miss a deadline again.
+        </p>
+        <button className="px-8 py-3 bg-[#305d6f] text-white text-lg rounded-lg shadow-md hover:bg-[#3c7289] transition">
+          Get Started
+        </button>
+      </section>
+
+      {/* --- Footer --- */}
+      <footer className="w-full bg-[#305d6f] text-white py-6 text-center mt-auto">
+        <div className="space-x-4 mb-2">
+          <a href="https://instagram.com/aggieagenda" className="hover:text-[#f4d8aa]">Instagram</a>
+          <a href="https://linkedin.com/company/aggie-agenda" className="hover:text-[#f4d8aa]">LinkedIn</a>
+        </div>
+        <p className="text-sm">
+          © {new Date().getFullYear()} Aggie Agenda. All rights reserved.
+        </p>
+      </footer>
+
+      {/* --- Custom Animation Keyframes --- */}
+      <style>{`
+        @keyframes float1 {
+          0%, 100% { transform: translateY(0px) translateX(0px); }
+          50% { transform: translateY(-30px) translateX(20px); }
+        }
+        @keyframes float2 {
+          0%, 100% { transform: translateY(0px) translateX(0px); }
+          50% { transform: translateY(25px) translateX(-30px); }
+        }
+        @keyframes float3 {
+          0%, 100% { transform: translateY(0px) translateX(0px); }
+          50% { transform: translateY(-40px) translateX(40px); }
+        }
+      `}</style>
     </div>
   );
 }
