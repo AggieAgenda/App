@@ -1,13 +1,10 @@
 
-
+import homeImage from '../assets/home_Image.png';
 // src/pages/home.jsx
 export default function Home() {
   return (
-    <div className=" w-screen max-w-1920 h-screen bg-[#f4d7a9] text-black flex flex-col items-center">
-      <div className="w-full max-w-5xl">
-        
-        {/* Navigation */}
-        <nav className="flex items-center justify-between py-6">
+    <div className=" w-screen max-w-1920 h-screen bg-[#f4d8aa] text-black flex flex-col items-center">
+      <nav className="w-screen justify-between py-6 bg-[#305d6f]">
             <a href = "/">
             <h1  className="text-2xl font-bold text-maroon-600">Aggie Agenda</h1>
           </a>
@@ -21,63 +18,51 @@ export default function Home() {
             </button>
           </div>
         </nav>
+      <div className="flex w-full max-w-1000 items-center ">
+        
+        {/* Navigation */}
+        
 
-        {/* Hero */}
-        <section className="flex flex-col lg:flex-row items-center gap-8 py-12">
-          <div className="flex-1">
-            <h2 className="text-4xl md:text-5xl font-extrabold mb-4">
-              Organize Your Day 
-            </h2>
-            <p className="text-lg text-black-300 mb-6">
-              Aggie Agenda helps you stay on top of your classes, clubs, and events by putting them in your google calender
-            </p>
-            <button className="px-6 py-3 bg-maroon-600 hover:bg-maroon-700 rounded-2xl font-semibold transition">
-              Coming Soon !
-            </button>
-          </div>
-          <div className="flex-1">
-            {/* Placeholder for image or illustration */}
-            <div className="w-full h-64 bg-gray-800 rounded-lg" />
-          </div>
-        </section>
-
-        {/* Features Section */}
-        <section id="features" className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center py-12">
-          <div>
-            <h3 className="text-2xl font-semibold mb-2 text-maroon-600">Stay on Track</h3>
-            <p className="text-gray-300">Integrated calendar + class schedule keeps you organized without the stress.</p>
-          </div>
-          <div>
-            <h3 className="text-2xl font-semibold mb-2 text-maroon-600">Never Miss a Deadline</h3>
-            <p className="text-gray-300">Assignments, projects, and exams are all tracked in your google calender </p>
-          </div>
-          <div>
-            <h3 className="text-2xl font-semibold mb-2 text-maroon-600">Contact & Collaborate</h3>
-            <p className="">Discover clubs, campus events, and career fairs - and connect with opportunities around campus.</p>
-          </div>
-        </section>
-
-        {/* Social Proof */}
-        <section id="impact" className=" text-center">
-          <p className="text-gray-400 ">
-            
-          </p>
-          {/* Add icons or stats as needed */}
-        </section>
-
-        {/* Footer */}
-        <section className="    items-center text-center ">
-           <div className="w-5xl " >
-                <a href="https://www.instagram.com/aggieagenda">Instagram   </a>
-                <a href="https://www.linkedin.com/company/aggie-agenda">LinkedIn</a>
-                
-
-                
+        {/*Body*/}
+        <div classname = "flex max-w-7xl mx-auto items-center">
+          {/* Hero */}
+          <section className="flex items-center px-60 ">
+            <div className="flex-1 text-center lg:text-left">
+              <h1 className="py-4 ">
+                Aggie Agenda
+              </h1>
+              <h3 className="text-lg text-black-300 ">
+                The way to synchronize all your acedemic events
+              </h3>
             </div>
-          © {new Date().getFullYear()} Aggie Agenda. All rights reserved.
-           
-        </section>
+            <div className='flex-1'>
+              {/*Make this image farther to the left of the rest of this*/}
+              <img src={homeImage} alt = "Nice Photo"/>
+            </div>
+          
+          </section>
 
+          {/* Get Started Section*/}
+          <section id="features" className="flex-1 px-10 items-center">
+            <h1>One shot your calendar</h1>
+            <button className='bg-[#305d6f]'>Get Started</button> {/*Color this button*/ }
+          </section>
+
+        
+
+          {/* Footer 
+          <section className="bg-[#305d6f]    items-center text-center ">
+            <div className="w-5xl " >
+                  <a href="https://www.instagram.com/aggieagenda">Instagram   </a>
+                  <a href="https://www.linkedin.com/company/aggie-agenda">LinkedIn</a>
+                  
+
+                  
+              </div>
+            © {new Date().getFullYear()} Aggie Agenda. All rights reserved.
+            
+          </section> */}
+        </div>
       </div>
     </div>
   );
