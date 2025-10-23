@@ -14,7 +14,7 @@ export default function Calendar() {
     <>
       <NavBar />
       <main className="bg-gray-100  p-8 overflow-y-auto h-[calc(100vh-6rem)] mb-20">
-        <div className="bg-white w-250 h-172 rounded-4xl shadow-lg p-4"> {/* card */}
+        <div className="bg-white w-250 h-200 rounded-4xl shadow-lg p-4"> {/* card */}
           <CalendarNavBar months={monthNames} setMonth={setCurrentMonth} setYear={setCurrentYear} month={currentMonth} year={currentYear} />
           <CalendarGrid month={currentMonth} year={currentYear}/>
         </div>        
