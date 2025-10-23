@@ -1,6 +1,13 @@
 // src/pages/Home.jsx
 import homeImage from '../assets/home_Image.png';
 
+
+const handleGoogleLogin = () => {
+  console.log("accessing http")
+  window.location.href = 'http//localhost:8000/accounts/google/login/';
+}
+
+
 export default function Home() {
   return (
     <div className="relative min-h-screen flex flex-col overflow-hidden bg-gradient-to-b from-[#f4d8aa] to-white text-[#1a1a1a]">
@@ -55,7 +62,7 @@ export default function Home() {
         <p className="text-lg text-gray-700 max-w-2xl mb-10">
           Sync all your academic events from multiple platforms into one clean, unified view. Never miss a deadline again.
         </p>
-        <button className="px-8 py-3 bg-[#305d6f] text-white text-lg rounded-lg shadow-md hover:bg-[#3c7289] transition">
+        <button onClick = {handleGoogleLogin} className="px-8 py-3 bg-[#305d6f] text-white text-lg rounded-lg shadow-md hover:bg-[#3c7289] transition">
           Coming Soon
         </button>
       </section>
