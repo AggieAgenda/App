@@ -3,32 +3,32 @@ export default function Event() {
   const events = [
     {
       title: "Midnight Yell",
-      image: "/images/midnight_yell.jpg",
+      image: "/midnight_yell.jpg",
       description: "Join fellow Aggies at Kyle Field for the iconic midnight tradition before every home game.",
     },
     {
       title: "Muster",
-      image: "/images/AggieMuster.jpg",
+      image: "/AggieMuster.jpg",
       description: "A cherished ceremony honoring Aggies who have passed, reminding us that once an Aggie, always an Aggie.",
     },
     {
       title: "Fish Camp",
-      image: "/images/fish_camp_run1.jpg",
+      image: "/fish_camp_run1.jpg",
       description: "Welcome new Aggies to campus life with a week of bonding, laughter, and unforgettable traditions.",
     },
     {
       title: "Silver Taps",
-      image: "/images/silver_taps_run1.jpg",
+      image: "/silver_taps_run1.jpg",
       description: "A solemn ceremony held to honor the memory of students who have passed away during the year.",
     },
     {
       title: "Career Fair",
-      image: "/images/career_fair_run1.jpg",
+      image: "/career_fair_run1.jpg",
       description: "Meet recruiters and explore opportunities with top companies seeking Aggie engineers and leaders.",
     },
     {
       title: "Ring Day",
-      image: "/images/aggie_ringday_run1.jpg",
+      image: "/aggie_ringday_run1.jpg",
       description: "Celebrate receiving your Aggie Ring — a symbol of hard work, tradition, and achievement.",
     },
   ];
