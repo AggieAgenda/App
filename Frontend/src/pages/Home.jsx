@@ -3,7 +3,7 @@
 // src/pages/home.jsx
 export default function Home() {
   return (
-    <div className=" w-screen max-w-1920 h-screen bg-[#f4d7a9] text-black flex flex-col items-center">
+    <div className=" w-screen max-w-1920 h-screen bg-[#669282] text-black flex flex-col items-center">
       <div className="w-full max-w-5xl">
         
         {/* Navigation */}
@@ -15,6 +15,8 @@ export default function Home() {
             <a href="/features" className="hover:text-maroon-400 transition">Features</a>
             <a href="/contact" className="hover:text-maroon-400 transition">Contact</a>
             <a href="/about" className="hover:text-maroon-400 transition">About</a>
+            <a href="/Event" className="hover:text-maroon-400 transition">Event</a>
+
 
             <button className="ml-4 px-5 py-2 bg-maroon-600 hover:bg-maroon-700 rounded-lg transition">
               Coming Soon
@@ -31,7 +33,7 @@ export default function Home() {
             <p className="text-lg text-black-300 mb-6">
               Aggie Agenda helps you stay on top of your classes, clubs, and events by putting them in your google calender
             </p>
-            <button className="px-6 py-3 bg-maroon-600 hover:bg-maroon-700 rounded-2xl font-semibold transition">
+            <button className="px-6 py-3 bg-maroon-600 hover:bg-pink-700 rounded-2xl font-semibold transition">
               Coming Soon !
             </button>
           </div>
