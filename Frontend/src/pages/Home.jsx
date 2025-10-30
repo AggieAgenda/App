@@ -27,6 +27,7 @@ export default function Home() {
           Aggie Agenda
         </a>
         <div className="space-x-8 text-lg">
+          <a href="/events" className="hover:text-[#f4d8aa] transition">Events</a>
           <a href="/features" className="hover:text-[#f4d8aa] transition">Features</a>
           <a href="/contact" className="hover:text-[#f4d8aa] transition">Contact</a>
           <a href="/about" className="hover:text-[#f4d8aa] transition">About</a>
