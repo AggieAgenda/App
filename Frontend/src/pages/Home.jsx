@@ -1,5 +1,6 @@
 // src/pages/Home.jsx
-import homeImage from '../assets/home_Image.png';
+import homeImage from '../assets/home_Image.png'
+import NavBar from '../components/Navbar.jsx'
 
 
 const handleGoogleLogin = () => {
@@ -22,18 +23,7 @@ export default function Home() {
       </div>
 
       {/* --- Navbar --- */}
-      <nav className="flex justify-between items-center w-full px-10 py-6 bg-[#305d6f] text-white shadow-md">
-        <a href="/" className="text-3xl font-bold tracking-wide">
-          Aggie Agenda
-        </a>
-        <div className="space-x-8 text-lg">
-          <a href="/events" className="hover:text-[#f4d8aa] transition">Events</a>
-          <a href="/features" className="hover:text-[#f4d8aa] transition">Features</a>
-          <a href="/contact" className="hover:text-[#f4d8aa] transition">Contact</a>
-          <a href="/about" className="hover:text-[#f4d8aa] transition">About</a>
-        </div>
-      </nav>
-
+      <NavBar /> 
       {/* --- Hero Section --- */}
       <section className="flex flex-col md:flex-row items-center justify-between px-10 md:px-20 py-20 max-w-7xl mx-auto w-full">
         <div className="max-w-lg space-y-6 text-center md:text-left">
