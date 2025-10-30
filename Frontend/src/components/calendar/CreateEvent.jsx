@@ -19,7 +19,6 @@ export default function CreateEvent(props){
                         <label className="block text-sm font-medium mb-1">Time</label>
                         <input
                             type="time" 
-                            step="600"
                             className="w-2/5 border border-red-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
                         />
                         <span> to </span>
