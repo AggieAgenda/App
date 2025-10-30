@@ -5,6 +5,7 @@ import Contact from './pages/Contact.jsx';
 import Features from './pages/Features';
 import Pricing from './pages/Pricing';
 import NotFound from './pages/NotFound';
+import "@fortawesome/fontawesome-free/css/all.min.css";
 
  function App() {
       return (
