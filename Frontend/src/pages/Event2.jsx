@@ -1,35 +1,35 @@
-// src/pages/Event.jsx
-export default function Event() {
+// src/pages/Event2.jsx
+export default function Event2() {
   const events = [
     {
-      title: "Midnight Yell",
-      image: "/midnight_yell.jpg",
-      description: "Join fellow Aggies at Kyle Field for the iconic midnight tradition before every home game.",
+      title: "Lunar Festival",
+      image: "/lunar_festival.jpg",
+      description: "Experience colorful lanterns, traditional dances, and mooncakes during this cultural celebration of the full moon.",
     },
     {
-      title: "Muster",
-      image: "/AggieMuster.jpg",
-      description: "A cherished ceremony honoring Aggies who have passed, reminding us that once an Aggie, always an Aggie.",
+      title: "Tech Innovators Summit",
+      image: "/tech_summit.jpg",
+      description: "A global conference where engineers, developers, and entrepreneurs showcase groundbreaking technologies.",
     },
     {
-      title: "Fish Camp",
-      image: "/fish_camp_run1.jpg",
-      description: "Welcome new Aggies to campus life with a week of bonding, laughter, and unforgettable traditions.",
+      title: "Mountain Marathon",
+      image: "/mountain_marathon.jpg",
+      description: "Test endurance and determination on a scenic trail marathon across rugged mountain landscapes.",
     },
     {
-      title: "Silver Taps",
-      image: "/silver_taps_run1.jpg",
-      description: "A solemn ceremony held to honor the memory of students who have passed away during the year.",
+      title: "Ocean Cleanup Day",
+      image: "/ocean_cleanup.jpg",
+      description: "Join volunteers worldwide in removing plastic waste and protecting marine life from pollution.",
     },
     {
-      title: "Career Fair",
-      image: "/career_fair_run1.jpg",
-      description: "Meet recruiters and explore opportunities with top companies seeking Aggie engineers and leaders.",
+      title: "Film Noir Festival",
+      image: "/film_noir.jpg",
+      description: "Celebrate classic and modern noir films with live panels, screenings, and interactive experiences.",
     },
     {
-      title: "Ring Day",
-      image: "/aggie_ringday_run1.jpg",
-      description: "Celebrate receiving your Aggie Ring — a symbol of hard work, tradition, and achievement.",
+      title: "Art in the Park",
+      image: "/art_in_park.jpg",
+      description: "A day of creativity featuring local artists, live painting, and community workshops in the open air.",
     },
   ];
 
@@ -68,8 +68,8 @@ export default function Event() {
 
       {/* Pagination */}
       <div className="flex space-x-4 pb-10">
-        <button className="px-4 py-2 bg-maroon-600 rounded-lg hover:bg-maroon-700 transition">1</button>
-        <a href="/event2" className="px-4 py-2 bg-gray-700 rounded-lg hover:bg-gray-600 transition">2</a>
+        <a href="/event" className="px-4 py-2 bg-gray-700 rounded-lg hover:bg-gray-600 transition">1</a>
+        <button className="px-4 py-2 bg-maroon-600 rounded-lg hover:bg-maroon-700 transition">2</button>
         <a href="/event3" className="px-4 py-2 bg-gray-700 rounded-lg hover:bg-gray-600 transition">3</a>
         <a href="/event4" className="px-4 py-2 bg-gray-700 rounded-lg hover:bg-gray-600 transition">4</a>
       </div>

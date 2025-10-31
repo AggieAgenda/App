@@ -1,5 +1,5 @@
 
-import { Routes, Route } from 'react-router-dom';
+import {Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Contact from './pages/Contact.jsx';
 import Features from './pages/Features';
@@ -9,6 +9,8 @@ import About from './pages/About.jsx';
 import Template from './pages/Template.jsx'
 import Calendar from './pages/Calendar.jsx'
 import Event from './pages/Event.jsx'
+import Event2 from './pages/Event2.jsx'
+
  function App() {
       return (
         <Routes >
@@ -20,7 +22,7 @@ import Event from './pages/Event.jsx'
             <Route path ="/calendar" element = {<Calendar/>} />
             <Route path = "/about" element = {<About/>}></Route>
             <Route path = "/events" element = {<Event/>}></Route>
-
+            <Route path="/event2" element={<Event2 />} />
            
         </Routes>
       );
