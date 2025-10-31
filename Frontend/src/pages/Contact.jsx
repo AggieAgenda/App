@@ -40,7 +40,7 @@ export default function Contact() {
         </div>
       </section>
 
-      {/* --- Footer --- */}
+      {/* --- Footer --- 
       <footer className="w-full bg-[#305d6f] text-white py-6 text-center mt-auto">
         <div className="space-x-4 mb-2">
           <a href="https://instagram.com/aggieagenda" className="hover:text-[#f4d8aa]">Instagram</a>
@@ -49,7 +49,15 @@ export default function Contact() {
         <p className="text-sm">
           © {new Date().getFullYear()} Aggie Agenda. All rights reserved.
         </p>
-      </footer>
+      </footer> */}
+      <footer className="mt-175 bg-[#1a1a1a] py-6 text-center rounded-2xl">
+        <p className="text-gray-400 text-center mb-4">Have questions, feedback, or ideas? We'd love to hear from you. Follow us on our Instagram, Discord, or Linkedin.</p>
+          <div className="flex justify-center space-x-6 text-2xl">
+            <a href="https://www.instagram.com/aggieagenda" className="hover:opacity-80 transition"><i className="fa-brands fa-instagram"></i></a>
+            <a href="https://discord.com/channels/1419809900594200726/1422241699047931946"><i className="fa-brands fa-discord"></i></a>
+            <a href="https://www.linkedin.com" className="hover:opacity-80 transition"><i className="fa-brands fa-linkedin"></i></a>
+          </div>
+          </footer>
     </div>
   );
 }
