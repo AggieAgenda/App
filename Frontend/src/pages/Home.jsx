@@ -1,6 +1,14 @@
+// src/pages/Home.jsx
+import homeImage from '../assets/home_Image.png'
+import NavBar from '../components/Navbar.jsx'
 
 
-// src/pages/home.jsx
+const handleGoogleLogin = () => {
+  console.log("accessing http")
+  window.location.href = 'http//localhost:8000/accounts/google/login/';
+}
+
+
 export default function Home() {
   return (
     <div className=" w-screen max-w-1920 h-screen bg-[#f4d7a9] text-black flex flex-col items-center">
@@ -15,7 +23,7 @@ export default function Home() {
             <a href="/features" className="hover:text-maroon-400 transition">Features</a>
             <a href="/contact" className="hover:text-maroon-400 transition">Contact</a>
             <a href="/about" className="hover:text-maroon-400 transition">About</a>
-            <a href="/FAQ" className="hover:text-maroon-400 transition">FAQ</a>
+
             <button className="ml-4 px-5 py-2 bg-maroon-600 hover:bg-maroon-700 rounded-lg transition">
               Coming Soon
             </button>
@@ -57,28 +65,45 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Social Proof */}
-        <section id="impact" className=" text-center">
-          <p className="text-gray-400 ">
-            
-          </p>
-          {/* Add icons or stats as needed */}
-        </section>
+      {/* --- Features Section --- */}
+      <section id="features" className="flex flex-col items-center text-center py-16 px-6 bg-[#f0e1c1]/70 w-full backdrop-blur-sm">
+        <h2 className="text-4xl font-bold text-[#305d6f] mb-6">
+          One shot your calendar
+        </h2>
+        <p className="text-lg text-gray-700 max-w-2xl mb-10">
+          Sync all your academic events from multiple platforms into one clean, unified view. Never miss a deadline again.
+        </p>
+        <button onClick = {handleGoogleLogin} className="px-8 py-3 bg-[#305d6f] text-white text-lg rounded-lg shadow-md hover:bg-[#3c7289] transition">
+          Coming Soon
+        </button>
+      </section>
 
-        {/* Footer */}
-        <section className="    items-center text-center ">
-           <div className="w-5xl " >
-                <a href="https://www.instagram.com/aggieagenda">Instagram   </a>
-                <a href="https://www.linkedin.com/company/aggie-agenda">LinkedIn</a>
-                
-
-                
-            </div>
+      {/* --- Footer --- */}
+      <footer className="w-full bg-[#305d6f] text-white py-6 text-center mt-auto">
+        <div className="space-x-4 mb-2">
+          <a href="https://instagram.com/aggieagenda" className="hover:text-[#f4d8aa]">Instagram</a>
+          <a href="https://linkedin.com/company/aggie-agenda" className="hover:text-[#f4d8aa]">LinkedIn</a>
+        </div>
+        <p className="text-sm">
           © {new Date().getFullYear()} Aggie Agenda. All rights reserved.
-           
-        </section>
+        </p>
+      </footer>
 
-      </div>
+      {/* --- Custom Animation Keyframes --- */}
+      <style>{`
+        @keyframes float1 {
+          0%, 100% { transform: translateY(0px) translateX(0px); }
+          50% { transform: translateY(-30px) translateX(20px); }
+        }
+        @keyframes float2 {
+          0%, 100% { transform: translateY(0px) translateX(0px); }
+          50% { transform: translateY(25px) translateX(-30px); }
+        }
+        @keyframes float3 {
+          0%, 100% { transform: translateY(0px) translateX(0px); }
+          50% { transform: translateY(-40px) translateX(40px); }
+        }
+      `}</style>
     </div>
   );
 }

@@ -1,12 +1,40 @@
 @import "tailwindcss";
-:root {
+
+
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  overflow-y:hidden; /* hides horizontal scroll */
+}
+@keyframes float1 {
+  0%, 100% { transform: translateY(0px) translateX(0px); }
+  50% { transform: translateY(-30px) translateX(20px); }
+}
+
+@keyframes float2 {
+  0%, 100% { transform: translateY(0px) translateX(0px); }
+  50% { transform: translateY(25px) translateX(-30px); }
+}
+
+@keyframes float3 {
+  0%, 100% { transform: translateY(0px) translateX(0px); }
+  50% { transform: translateY(-40px) translateX(40px); }
+}
+
+.animate-float1 { animation: float1 12s ease-in-out infinite; }
+.animate-float2 { animation: float2 15s ease-in-out infinite; }
+.animate-float3 { animation: float3 18s ease-in-out infinite; }
+
+
+/*:root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  background-color: #f4d8aa;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -29,7 +57,7 @@ h1 {
   font-size: 3.2em;
   line-height: 1.1;
 }
-
+/*
 button {
   border-radius: 8px;
   border: 1px solid transparent;
@@ -48,7 +76,7 @@ button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
-
+*/
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
