@@ -15,7 +15,7 @@ export default function Home() {
             <a href="/features" className="hover:text-maroon-400 transition">Features</a>
             <a href="/contact" className="hover:text-maroon-400 transition">Contact</a>
             <a href="/about" className="hover:text-maroon-400 transition">About</a>
-
+            <a href="/FAQ" className="hover:text-maroon-400 transition">FAQ</a>
             <button className="ml-4 px-5 py-2 bg-maroon-600 hover:bg-maroon-700 rounded-lg transition">
               Coming Soon
             </button>

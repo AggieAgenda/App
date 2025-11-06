@@ -9,6 +9,7 @@ export default function Navbar() {
         <Link to="/" className="hover:text-maroon-400 transition">Home</Link>
         <Link to="/about" className="hover:text-maroon-400 transition">About</Link>
         <Link to="/contact" className="hover:text-maroon-400 transition">Contact</Link>
+        <Link to="/FAQ" className="hover:text-maroon-400 transition">FAQ</Link>
       </div>
     </nav>
   );
