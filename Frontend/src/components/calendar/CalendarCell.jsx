@@ -9,8 +9,8 @@ export default function CalendarCell(props) {
     return (
         <>
         <div className={props.isOutsideMonth 
-            ? "h-25 p-2 text-left border border-red-100 rounded-xl text-gray-400 opacity-50" 
-            : "relative group h-25 p-2 text-left text-red-900 align-top border border-red-800 rounded-xl hover:bg-red-200 hover:border-transparent"
+            ? "h-25 p-2 text-left border border-red-400 rounded-xl text-gray-400 opacity-50" 
+            : "relative group h-25 p-2 text-left text-red-900 align-top border border-red-800 rounded-xl hover:bg-red-100 hover:border-transparent"
         }>
             {props.day}
             

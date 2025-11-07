@@ -13,14 +13,16 @@ export default function Calendar() {
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   return (
     <>
-      <NavBar />
-      <main className="bg-gray-100 p-8 overflow-y-auto h-[calc(100vh-4rem)] flex gap-8">
-        <div className="bg-white w-250 h-200 rounded-4xl shadow-lg p-4"> {/* card */}
+      <nav className="bg-[#1F0F0F] rounded-xl ">
+        <NavBar />
+      </nav>
+      <main className="bg-[#321212] p-8 overflow-y-auto h-[calc(100vh-4rem)] flex gap-8">
+        <div className="bg-[#F7EEEE] w-250 h-200 rounded-4xl shadow-lg p-4"> {/* card */}
           <CalendarNavBar months={monthNames} setMonth={setCurrentMonth} setYear={setCurrentYear} month={currentMonth} year={currentYear} />
           <CalendarGrid month={currentMonth} year={currentYear}/>
         </div>  
         <div className="flex justify-end">
-          <div className="bg-white w-100 h-200 rounded-4xl shadow-lg p-4">
+          <div className="bg-[#F7EEEE] w-100 h-200 rounded-4xl shadow-lg p-4">
             <EventList />
           </div>
         </div>
