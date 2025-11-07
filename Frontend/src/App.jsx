@@ -17,6 +17,7 @@ import Template from './pages/Template.jsx'
             <Route path ="/pricing" element = {<Pricing/>} />
             <Route path = "/about" element = {<About/>}></Route>
             
+            
            
         </Routes>
       );

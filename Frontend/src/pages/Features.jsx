@@ -1,23 +1,59 @@
 // src/pages/features.jsx
+import React, { useState } from "react";
+import SearchBar from "../components/SearchBar.jsx";
+
 export default function Features() {
+  const [query, setQuery] = useState("");
+  const sampleSuggestions = [
+    "Calendar",
+    "Class schedule",
+    "Deadlines",
+    "Campus events",
+    "Clubs",
+    "Career fairs",
+    "Midnight Yell",
+    "Muster"
+  ];
+
+  function handleSearch(value) {
+    // triggered on Enter or search button
+    console.log("Search triggered:", value);
+    // navigate, filter content, or open results panel here
+  }
+
   return (
-    <div className=" w-screen h-screen bg-[#121212] text-white flex flex-col items-center">
+    <div className="w-screen h-screen bg-[#121212] text-white flex flex-col items-center">
       <div className="w-full max-w-5xl px-6 pb-12">
         <div className="pb-6">
           <nav className="flex items-center justify-between py-6">
-              <a href = "/">
-              <h1  className="text-2xl font-bold text-maroon-600">Aggie Agenda</h1>
+            <a href="/">
+              <h1 className="text-2xl font-bold text-maroon-600">Aggie Agenda</h1>
             </a>
-            <div className="space-x-6">
-              <a href="/features" className="hover:text-maroon-400 transition">Features</a>
-              <a href="/pricing" className="hover:text-maroon-400 transition">Pricing</a>
-              <a href="/contact" className="hover:text-maroon-400 transition">Contact</a>
-              <button className="ml-4 px-5 py-2 bg-maroon-600 hover:bg-maroon-700 rounded-lg transition">
-                Coming Soon
-              </button>
+
+            {/* Put the search bar here (to the right of the title) */}
+            <div className="flex items-center space-x-6">
+              <div className="w-72"> {/* adjust width as needed */}
+                <SearchBar
+                  value={query}
+                  onChange={setQuery}
+                  onSearch={handleSearch}
+                  suggestions={sampleSuggestions}
+                  placeholder="Search features, events, clubs..."
+                  debounceMs={200}
+                />
+              </div>
+
+              <div className="hidden md:flex items-center space-x-6">
+                <a href="/features" className="hover:text-maroon-400 transition">Features</a>
+                <a href="/pricing" className="hover:text-maroon-400 transition">Pricing</a>
+                <a href="/contact" className="hover:text-maroon-400 transition">Contact</a>
+                <button className="ml-4 px-5 py-2 bg-maroon-600 hover:bg-maroon-700 rounded-lg transition">
+                  Coming Soon
+                </button>
+              </div>
             </div>
           </nav>
-          </div>
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
           <div>
