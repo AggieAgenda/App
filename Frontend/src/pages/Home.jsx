@@ -1,26 +1,17 @@
 // src/pages/Home.jsx
+import { GoogleLogin } from '@react-oauth/google';
 import homeImage from '../assets/home_Image.png'
 import NavBar from '../components/Navbar.jsx'
+import {useLogin} from '../hooks/login.js'
 
-
-const handleGoogleLogin = () => {
-  console.log("accessing http")
-  window.location.href = 'http//localhost:8000/accounts/google/login/';
-}
 
 
 export default function Home() {
+  // methods
+  const {loginWithGoogle} = useLogin();
+
   return (
     <div className="relative min-h-screen flex flex-col overflow-hidden bg-gradient-to-b from-[#f4d8aa] to-white text-[#1a1a1a]">
-      
-      {/* --- Background Animation --- */}
-      <div className="absolute inset-0 -z-10 overflow-hidden">
-        {/* Floating gradient blobs */}
-        <div className="absolute w-72 h-72 bg-[#305d6f] rounded-full filter blur-3xl opacity-30 animate-float1 top-10 left-20"></div>
-<div className="absolute w-96 h-96 bg-[#f4d8aa] rounded-full filter blur-3xl opacity-40 animate-float2 bottom-20 right-10"></div>
-<div className="absolute w-64 h-64 bg-[#3c7289] rounded-full filter blur-3xl opacity-25 animate-float3 top-1/3 right-1/3"></div>
-
-      </div>
 
       {/* --- Navbar --- */}
       <NavBar /> 
@@ -53,9 +44,17 @@ export default function Home() {
         <p className="text-lg text-gray-700 max-w-2xl mb-10">
           Sync all your academic events from multiple platforms into one clean, unified view. Never miss a deadline again.
         </p>
-        <button onClick = {handleGoogleLogin} className="px-8 py-3 bg-[#305d6f] text-white text-lg rounded-lg shadow-md hover:bg-[#3c7289] transition">
+        <button onClick = {loginWithGoogle} className="px-8 py-3 bg-[#305d6f] text-white text-lg rounded-lg shadow-md hover:bg-[#3c7289] transition">
           Coming Soon
         </button>
+        <GoogleLogin
+  onSuccess={credentialResponse => {
+    console.log(credentialResponse);
+  }}
+  onError={() => {
+    console.log('Login Failed');
+  }}
+/>;
       </section>
 
       {/* --- Footer --- */}
