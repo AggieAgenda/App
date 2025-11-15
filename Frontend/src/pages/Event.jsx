@@ -1,4 +1,5 @@
 // src/pages/Event.jsx
+import Navbar from '../components/Navbar.jsx'
 export default function Event() {
   const events = [
     {
@@ -35,20 +36,7 @@ export default function Event() {
 
   return (
     <div className="w-screen min-h-screen bg-[#321212] text-white flex flex-col items-center">
-      {/* Navbar */}
-      <nav className="w-full max-w-5xl flex items-center justify-between py-6 px-6">
-        <a href="/">
-          <h1 className="text-2xl font-bold text-maroon-600">Aggie Agenda</h1>
-        </a>
-        <div className="space-x-6">
-          <a href="/features" className="hover:text-maroon-400 transition">Features</a>
-          <a href="/event" className="hover:text-maroon-400 transition">Events</a>
-          <a href="/contact" className="hover:text-maroon-400 transition">Contact</a>
-          <button className="ml-4 px-5 py-2 bg-maroon-600 hover:bg-maroon-700 rounded-lg transition">
-            Coming Soon
-          </button>
-        </div>
-      </nav>
+      <Navbar />
 
       {/* Main content */}
       <div className="w-full max-w-6xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-6 pb-20 pt-28">

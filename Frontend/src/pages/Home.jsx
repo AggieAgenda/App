@@ -2,7 +2,6 @@
 import homeImage from '../assets/home_Image.png'
 import NavBar from '../components/Navbar.jsx'
 
-
 const handleGoogleLogin = () => {
   console.log("accessing http")
   window.location.href = 'http//localhost:8000/accounts/google/login/';
@@ -11,7 +10,7 @@ const handleGoogleLogin = () => {
 
 export default function Home() {
   return (
-    <div className="relative min-h-screen flex flex-col overflow-hidden bg-gradient-to-b from-[#f4d8aa] to-white text-[#1a1a1a]">
+    <div className="relative min-h-screen flex flex-col overflow-auto bg-gradient-to-b from-[#f4d8aa] to-white text-[#1a1a1a] w-full">
       
       {/* --- Background Animation --- */}
       <div className="absolute inset-0 -z-10 overflow-hidden">
