@@ -10,7 +10,7 @@ from dj_rest_auth.registration.views import SocialLoginView # probably import so
 
 class GoogleLogin(SocialLoginView):
     adapter_class = GoogleOAuth2Adapter
-    client_class = GoogleOAuth2Client
+    client_class = OAuth2Client
 class Test(SocialLoginView):
     print("testing objects")
 class Calender(SocialLoginView):
