@@ -56,5 +56,5 @@ def find_exam_dates(text): #takes in the text from extraction
 
 
 
-pdf_text = extract_text_from_pdf("your_document.pdf")
+pdf_text = find_exam_dates(extract_text_from_pdf("your_document.pdf"))
 print(pdf_text)
