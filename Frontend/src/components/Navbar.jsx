@@ -8,9 +8,12 @@ export default function Navbar() {
           Aggie Agenda
         </a>
         <div className="space-x-8 text-lg">
-          <a href="/features" className="font-bold hover:text-red-900 transition">Features</a>
-          <a href="/contact" className="font-bold hover:text-red-900 transition">Contact</a>
           <a href="/about" className="font-bold hover:text-red-900 transition">About</a>
+          <a href="/contact" className="font-bold hover:text-red-900 transition">Contact</a>
+          <a href="/calendar" className="font-bold hover:text-red-900 transition">Calendar</a>
+          <a href="/features" className="font-bold hover:text-red-900 transition">Features</a>
+          
+          
         </div>
       </nav>
   );
