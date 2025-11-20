@@ -16,13 +16,13 @@ export default function Calendar() {
       <nav className="bg-[#1F0F0F] rounded-xl ">
         <NavBar />
       </nav>
-      <main className="bg-[#321212] p-8 overflow-y-auto h-[calc(100vh-4rem)] flex gap-8">
-        <div className="bg-[#F7EEEE] w-250 h-200 rounded-4xl shadow-lg p-4"> {/* card */}
+      <main className="p-8 overflow-y-auto h-[calc(100vh-4rem)] flex gap-8 bg-gradient-to-b from-[#f4d8aa] to-white text-[#1a1a1a]">
+        <div className="bg-white w-250 h-200 rounded-4xl shadow-lg p-4"> {/* card */}
           <CalendarNavBar months={monthNames} setMonth={setCurrentMonth} setYear={setCurrentYear} month={currentMonth} year={currentYear} />
           <CalendarGrid month={currentMonth} year={currentYear}/>
         </div>  
         <div className="flex justify-end">
-          <div className="bg-[#F7EEEE] w-100 h-200 rounded-4xl shadow-lg p-4">
+          <div className="bg-white w-100 h-200 rounded-4xl shadow-lg p-4">
             <EventList />
           </div>
         </div>
