@@ -4,11 +4,11 @@ import PyPDF2 # still have to add this to requirements
 import re
 def extract_text_from_pdf(pdf_path):
     text = ""
-    with open(pdf_path, 'r') as file:
+    with open(pdf_path, 'rb') as file:
         reader = PyPDF2.PdfReader(file)
         
         for page in reader.pages:
-            page_text += page.extractText() #extract text from each page and add to a single string
+            page_text += page.extract_text() #extract text from each page and add to a single string
             if page_text:
                 text += text + "\n" #if there is text in the page add a new line character (skips the empty pages)
         return text
