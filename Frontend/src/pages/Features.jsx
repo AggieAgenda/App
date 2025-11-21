@@ -1,7 +1,7 @@
 // src/pages/Features.jsx
 import React, { useMemo, useState } from "react";
 import NavBar from "../components/Navbar.jsx";
-import SearchBar from '../components/Searchbar.jsx';
+import SearchBar from '../components/SearchBar.jsx';
 
 const FEATURES = [
   { id: 1, title: "Stay On Track", body: "Integrated calendar + class schedule keeps you organized without the stress." },
