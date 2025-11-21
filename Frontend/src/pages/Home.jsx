@@ -1,14 +1,16 @@
 // src/pages/Home.jsx
 import { GoogleLogin } from '@react-oauth/google';
+import { GoogleLogin } from '@react-oauth/google';
 import homeImage from '../assets/home_Image.png'
 import NavBar from '../components/Navbar.jsx'
 import {useLogin} from '../hooks/login.js'
 
 
 
+
 export default function Home() {
   // methods
-  const {loginWithGoogle} = useLogin();
+  const loginWithGoogle = useLogin();
 
   return (
     <div className="relative min-h-screen flex flex-col overflow-hidden bg-gradient-to-b from-[#f4d8aa] to-white text-[#1a1a1a]">
@@ -55,6 +57,14 @@ export default function Home() {
         <button onClick = {loginWithGoogle} className="px-8 py-3 bg-[#305d6f] text-white text-lg rounded-lg shadow-md hover:bg-[#3c7289] transition">
           Coming Soon
         </button>
+        <GoogleLogin
+  onSuccess={credentialResponse => {
+    console.log(credentialResponse);
+  }}
+  onError={() => {
+    console.log('Login Failed');
+  }}
+/>;
         <GoogleLogin
   onSuccess={credentialResponse => {
     console.log(credentialResponse);

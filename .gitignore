@@ -1,5 +1,6 @@
 AgendaKey.pem   
 myvenv/
 myenv/
+myenv/
 .env
 .vscode/*
