@@ -1,3 +1,55 @@
-AgendaKey.pem   
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# -------------------------------
+# Django / Python BACKEND ignores
+# -------------------------------
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+
+# Django database
+db.sqlite3
+db.sqlite3-journal
+
+# Django static/media
+media/
+staticfiles/
+
+# Virtual environments
+venv/
+env/
 myvenv/
+.venv/
+
+# Environment variables
 .env
+*.env
+
+# macOS junk
+.DS_Store
+.AppleDouble
+.LSOverride
