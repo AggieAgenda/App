@@ -9,6 +9,7 @@ import About from './pages/About.jsx';
 import Template from './pages/Template.jsx'
 import Calendar from './pages/Calendar.jsx'
 import Event from './pages/Event.jsx'
+import Program from './pages/Program'
  function App() {
       return (
         <Routes >
@@ -20,7 +21,7 @@ import Event from './pages/Event.jsx'
             <Route path ="/calendar" element = {<Calendar/>} />
             <Route path = "/about" element = {<About/>}></Route>
             <Route path = "/events" element = {<Event/>}></Route>
-
+            <Route path = "/program" element = {<Program/>}></Route>
            
         </Routes>
       );
