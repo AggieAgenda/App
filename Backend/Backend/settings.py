@@ -45,31 +45,50 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # rest apps I installed
+    'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
     'dj_rest_auth',
+    'dj_rest_auth.registration',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+
     'api',
     'django.contrib.sites',
 
 ]
-SITE_ID = 1 # set site ID to primary site
+# set site ID to primary site
+SITE_ID = 1 
+# prevent allauth verfiy emails 
+SOCIALACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'APP': {
             'client_id': GOOGLE_CLIENT_ID,
             'secret': GOOGLE_CLIENT_SECRET,
             'key': '',
-        }
+        },
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        },
+        'OAUTH_PKCE_ENABLED': True, # modern security thing ig
+        # still have to choose add social application to admin i think??
     }
 }
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
 
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -81,6 +100,17 @@ MIDDLEWARE = [
     "whitenoise.middleware.WhiteNoiseMiddleware",
 
 ]
+
+CORS_ALLOW_ALL_ORIGINS = True  # do not push into development ONLY for local testing
+'''
+CORS_ALLOWED_ORIGINS = [
+    ""
+]
+CSRF_TRUSTED_ORIGINS = [ # use for cookies and sessions 
+    "https//www.you-frontend ...
+]
+# CORS_ALLOW_CREDENTIALS = True may want these
+'''
 
 ROOT_URLCONF = 'Backend.urls'
 
