@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.2.3",
+    "@react-oauth/google": "^0.12.2",
     "@tailwindcss/cli": "^4.1.12",
     "@tailwindcss/vite": "^4.1.12",
     "class-variance-authority": "^0.7.1",
