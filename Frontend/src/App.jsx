@@ -11,6 +11,7 @@ import Calendar from './pages/Calendar.jsx'
 import Event from './pages/Event.jsx'
 import Program from './pages/Program'
 import Privacy from './pages/Privacy';
+import Dashboard from './pages/Dashboard.jsx'
  function App() {
       return (
         <Routes >
@@ -24,6 +25,10 @@ import Privacy from './pages/Privacy';
             <Route path = "/privacy" element = {<Privacy/>} />
             <Route path = "/events" element = {<Event/>}></Route>
             <Route path = "/program" element = {<Program/>}></Route>
+            <Route path = '/dashboard'element = {<Dashboard/>}>
+                <Route path = 'calendar' element = {<Calendar/>}></Route>
+                <Route path = 'events' element = {<Event/>}></Route>
+            </Route>
            
         </Routes>
       );

@@ -3,12 +3,20 @@ import { GoogleLogin } from '@react-oauth/google';
 import homeImage from '../assets/home_Image.png'
 import NavBar from '../components/Navbar.jsx'
 import {useLogin} from '../hooks/login.js'
+import { useNavigate } from 'react-router-dom';
 
 
 
 export default function Home() {
-  // methods
-  const {loginWithGoogle} = useLogin();
+  // 
+  const navigate = useNavigate()
+  const loginWithGoogle = useLogin();
+  const Func =()=>{
+    navigate('/dashboard')
+    loginWithGoogle()
+    console.log("Im being called")
+  }
+
 
   return (
     <div className="relative min-h-screen flex flex-col overflow-hidden bg-gradient-to-b from-[white] to-white text-[#1a1a1a]">
@@ -44,8 +52,8 @@ export default function Home() {
         <p className="text-lg text-gray-700 max-w-2xl mb-10">
           Sync all your academic events from multiple platforms into one clean, unified view. Never miss a deadline again.
         </p>
-        <button onClick = {loginWithGoogle} className="px-8 py-3 bg-[#550000] text-white text-lg rounded-lg shadow-md hover:bg-[black] transition">
-          Coming Soon
+        <button onClick = {Func} className="px-8 py-3 bg-[#550000] text-white text-lg rounded-lg shadow-md hover:bg-[black] transition">
+          Get Started
         </button>
         <GoogleLogin
           onSuccess={credentialResponse => {
