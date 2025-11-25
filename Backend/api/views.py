@@ -21,6 +21,7 @@ class PDFScraper(APIView): # needs to somehow take a pdf
     # define post get set 
     def post(self, request, *args, **kwargs):
         file = request.FILES.get('file')
+        
         if not file:
             return Response({'error': 'No File'})
         
