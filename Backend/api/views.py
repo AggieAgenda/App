@@ -28,6 +28,7 @@ class PDFScraper(APIView): # needs to somehow take a pdf
     def get(self, request, *args, **kwargs):
         return Response({'message': 'You can hear me'})
     pdf = []
+#Names of each API 
 google_login = GoogleLogin.as_view()
 test = Test.as_view()
-pdfScrape = PDFScraper.as_view()
+pdfScrape = PDFScraper.as_view() # maybe rename the url is syllabus can be confusing

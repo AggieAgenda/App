@@ -12,6 +12,7 @@ import Event from './pages/Event.jsx'
 import Program from './pages/Program'
 import Privacy from './pages/Privacy';
 import Dashboard from './pages/Dashboard.jsx'
+import Developers from './pages/Developers.jsx';
  function App() {
       return (
         <Routes >
@@ -29,6 +30,7 @@ import Dashboard from './pages/Dashboard.jsx'
                 <Route path = 'calendar' element = {<Calendar/>}></Route>
                 <Route path = 'events' element = {<Event/>}></Route>
             </Route>
+            <Route path = '/developers' element = {<Developers/>}></Route>
            
         </Routes>
       );

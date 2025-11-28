@@ -36,7 +36,7 @@ export default function Features() {
   }
 
   return (
-    <div className="relative min-h-screen flex flex-col overflow-hidden bg-gradient-to-b from-[#f4d8aa] to-white text-[#1a1a1a]">
+    <div className="relative min-h-screen flex flex-col overflow-hidden bg-gradient-to-b from-[white] to-white text-[#1a1a1a]">
       <div className="absolute inset-0 -z-10 overflow-hidden">
         <div className="absolute w-72 h-72 bg-[#305d6f] rounded-full filter blur-3xl opacity-30 animate-float1 top-10 left-20"></div>
         <div className="absolute w-96 h-96 bg-[#f4d8aa] rounded-full filter blur-3xl opacity-40 animate-float2 bottom-20 right-10"></div>
@@ -79,7 +79,7 @@ export default function Features() {
         </div>
       </section>
 
-      <footer className="w-full bg-[#305d6f] text-white py-6 text-center mt-auto">
+      <footer className="w-full bg-[var(--secondary-color)] text-white py-6 text-center mt-auto">
         <div className="space-x-4 mb-2">
           <a href="https://instagram.com/aggieagenda" className="hover:text-[#f4d8aa]">Instagram</a>
           <a href="https://linkedin.com/company/aggie-agenda" className="hover:text-[#f4d8aa]">LinkedIn</a>

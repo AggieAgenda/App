@@ -1,52 +1,82 @@
 import { useState } from "react";
-import { Menu, Bell, User } from "lucide-react";
+import { Menu, Bell, User, Undo2 } from "lucide-react";
 import { motion } from "framer-motion";
+import {Link } from "react-router-dom";
 
 export default function DashboardLayout() {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+    const [sidebarOpen, setSidebarOpen] = useState(true);
+    
 
-  return (
-    <div className="flex h-screen bg-gray-100 text-gray-900">
-      {/* Sidebar */}
-      <motion.aside
-        initial={{ x: -200 }}
-        animate={{ x: sidebarOpen ? 0 : -200 }}
-        transition={{ duration: 0.3 }}
-        className="w-64 bg-white shadow-xl p-4 flex flex-col"
-      >
-        <h2 className="text-2xl font-bold mb-6">Dashboard</h2>
-        <nav className="flex flex-col gap-4 text-lg">
-          <a href="/dashboard" className="hover:text-blue-600">Overview</a>
-          <a href="/dashboard/analytics" className="hover:text-blue-600">Analytics</a>
-          <a href="/dashboard/calendar" className="hover:text-blue-600">Calendar</a>
-          <a href="/dashboard/settings" className="hover:text-blue-600">Settings</a>
-        </nav>
-      </motion.aside>
+    const ReadSyllabus = async (file) =>{ // fix this part so the file is taken in and calls the api then print out the recieved json
+        console.log("Running syllabus Reader")
+        const url = 'http://127.0.0.1:8000/api/syllabus'
+        const respose = await fetch(url, {
+            method: 'GET',
+        })
+        console.log(respose.json.toString)
+    }
 
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col">
-        {/* Top Bar */}
-        <header className="flex justify-between items-center p-4 bg-white shadow-md">
-          <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="p-2 rounded-lg hover:bg-gray-200 transition"
-          >
-            <Menu />
-          </button>
+    return (
+        <div className="flex h-screen bg-gray-100 text-gray-900">
+        {/* Sidebar */}
+        <motion.aside
+            initial={{ x: -200 }}
+            animate={{ x: sidebarOpen ? 0 : -200 }}
+            transition={{ duration: 0.3 }}
+            className="w-64 bg-white shadow-xl p-4 flex flex-col"
+        >
+            <h2 className="text-2xl font-bold mb-6">Dashboard</h2>
+            <nav className="flex flex-col gap-4 text-lg">
+            <a href="/dashboard" className="hover:text-blue-600">Overview</a>
+            <a href="/dashboard/analytics" className="hover:text-blue-600">Analytics</a>
+            <a href="/dashboard/calendar" className="hover:text-blue-600">Calendar</a>
+            <a href="/dashboard/settings" className="hover:text-blue-600">Settings</a>
+            </nav>
+        </motion.aside>
 
-          <div className="flex items-center gap-4">
-            <Bell className="cursor-pointer" />
-            <User className="cursor-pointer" />
-          </div>
-        </header>
+        {/* Main Content */}
+        <div className="flex-1 flex flex-col">
+            {/* Top Bar */}
+            <header className="flex justify-between items-center p-4 bg-white shadow-md">
+            <button
+                onClick={() => setSidebarOpen(!sidebarOpen)}
+                className="p-2 rounded-lg hover:bg-gray-200 transition"
+            >
+                <Menu />
+            </button>
 
-        {/* Content Slot */}
-        <div className="p-6">
-          {/* The child components will appear here when used with React Router */}
-          <h1>This is still in Devlopment</h1>
-          <h1>Coming Soon!</h1>
+            <div className="flex items-center gap-4">
+                <Bell className="cursor-pointer" />
+                <User className="cursor-pointer" />
+                <Link to = "/">
+                    <Undo2 className="cursor-pointer" />
+                </Link>
+            </div>
+            </header>
+
+            {/* Content Slot */}
+            <div className="p-6">
+            {/* The child components will appear here when used with React Router */}
+            <div className="flex flex-col items-center text-center">
+                <div classname= "flex flex-col mb-10">
+                    <h1 className = "text-lg">We are still in Devlopment</h1>
+                    <h1 className="text-lg mb-5">Coming Soon!</h1>
+
+                </div>
+                
+                <a href = "https://docs.google.com/forms/d/e/1FAIpQLSdP_FFSPaQBSOKEcKfck4MV3cRNBoOQuUhnYCSfy9hUHTeZwQ/viewform">
+                    <button className="px-8 py-3 bg-[#550000] text-white text-lg rounded-lg shadow-md hover:bg-[black] transition">Get on the waitlist</button>
+                </a>
+            </div>
+
+
+            
+            </div>
         </div>
-      </div>
-    </div>
-  );
+        </div>
+    );
 }
+/*
+<h1>Syllabus Reader</h1>
+            <input type='file'></input>
+            <button onClick={ReadSyllabus}>Run</button> */

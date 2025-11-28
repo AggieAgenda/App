@@ -10,8 +10,10 @@ export default function Navbar() {
         <div className="space-x-8 text-lg">
           <a href="/features" className=" hover:text-[black] transition">Features</a>
           <a href="/contact" className=" hover:text-[black] transition">Contact</a>
-          <a href="/about" className=" hover:text-[black] transition">About</a>
-          <a className = "text-[#55000]">Login</a>
+          <Link to="/about" className=" hover:text-[black] transition">About</Link>
+          <Link to = "/dashboard">Login</Link>
+          
+          {/*Need to work on authentication for this to be perfect */}
         </div>
       </nav>
   );
