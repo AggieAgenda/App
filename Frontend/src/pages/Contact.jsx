@@ -3,7 +3,7 @@ import NavBar from '../components/Navbar.jsx'
 
 export default function Contact() {
   return (
-    <div className="relative min-h-screen flex flex-col overflow-hidden bg-gradient-to-b from-[#f4d8aa] to-white text-[#1a1a1a]">
+    <div className="relative min-h-screen flex flex-col overflow-hidden bg-gradient-to-b from-[var(--primary-color)] to-white text-[#1a1a1a]">
       
       {/* --- Background Animation --- */}
       <div className="absolute inset-0 -z-10 overflow-hidden">

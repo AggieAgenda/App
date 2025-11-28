@@ -1,11 +1,24 @@
 @import "tailwindcss";
 
 
+:root{
+  --primary-color: white;
+  --secondary-color: black;
+  --maroon: maroon;
+
+}
+
+.dark{
+  --primary-color: black;
+  --secondary-color: white;
+  --maroon: maroon;
+}
+
 html, body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
-  overflow-y:hidden; /* hides horizontal scroll */
+  /*overflow-y:hidden; /* hides horizontal scroll */
 }
 @keyframes float1 {
   0%, 100% { transform: translateY(0px) translateX(0px); }
