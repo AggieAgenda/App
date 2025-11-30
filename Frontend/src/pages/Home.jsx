@@ -34,7 +34,7 @@ export default function Home() {
           
         </div>
 
-        <div className="mt-10 md:mt-0 md:ml-10 flex justify-center mb-5">
+        <div className="mt-10 md:mt-0 md:ml-10 flex justify-center ">
           <img
             src={homeImage}
             alt="Aggie Agenda Preview"
@@ -44,11 +44,8 @@ export default function Home() {
       </section>
 
       {/* --- Features Section --- */}
-      <section id="features" className="flex items-center justify-center text-center py-16 px-6  w-full backdrop-blur-sm">
-        <div>
-          <img src= "https://www.yumpu.com/en/image/facebook/49954993.jpg" width = '250'></img>
-        </div>
-        <div className=' flex flex-col items-center text-center py-16  backdrop-blur-sm'>
+      <section id="features" className="flex flex-col items-center justify-center text-center py-16 px-6  w-full backdrop-blur-sm">
+        <div >
           <h2 className="text-4xl font-bold text-[#550000] mb-6">
             One Shot Your Calendar
           </h2>
@@ -72,6 +69,28 @@ export default function Home() {
           />
           </div>
       </section>
+
+      <section id="features" className="flex items-center justify-center text-center py-16 px-6  w-full backdrop-blur-sm">
+        <div>
+          <img src= "https://www.yumpu.com/en/image/facebook/49954993.jpg" width = '250'></img>
+        </div>
+        <div className=' flex flex-col items-center text-center py-16  backdrop-blur-sm'>
+          <h2 className="text-4xl font-bold text-[#550000] mb-6">
+            Reads Your Syllabus
+          </h2>
+          <p className="text-lg text-gray-700 max-w-2xl ">
+            Stop manually entering dates. Our algorithm instantly processes your syllabus and extracts every deadline, exam, and reading.
+          </p>
+          <br></br>
+          <p className="text-lg text-gray-700 max-w-2xl ">
+            Whether it's a PDF, DOC, or photo, we find all the key dates so you don't have to.
+          </p> 
+          <p className="text-lg text-gray-700 max-w-2xl mb-10">Just upload your Syllabus, and your calendar is built for you.</p>
+          {/*Maybe put image of one shotting the calender here */}
+          
+          </div>
+      </section>      
+
       
       <section id="features" className="flex flex-col items-center text-center py-16 px-6  w-full backdrop-blur-sm">
         <h2 className="text-4xl font-bold text-[#550000] mb-6">

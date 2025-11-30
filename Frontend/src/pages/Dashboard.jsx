@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Menu, Bell, User, Undo2 } from "lucide-react";
 import { motion } from "framer-motion";
-import {Link } from "react-router-dom";
+import {Link , Outlet } from "react-router-dom";
 
 export default function DashboardLayout() {
     const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -27,10 +27,14 @@ export default function DashboardLayout() {
         >
             <h2 className="text-2xl font-bold mb-6">Dashboard</h2>
             <nav className="flex flex-col gap-4 text-lg">
-            <a href="/dashboard" className="hover:text-blue-600">Overview</a>
-            <a href="/dashboard/analytics" className="hover:text-blue-600">Analytics</a>
-            <a href="/dashboard/calendar" className="hover:text-blue-600">Calendar</a>
-            <a href="/dashboard/settings" className="hover:text-blue-600">Settings</a>
+            
+            <Link to = 'overview'>Dashboard</Link>
+            <Link to = 'syllabus' >Syllabus Reader</Link>
+            <Link to = 'calendar'>Calendar</Link>
+            <Link to = 'events'>Find Events</Link>
+            
+            
+            
             </nav>
         </motion.aside>
 
@@ -38,20 +42,20 @@ export default function DashboardLayout() {
         <div className="flex-1 flex flex-col">
             {/* Top Bar */}
             <header className="flex justify-between items-center p-4 bg-white shadow-md">
-            <button
-                onClick={() => setSidebarOpen(!sidebarOpen)}
-                className="p-2 rounded-lg hover:bg-gray-200 transition"
-            >
-                <Menu />
-            </button>
+                <button
+                    onClick={() => setSidebarOpen(!sidebarOpen)}
+                    className="p-2 rounded-lg hover:bg-gray-200 transition"
+                >
+                    <Menu />
+                </button>
 
-            <div className="flex items-center gap-4">
-                <Bell className="cursor-pointer" />
-                <User className="cursor-pointer" />
-                <Link to = "/">
-                    <Undo2 className="cursor-pointer" />
-                </Link>
-            </div>
+                <div className="flex items-center gap-4">
+                    <Bell className="cursor-pointer" />
+                    <User className="cursor-pointer" />
+                    <Link to = "/">
+                        <Undo2 className="cursor-pointer" />
+                    </Link>
+                </div>
             </header>
 
             {/* Content Slot */}
@@ -59,14 +63,10 @@ export default function DashboardLayout() {
             {/* The child components will appear here when used with React Router */}
             <div className="flex flex-col items-center text-center">
                 <div classname= "flex flex-col mb-10">
-                    <h1 className = "text-lg">We are still in Devlopment</h1>
-                    <h1 className="text-lg mb-5">Coming Soon!</h1>
+                    
+                    <Outlet/>
 
                 </div>
-                
-                <a href = "https://docs.google.com/forms/d/e/1FAIpQLSdP_FFSPaQBSOKEcKfck4MV3cRNBoOQuUhnYCSfy9hUHTeZwQ/viewform">
-                    <button className="px-8 py-3 bg-[#550000] text-white text-lg rounded-lg shadow-md hover:bg-[black] transition">Get on the waitlist</button>
-                </a>
             </div>
 
 
@@ -80,3 +80,10 @@ export default function DashboardLayout() {
 <h1>Syllabus Reader</h1>
             <input type='file'></input>
             <button onClick={ReadSyllabus}>Run</button> */
+
+
+/* <h1 className = "text-lg">We are still in Devlopment</h1>
+                    <h1 className="text-lg mb-5">Coming Soon!</h1>
+                    <a href = "https://docs.google.com/forms/d/e/1FAIpQLSdP_FFSPaQBSOKEcKfck4MV3cRNBoOQuUhnYCSfy9hUHTeZwQ/viewform">
+                        <button className="px-8 py-3 bg-[#550000] text-white text-lg rounded-lg shadow-md hover:bg-[black] transition">Get on the waitlist</button>
+                    </a> */
