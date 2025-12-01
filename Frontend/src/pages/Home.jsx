@@ -12,7 +12,7 @@ export default function Home() {
   const navigate = useNavigate()
   const loginWithGoogle = useLogin();
   const Func =()=>{
-    navigate('/dashboard')
+    navigate('/dashboard/overview')
     loginWithGoogle()
     console.log("Im being called")
   }

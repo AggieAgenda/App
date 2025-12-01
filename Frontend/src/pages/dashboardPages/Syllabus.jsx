@@ -17,7 +17,7 @@ export default function SyllabusReader() {
 
         try {
             const formData = new FormData();
-            files.forEach((file) => formData.append("files", file));
+            files.forEach((file) => formData.append("file", file));
 
             // 🔥 Django backend endpoint (adjust later)
             const res = await fetch("http://127.0.0.1:8000/api/syllabus", {
