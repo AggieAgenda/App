@@ -3,13 +3,11 @@ import { Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Contact from './pages/Contact.jsx';
 import Features from './pages/Features';
-import Pricing from './pages/Pricing';
-import NotFound from './pages/NotFound';
 import About from './pages/About.jsx';
-import Template from './pages/Template.jsx'
-import Calendar from './pages/Calendar.jsx'
-import Events from './pages/Event.jsx'
-import Program from './pages/Program'
+import Template from './pages/Template.jsx';
+import Calendar from './pages/dashboardPages/Calendar.jsx';
+import Events from './pages/dashboardPages/Event.jsx'
+import Program from './pages/Program';
 import Privacy from './pages/Privacy';
 import Dashboard from './pages/Dashboard.jsx'
 import Developers from './pages/Developers.jsx';
@@ -22,7 +20,6 @@ import Overview from './pages/dashboardPages/Overview.jsx'
             <Route path="/" element={<Home />} />
             <Route path="/contact" element={<Contact />} />
             <Route path ="/features" element = {<Features/>} />
-            <Route path ="/pricing" element = {<Pricing/>} />
             <Route path = "/about" element = {<About/>} />
             <Route path = "/privacy" element = {<Privacy/>} />
             <Route path = "/program" element = {<Program/>}></Route>

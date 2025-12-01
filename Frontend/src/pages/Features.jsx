@@ -48,7 +48,7 @@ export default function Features() {
       <section className="flex flex-col items-center justify-center px-10 md:px-20 py-20 max-w-7xl mx-auto w-full flex-grow">
         <div className="w-full max-w-5xl">
           <div className="text-center mb-6">
-            <h2 className="text-5xl font-extrabold text-[#305d6f] drop-shadow-md mb-4">Features</h2>
+            <h2 className="text-5xl font-extrabold text-[var(--maroon)] drop-shadow-md mb-4">Features</h2>
             <p className="text-xl text-gray-700 max-w-2xl mx-auto">Everything you need to stay organized and connected at Texas A&M</p>
           </div>
 
@@ -68,7 +68,7 @@ export default function Features() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
             {filtered.map(f => (
               <div key={f.id} className="bg-white/70 backdrop-blur-sm p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
-                <h3 className="text-2xl font-bold text-[#305d6f] mb-3">{f.title}</h3>
+                <h3 className="text-2xl font-bold text-[var(--maroon)] mb-3">{f.title}</h3>
                 <p className="text-gray-700">{f.body}</p>
               </div>
             ))}

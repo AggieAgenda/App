@@ -4,14 +4,14 @@
 :root{
   --primary-color: white;
   --secondary-color: black;
-  --maroon: maroon;
+  --maroon: #550000;
 
 }
 
 .dark{
   --primary-color: black;
   --secondary-color: white;
-  --maroon: maroon;
+  --maroon: #550000;
 }
 
 html, body {

@@ -20,7 +20,7 @@ export default function About() {
       <section className="flex flex-col items-center justify-center px-10 md:px-20 py-20 max-w-7xl mx-auto w-full flex-grow">
         <div className="w-full max-w-5xl text-center">
           <div className="mb-12">
-            <h2 className="text-5xl font-extrabold text-[#305d6f] drop-shadow-md mb-6">
+            <h2 className="text-5xl font-extrabold text-[var(--maroon)] drop-shadow-md mb-6">
               About Us
             </h2>
             <div className="bg-white/70 backdrop-blur-sm p-8 rounded-xl shadow-lg">
@@ -36,7 +36,7 @@ export default function About() {
       </section>
 
       {/* --- Footer --- */}
-      <footer className="w-full bg-[#305d6f] text-white py-6 text-center mt-auto">
+      <footer className="w-full bg-[var(--secondary-color)] text-white py-6 text-center mt-auto">
         <div className="space-x-4 mb-2">
           <a href="https://instagram.com/aggieagenda" className="hover:text-[#f4d8aa]">Instagram</a>
           <a href="https://linkedin.com/company/aggie-agenda" className="hover:text-[#f4d8aa]">LinkedIn</a>
