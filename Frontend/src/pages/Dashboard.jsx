@@ -14,7 +14,6 @@ import {
   X
 } from "lucide-react";
 import { Outlet, Link} from "react-router-dom";
-// Mock Outlet component for demonstration
 
 export default function DashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -27,7 +26,8 @@ export default function DashboardLayout() {
     { id: "syllabus", label: "Syllabus Reader", icon: FileText, path: "/dashboard/syllabus" },
     { id: "calendar", label: "Calendar", icon: Calendar, path: "/dashboard/calendar" },
     { id: "events", label: "Find Events", icon: MapPin, path: "/dashboard/events" },
-    { id: "organizations", label: "Organizations", icon: Users, path: "/dashboard/organizations" }
+    { id: "organizations", label: "Organizations", icon: Users, path: "/dashboard/organizations" },
+    { id: "orgview", label: "Your Organizatoin", icon: Users, path: "/dashboard/organization-view"}
   ];
 
   return (
