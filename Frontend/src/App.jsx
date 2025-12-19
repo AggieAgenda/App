@@ -13,6 +13,8 @@ import Dashboard from './pages/Dashboard.jsx'
 import Developers from './pages/Developers.jsx';
 import SyllabusReader from './pages/dashboardPages/Syllabus.jsx'
 import Overview from './pages/dashboardPages/Overview.jsx'
+import Organizations from './pages/dashboardPages/Organizations.jsx'
+import OrganizationView from './pages/dashboardPages/OrganizationView'
  function App() {
       return (
         <Routes >
@@ -28,6 +30,9 @@ import Overview from './pages/dashboardPages/Overview.jsx'
                 <Route path = 'syllabus' element = {<SyllabusReader/>}></Route>
                 <Route path = 'calendar' element = {<Calendar/>}></Route>
                 <Route path = 'events' element = {<Events/>}></Route>
+                <Route path = 'organizations' element = {<Organizations/>}></Route>
+                <Route path = 'organization-view' element = {<OrganizationView/>}></Route>
+
             </Route>
             <Route path = '/developers' element = {<Developers/>}></Route>
            
