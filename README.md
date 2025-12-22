@@ -99,7 +99,7 @@ Please discuss major changes via issues before submitting pull requests.
 
 ## License
 
-MIT License - see [LICENSE](LICENSE) for details
+License - see [LICENSE](LICENSE) for details
 
 ---
 
