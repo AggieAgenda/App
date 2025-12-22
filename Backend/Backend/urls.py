@@ -16,11 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from . import views
 
 urlpatterns = [
-    path("Calendar/", include("Calendar.urls")),
+    #path("Calendar/", include("Calendar.urls")),
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
+    path('login/',include('login.urls')),
+    path('',views.index, name='index'),
     path('dj-rest-auth/', include('dj_rest_auth.urls')),
     path('dj-rest-auth/registration/', include('dj_rest_auth.registration.urls')),
     path('accounts/', include('allauth.urls')),  # important for OAuth
