@@ -1,87 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, Upload, Download, MapPin, Users, ArrowRight, Menu, X, ChevronUp } from 'lucide-react';
 import homeImage from '../assets/home_Image.png';
-import {useNavigate, Link} from 'react-router-dom';
-
+import { Link} from 'react-router-dom';
+import Footer from '../components/Footer';
+import Navbar from '../components/Navbar';
 // Navbar Component
-function Navbar() {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const navigate = useNavigate();
-  
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const Func =()=>{
-    navigate('/dashboard/overview')
-    //loginWithGoogle()
-    console.log("Im being called")
-  }
-  return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-      isScrolled ? 'bg-white/95 backdrop-blur-md shadow-md' : 'bg-white'
-    } py-4`}>
-      <div className="max-w-7xl mx-auto flex justify-between items-center px-6 md:px-8">
-        <a href="/" className="text-3xl md:text-4xl font-extrabold text-[#500000] hover:opacity-90 transition-opacity">
-          Aggie Agenda
-        </a>
-
-        {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center space-x-8 text-lg font-medium">
-          <a href="#features" className="relative group text-gray-700 hover:text-[#500000] transition-colors">
-            Features
-            <span className="absolute w-0 left-0 -bottom-1 h-[2px] bg-[#500000] transition-all duration-300 group-hover:w-full" />
-          </a>
-          <a href="#contact" className="relative group text-gray-700 hover:text-[#500000] transition-colors">
-            Contact
-            <span className="absolute w-0 left-0 -bottom-1 h-[2px] bg-[#500000] transition-all duration-300 group-hover:w-full" />
-          </a>
-          <a href="#about" className="relative group text-gray-700 hover:text-[#500000] transition-colors">
-            About
-            <span className="absolute w-0 left-0 -bottom-1 h-[2px] bg-[#500000] transition-all duration-300 group-hover:w-full" />
-          </a>
-          <button onClick = {Func} className="px-6 py-2.5 rounded-lg bg-[#500000] text-white hover:bg-[#700000] transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-            Login
-          </button>
-        </div>
-
-        {/* Mobile Menu Button */}
-        <button 
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="md:hidden text-gray-700 hover:text-[#500000] transition-colors"
-        >
-          {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
-        </button>
-      </div>
-
-      {/* Mobile Menu */}
-      {isMobileMenuOpen && (
-        <div className="md:hidden bg-white border-t border-gray-200 shadow-lg">
-          <div className="flex flex-col space-y-4 px-6 py-6">
-            <a href="#features" className="text-gray-700 hover:text-[#500000] transition-colors font-medium">
-              Features
-            </a>
-            <a href="#contact" className="text-gray-700 hover:text-[#500000] transition-colors font-medium">
-              Contact
-            </a>
-            <a href="#about" className="text-gray-700 hover:text-[#500000] transition-colors font-medium">
-              About
-            </a>
-            <button onClick= {Func()} className="px-6 py-2.5 rounded-lg bg-[#500000] text-white hover:bg-[#700000] transition-all text-center">
-              Login
-            </button>
-          </div>
-        </div>
-      )}
-    </nav>
-  );
-}
 
 // Feature Card Component
 function FeatureCard({ icon: Icon, title, description, imageSrc, reverse }) {
@@ -147,9 +71,11 @@ export default function AggieAgendaHome() {
                     
                   </button>
                 </Link>
+                <Link to= "documentation/learn-more">
                 <button className="px-8 py-4 border-2 border-[#500000] text-[#500000] text-lg font-semibold rounded-lg hover:bg-[#500000] hover:text-white transition-all">
                   Learn More
                 </button>
+                </Link>
               </div>
             </div>
 
@@ -242,28 +168,7 @@ export default function AggieAgendaHome() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12 px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center space-y-6">
-            <p className="text-lg">Started by Fellow Texas A&M Students</p>
-            <div className="flex justify-center gap-6 text-lg">
-              <a href="https://instagram.com/aggieagenda" className="hover:text-[#500000] transition-colors">
-                Instagram
-              </a>
-              <a href="https://linkedin.com/company/aggie-agenda" className="hover:text-[#500000] transition-colors">
-                LinkedIn
-              </a>
-              <a href="/developers" className="hover:text-[#500000] transition-colors">
-                Developers
-              </a>
-            </div>
-            <p className="text-sm text-gray-400">
-              © {new Date().getFullYear()} Aggie Agenda. All rights reserved.
-            </p>
-          </div>
-        </div>
-      </footer>
+      
 
       {/* Scroll to Top Button */}
       {showScrollTop && (
@@ -274,6 +179,8 @@ export default function AggieAgendaHome() {
           <ChevronUp size={24} />
         </button>
       )}
+    <Footer/>
     </div>
+    
   );
 }

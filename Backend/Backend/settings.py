@@ -41,6 +41,7 @@ ALLOWED_HOSTS = ['localhost','127.0.0.1'] # only works with local host
 # Application definition
 
 INSTALLED_APPS = [
+    #Django apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -53,11 +54,12 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'dj_rest_auth',
     'dj_rest_auth.registration',
+    #Auth Apps
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-
+    #My apps
     'api',
     'login',
     'django.contrib.sites',
