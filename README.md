@@ -1,98 +1,106 @@
 # Aggie Agenda
 
-Aggie Agenda is a productivity web platform that allows users to upload their class syllabi and automatically generates events in their Google Calendar. This tool is especially useful for students who want to better manage their academic deadlines and university events.
+A smart productivity platform for students that automatically transforms syllabi into organized Google Calendar events. Never miss another assignment deadline or important date.
 
----
+## Overview
 
-## Features
+Aggie Agenda streamlines academic planning by parsing your course syllabi and seamlessly integrating assignments, deadlines, and events directly into your Google Calendar. Built with modern web technologies to provide a fast, reliable experience.
 
-- Upload your syllabus to automatically add assignments and deadlines to Google Calendar.
-- Web-based interface built with React and Vite for the frontend.
-- Secure backend using Django and Django REST API.
-- Handles file parsing and date extraction from syllabi.
-- Integration with Google Calendar API (setup required).
+### Tech Stack
 
----
+- **Frontend:** React + Vite
+- **Backend:** Django + Django REST Framework
+- **Integration:** Google Calendar API
 
-## File Structure
+## Project Structure
 
-├─ App/
-│ ├─ Backend/ # Django backend
-│ │ ├─ api/ # API endpoints for the backend
-│ │ ├─ login/ # Authentication app
-│ │ ├─ staticfiles/ # Static JS and CSS assets
-│ │ ├─ manage.py # Django project management tool
-│ │ ├─ requirements.txt # Python dependencies
-│ │ └─ README.md # Backend Setup Instructions
-│ ├─ Frontend/ # React application
-│ │ ├─ public/ # Public images and static files
-│ │ ├─ src/ # React components, hooks, pages
-│ │ ├─ index.html
-│ │ └─ README.md
-│ ├─ LICENSE
-│ ├─ package-lock.json
-│ └─ README.md # 
+```
+App/
+├── Backend/
+│   ├── api/                 # REST API endpoints
+│   ├── login/               # Authentication
+│   ├── staticfiles/         # Static assets
+│   ├── manage.py
+│   ├── requirements.txt
+│   └── README.md
+│
+└── Frontend/
+    ├── src/                 # React components and pages
+    ├── public/              # Static assets
+    ├── index.html
+    └── README.md
+```
 
-
----
-
-## Getting Started
+## Quick Start
 
 ### Prerequisites
 
-- **Python 3.10+** and **Django** for the backend
-- **Node.js** (npm) for the frontend
-- [Google Calendar API credentials](https://developers.google.com/calendar/quickstart/js) if syncing calendar events
+- Python 3.10 or higher
+- Node.js and npm
+- [Google Calendar API credentials](https://developers.google.com/calendar/quickstart/js)
 
 ### Backend Setup
 
-1. Navigate to the backend directory and create a Python virtual environment:
-   
-    cd App/Backend
-    python -m venv ../app_env
-    ../app_env/Scripts/activate   # On Windows
-    # or
-    source ../app_env/bin/activate # On Mac/Linux
-    2. Install dependencies:
-   
-    pip install -r requirements.txt
-    3. Make sure to set up your environment variables in a `.env` file next to `manage.py`.
-4. Start the backend server:
-   
-    python manage.py runserver
-    ### Frontend Setup
+```bash
+# Navigate to backend directory
+cd App/Backend
 
-1. Navigate to the frontend directory:
-   
-    cd App/Frontend
-    2. Install dependencies:
-   
-    npm install
-    3. Start the React development server:
-   
-    npm run dev
-    ---
+# Create and activate virtual environment
+python -m venv ../app_env
+source ../app_env/bin/activate  # Mac/Linux
+# or
+../app_env/Scripts/activate     # Windows
 
-## Usage
+# Install dependencies
+pip install -r requirements.txt
 
-- Once both frontend (`localhost:5173`) and backend (`localhost:8000`) are running, open your browser to the frontend URL.
-- Upload your syllabus and follow on-screen instructions to sync with Google Calendar.
+# Configure environment variables
+# Create a .env file in the Backend directory with your credentials
 
----
+# Start the server
+python manage.py runserver
+```
 
-## Additional Information
+The backend will run on `http://localhost:8000`
 
-- Code includes sample C++ data structures and algorithm assignments in `App/Backend/Calendar/CSCE 221` (for reference or academic use, not run by the main agenda app).
-- Static files and styles are managed in `App/Backend/staticfiles/`.
+### Frontend Setup
 
----
+```bash
+# Navigate to frontend directory
+cd App/Frontend
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+```
+
+The frontend will run on `http://localhost:5173`
+
+## How It Works
+
+1. Open the app in your browser at `http://localhost:5173`
+2. Log in with your Google account
+3. Upload your course syllabus (PDF or compatible format)
+4. Review the extracted events and dates
+5. Confirm to sync with your Google Calendar
 
 ## Contributing
 
-Pull requests are welcome for improving syllabus parsing or the UI. Please open issues to discuss bugs or ideas first.
+Contributions are welcome! Here's how you can help:
 
----
+- Report bugs or suggest features by opening an issue
+- Improve syllabus parsing accuracy
+- Enhance the user interface
+- Add support for additional file formats
+
+Please discuss major changes via issues before submitting pull requests.
 
 ## License
 
-This project is under the MIT License.
+MIT License - see [LICENSE](LICENSE) for details
+
+---
+
+**Need help?** Check the individual README files in the Backend and Frontend directories for more detailed setup instructions.
