@@ -11,7 +11,9 @@ import {
   Users,
   Bell,
   Search,
-  X
+  X,
+  Building2,
+  GraduationCap
 } from "lucide-react";
 import { Outlet, Link} from "react-router-dom";
 
@@ -27,7 +29,9 @@ export default function DashboardLayout() {
     { id: "calendar", label: "Calendar", icon: Calendar, path: "/dashboard/calendar" },
     { id: "events", label: "Find Events", icon: MapPin, path: "/dashboard/events" },
     { id: "organizations", label: "Organizations", icon: Users, path: "/dashboard/organizations" },
-    { id: "orgview", label: "Your Organizatoin", icon: Users, path: "/dashboard/organization-view"}
+    { id: "orgview", label: "Your Organization", icon: Building2, path: "/dashboard/organization-view"},
+    { id: "grades", label: "Grade Calculator", icon: GraduationCap, path: "/dashboard/organization-view"}
+
   ];
 
   return (

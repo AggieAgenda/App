@@ -8,23 +8,51 @@ export default function About() {
     {
       name: "Dunsin Komolafe",
       role: "Project Manager",
-      image: "https://i.imgur.com/C2zwjdJ.png",
-      linkedin: "linkedin.com/in/dunsink"
+      image: "https://media.licdn.com/dms/image/v2/D5603AQEtCHQ1JklxXQ/profile-displayphoto-scale_400_400/B56Zkv3EsxI4Ag-/0/1757444590874?e=1767830400&v=beta&t=-2aMBGeK4D1SDxbJuAF-vNIpa56I_WjlQhdHduu_Eps ",
+      linkedin: "linkedin.com/in/dunsink",
+      
     },
     {
       name: "Aniekan Ekanam",
       role: "Project Co-Manager",
-      image: "https://i.imgur.com/C2zwjdJ.png",
-      linkedin: "linkedin.com/in/dunsink"
+      image: "https://media.licdn.com/dms/image/v2/D4E03AQFiX2jfSmZ5wg/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1686291366602?e=1767830400&v=beta&t=lSozkdxPvLks_Vttqi-Tgy9BdB-nOo2uurHMJN_DMKs",
+      linkedin: "linkedin.com/in/aniekanekanem/"
     },
     {
       name: "Mustafa Argin",
       role: "Project Member",
-      image: "https://i.imgur.com/C2zwjdJ.png",
+      image: "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",
       linkedin: "linkedin.com/in/dunsink"
+    },
+    {
+      name: "Patrick Semler",
+      role: "Project Member",
+      image:"data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",
+      linkedin: "https://www.linkedin.com/in/patricksemler/"
     }
+    ,
+    {
+      name: "",
+      role: "Project Member",
+      image:"data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",
+      linkedin: "https://www.linkedin.com/in/patricksemler/"
+    }
+
   ]
-  
+  const former = [ // former stack people
+    {
+      name: "",
+      role: "Project Member",
+      image:"data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",
+      linkedin: "https://www.linkedin.com/in/patricksemler/"
+    },
+    {
+      name: "",
+      role: "Project Member",
+      image:"data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",
+      linkedin: "https://www.linkedin.com/in/patricksemler/"
+    }
+  ] 
   return (
     <div className="relative min-h-screen flex flex-col overflow-hidden bg-gradient-to-b from-white to-gray-50 text-gray-900">
       
