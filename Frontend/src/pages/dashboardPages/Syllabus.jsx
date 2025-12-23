@@ -4,20 +4,22 @@ import { UploadCloud, FileText, Loader, CheckCircle, XCircle, Calendar, BookOpen
 export default function SyllabusReader() {
     const [files, setFiles] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [saving, setSaving] = useState(false);
     const [response, setResponse] = useState(null);
     const [error, setError] = useState(null);
     const [processingFile, setProcessingFile] = useState(null);
+    const [savingFile, setSavingFile] = useState(null);
 
     const handleFileChange = (e) => {
         const selectedFiles = [...e.target.files];
-        
+
         // Validate file types
         const invalidFiles = selectedFiles.filter(file => !file.name.endsWith('.pdf'));
         if (invalidFiles.length > 0) {
             setError(`Invalid file type: ${invalidFiles.map(f => f.name).join(', ')}. Only PDFs are allowed.`);
             return;
         }
-        
+
         // Validate file size (10MB limit)
         const MAX_SIZE = 10 * 1024 * 1024;
         const oversizedFiles = selectedFiles.filter(file => file.size > MAX_SIZE);
@@ -25,7 +27,7 @@ export default function SyllabusReader() {
             setError(`File too large: ${oversizedFiles.map(f => f.name).join(', ')}. Maximum size is 10MB.`);
             return;
         }
-        
+
         setFiles(selectedFiles);
         setError(null);
         setResponse(null);
@@ -42,7 +44,7 @@ export default function SyllabusReader() {
             // Process each file individually
             for (const file of files) {
                 setProcessingFile(file.name);
-                
+
                 const formData = new FormData();
                 formData.append("file", file);
 
@@ -52,7 +54,7 @@ export default function SyllabusReader() {
                 });
 
                 const data = await res.json();
-                
+
                 if (!res.ok) {
                     results.push({
                         fileName: file.name,
@@ -67,7 +69,7 @@ export default function SyllabusReader() {
                     });
                 }
             }
-            
+
             setResponse(results);
         } catch (err) {
             setError(`Network error: ${err.message}. Make sure the Django server is running.`);
@@ -77,6 +79,57 @@ export default function SyllabusReader() {
             setProcessingFile(null);
         }
     };
+
+    const saveToCalendar = async () => {
+        if (response == null) return;
+
+        setSaving(true);
+        setError(null);
+
+        try {
+            for (const result of response) {
+                if (!result.success) {
+                    console.log(`Skipping ${result.fileName} - processing failed`);
+                    continue;
+                }
+
+                setSavingFile(result.fileName);
+
+                for (const date of result.data.dates) {
+                    try {
+                        const res = await fetch("http://127.0.0.1:8000/api/calendar/events/", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({
+                                'title': date.description,
+                                'description': `From ${result.fileName}`,
+                                'date': date.date,
+                                'time': '8:00', // Replace this later
+                                'type': date.event_type,
+                                'course': 'MATH 151', // Replace this later
+                                'color': '#FF5733' // Replace this later
+                            })
+                        });
+
+                        const data = await res.json();
+
+                        // Could check if the request was successful here (data.success) and then add to a counter of successfully added events
+
+                    } catch (err) {
+                        console.error(`Failed to create event: ${date.description}`);
+                    }
+                }
+            }
+        } catch (err) {
+            setError(`Network error: ${err.message}. Make sure the Django server is running.`);
+            console.error(err);
+        } finally {
+            setSaving(false);
+            setSavingFile(null);
+        }
+    }
 
     const removeFile = (index) => {
         setFiles(files.filter((_, i) => i !== index));
@@ -88,7 +141,7 @@ export default function SyllabusReader() {
                 <BookOpen className="w-8 h-8 text-blue-600" />
                 <h1 className="text-2xl font-bold">Syllabus Reader</h1>
             </div>
-            
+
             <p className="text-gray-600 mb-6">
                 Upload syllabus PDF files to automatically extract important dates, deadlines, and course information.
             </p>
@@ -138,7 +191,7 @@ export default function SyllabusReader() {
                                     </p>
                                 </div>
                             </div>
-                            
+
                             <button
                                 onClick={() => removeFile(idx)}
                                 className="text-red-500 hover:text-red-700 text-sm font-medium"
@@ -152,20 +205,40 @@ export default function SyllabusReader() {
             )}
 
             {/* Submit Button */}
-            <button
-                onClick={handleSubmit}
-                disabled={loading || files.length === 0}
-                className="mt-6 w-full py-3 bg-blue-600 text-white rounded-xl shadow hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition flex items-center justify-center gap-2 font-medium"
-            >
-                {loading ? (
-                    <>
-                        <Loader className="w-5 h-5 animate-spin" />
-                        Processing {processingFile}...
-                    </>
-                ) : (
-                    <>Process {files.length} {files.length === 1 ? 'PDF' : 'PDFs'}</>
+            <div className="mt-6 space-y-2">
+                <button
+                    onClick={handleSubmit}
+                    disabled={loading || files.length === 0}
+                    className="w-full py-3 bg-blue-600 text-white rounded-xl shadow hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition flex items-center justify-center gap-2 font-medium"
+                >
+                    {loading ? (
+                        <>
+                            <Loader className="w-5 h-5 animate-spin" />
+                            Processing {processingFile}...
+                        </>
+                    ) : (
+                        <>Process {files.length} {files.length === 1 ? 'PDF' : 'PDFs'}</>
+                    )}
+                </button>
+
+                {/* Save to Calendar Button */}
+                {response && (
+                    <button
+                        onClick={saveToCalendar}
+                        disabled={saving}
+                        className="w-full py-3 bg-green-600 text-white rounded-xl shadow hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition flex items-center justify-center gap-2 font-medium"
+                    >
+                        {saving ? (
+                            <>
+                                <Loader className="w-5 h-5 animate-spin" />
+                                Saving {savingFile} results...
+                            </>
+                        ) : (
+                            <>Save results to Calendar</>
+                        )}
+                    </button>
                 )}
-            </button>
+            </div>
 
             {/* Response Preview */}
             {response && (
@@ -174,15 +247,14 @@ export default function SyllabusReader() {
                         <Calendar className="w-6 h-6 text-blue-600" />
                         Extraction Results
                     </h3>
-                    
+
                     {response.map((result, idx) => (
                         <div
                             key={idx}
-                            className={`p-5 rounded-xl border ${
-                                result.success 
-                                    ? 'bg-green-50 border-green-200' 
-                                    : 'bg-red-50 border-red-200'
-                            }`}
+                            className={`p-5 rounded-xl border ${result.success
+                                ? 'bg-green-50 border-green-200'
+                                : 'bg-red-50 border-red-200'
+                                }`}
                         >
                             <div className="flex items-start gap-3 mb-3">
                                 {result.success ? (
@@ -192,7 +264,7 @@ export default function SyllabusReader() {
                                 )}
                                 <div className="flex-1">
                                     <h4 className="font-semibold text-gray-800">{result.fileName}</h4>
-                                    
+
                                     {result.success ? (
                                         <div className="mt-3 space-y-3">
                                             {/* Summary */}
@@ -201,14 +273,14 @@ export default function SyllabusReader() {
                                                     {result.data.total_dates_found}
                                                 </span> date(s)
                                             </div>
-                                            
+
                                             {/* Dates List */}
                                             {result.data.dates && result.data.dates.length > 0 && (
                                                 <div className="space-y-2">
                                                     <p className="text-sm font-medium text-gray-700">Extracted Dates:</p>
                                                     <div className="space-y-2 max-h-64 overflow-y-auto">
                                                         {result.data.dates.map((dateInfo, dateIdx) => (
-                                                            <div 
+                                                            <div
                                                                 key={dateIdx}
                                                                 className="p-3 bg-white rounded-lg border border-gray-200"
                                                             >
@@ -230,7 +302,7 @@ export default function SyllabusReader() {
                                                     </div>
                                                 </div>
                                             )}
-                                            
+
                                             {/* Text Preview */}
                                             {result.data.text_preview && (
                                                 <details className="mt-3">
@@ -250,7 +322,7 @@ export default function SyllabusReader() {
                             </div>
                         </div>
                     ))}
-                    
+
                     {/* Raw JSON Toggle */}
                     <details className="bg-gray-50 p-4 rounded-lg border">
                         <summary className="cursor-pointer text-sm font-medium text-gray-700 hover:text-gray-900">
