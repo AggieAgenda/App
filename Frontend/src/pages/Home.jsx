@@ -4,6 +4,8 @@ import homeImage from '../assets/home_Image.png';
 import { Link} from 'react-router-dom';
 import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
+import GoogleLogin from '../components/GoogleLoginButton';
+import GoogleLoginButton from '../components/GoogleLoginButton';
 // Navbar Component
 
 
@@ -71,6 +73,7 @@ export default function AggieAgendaHome() {
                     
                   </button>
                 </Link>
+                <GoogleLoginButton></GoogleLoginButton>
                 <Link to= "documentation/learn-more">
                 <button className="px-8 py-4 border-2 border-[#500000] text-[#500000] text-lg font-semibold rounded-lg hover:bg-[#500000] hover:text-white transition-all">
                   Learn More
