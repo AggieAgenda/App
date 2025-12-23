@@ -86,16 +86,6 @@ The frontend will run on `http://localhost:5173`
 4. Review the extracted events and dates
 5. Confirm to sync with your Google Calendar
 
-## Contributing
-
-Contributions are welcome! Here's how you can help:
-
-- Report bugs or suggest features by opening an issue
-- Improve syllabus parsing accuracy
-- Enhance the user interface
-- Add support for additional file formats
-
-Please discuss major changes via issues before submitting pull requests.
 
 ## License
 
