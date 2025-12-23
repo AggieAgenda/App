@@ -13,8 +13,6 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 import environ # can't find even though downloaded
 import os
-from dotenv import load_dotenv
-from urllib.parse import urlparse, parse_qsl
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -33,7 +31,7 @@ GOOGLE_CLIENT_SECRET = env('GOOGLE_CLIENT_SECRET')
 SECRET_KEY = 'django-insecure-akf6uyv^2+u(%o%fa311t^*eu@h!7umqn8((d*9x0%9ql60b35'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['localhost','127.0.0.1'] # only works with local host
 
@@ -144,18 +142,14 @@ WSGI_APPLICATION = 'Backend.wsgi.application'
 # Add these at the top of your settings.py
 
 
-# Replace the DATABASES section of your settings.py with this
-tmpPostgres = urlparse(os.getenv("DATABASE_URL"))
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': tmpPostgres.path.replace('/', ''),
-        'USER': tmpPostgres.username,
-        'PASSWORD': tmpPostgres.password,
-        'HOST': tmpPostgres.hostname,
-        'PORT': 5432,
-        'OPTIONS': dict(parse_qsl(tmpPostgres.query)),
+        'NAME': os.environ.get('DB_NAME', ''),
+        'USER': os.environ.get('DB_USER', ''),
+        'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+        'HOST': os.environ.get('DB_HOST', ''),
+        'PORT': os.environ.get('DB_PORT', '')
     }
 }
 
