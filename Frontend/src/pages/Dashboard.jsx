@@ -84,9 +84,11 @@ export default function DashboardLayout() {
           <div className="bg-[#500000]/5 rounded-lg p-4">
             <p className="text-sm font-semibold text-gray-800 mb-1">Need Help?</p>
             <p className="text-xs text-gray-600 mb-3">Check out our guide to get started</p>
-            <button className="text-xs text-[#500000] font-semibold hover:underline">
-              View Documentation →
-            </button>
+            <Link to = "/documentation">
+              <button className="text-xs text-[#500000] font-semibold hover:underline">
+                View Documentation →
+              </button>
+            </Link>
           </div>
         </div>
       </aside>
