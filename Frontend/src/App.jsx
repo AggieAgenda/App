@@ -36,7 +36,7 @@ import {Documentation, LearnMore,Solutions} from './pages/Documentation.jsx';
                 <Route path = "/about" element = {<About/>} />
                 <Route path = "/privacy" element = {<Privacy/>} />
                 <Route path = "/program" element = {<Program/>}></Route>
-                <Route path = '/dashboard'element = { /*<ProtectedRoute> */  <Dashboard/> /*</Routes> </ProtectedRoute>  */    }>
+                <Route path = '/dashboard'element = { <ProtectedRoute>   <Dashboard/> </ProtectedRoute>      }>
                     <Route path = 'overview' element = {<Overview/>}></Route>
                     <Route path = 'syllabus' element = {<SyllabusReader/>}></Route>
                     <Route path = 'calendar' element = {<Calendar/>}></Route>

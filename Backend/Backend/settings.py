@@ -136,11 +136,7 @@ CORS_ALLOWED_ORIGINS = ["http://localhost:5173"]
 
 CSRF_TRUSTED_ORIGINS = ["http://localhost:5173"]
 
-SESSION_COOKIE_SAMESITE = "None"
-CSRF_COOKIE_SAMESITE = "None"
 
-SESSION_COOKIE_SECURE = False   # local dev (http)
-CSRF_COOKIE_SECURE = False
 
 
 ROOT_URLCONF = 'Backend.urls'
