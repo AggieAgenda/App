@@ -11,6 +11,7 @@ from dj_rest_auth.registration.views import SocialLoginView
 
 import fitz
 from .syllabusReader import readPDF, extract_dates
+from datetime import datetime
 
 
 # =============================================================================
@@ -590,16 +591,16 @@ class DashboardOverviewView(APIView):
                 {
                     'id': 1,
                     'title': 'Math Assignment',
-                    'due_date': '2024-12-25',
+                    'due_date': '2025-12-25',
                     'due_time': '23:59',
                     'course': 'MATH 101',
                     'type': 'assignment',
-                    'days_until_due': 4
+                    'days_until_due': 8
                 },
                 {
                     'id': 2,
                     'title': 'Physics Exam',
-                    'due_date': '2024-12-28',
+                    'due_date': '2025-12-28',
                     'due_time': '10:00',
                     'course': 'PHYS 201',
                     'type': 'exam',
@@ -650,6 +651,24 @@ class DashboardOverviewView(APIView):
             }
         }
         
+        # --- SORT SECTIONS ---
+
+        # Deadlines: soonest first
+        mock_data['upcoming_deadlines'].sort(
+            key=lambda d: d['days_until_due']
+        )
+
+        # Today's schedule: earliest time first
+        mock_data['today_schedule'].sort(
+            key=lambda s: s['time']
+        )
+
+        # Events: earliest date first
+        mock_data['registered_events'].sort(
+            key=lambda e: e['date']
+        )
+
+
         return Response(mock_data, status=status.HTTP_200_OK)
 
 

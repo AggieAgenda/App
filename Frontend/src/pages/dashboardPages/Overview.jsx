@@ -13,7 +13,34 @@ import {
   Search,
   X
 } from "lucide-react";
+import { useEffect, useState } from "react";
+
 export default function DashboardOverview() {
+    const [dashboard, setDashboard] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+    fetch("http://localhost:8000/api/dashboard/overview/")
+        .then(res => res.json())
+        .then(data => {
+        setDashboard(data);
+        setLoading(false);
+        })
+        .catch(err => {
+        console.error(err);
+        setLoading(false);
+        });
+    }, []);
+
+
+    if (loading) {
+        return <p className="text-gray-500">Loading dashboard...</p>;
+         }
+        const deadlines = dashboard.upcoming_deadlines || [];
+        const schedule = dashboard.today_schedule || [];
+        const events = dashboard.registered_events || [];
+
+    
     return (
         <>  
             
@@ -81,7 +108,103 @@ export default function DashboardOverview() {
                 </div>
             </div>
             </div>
-        
+
+
+                {/* Today's Schedule */}
+        <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-blue-500">
+        <h2 className="text-xl font-bold text-gray-800 mb-4">
+            Today's Schedule
+        </h2>
+
+        <div className="space-y-3">
+            {schedule.length === 0 && (
+            <p className="text-sm text-gray-500">No events today</p>
+            )}
+
+            {schedule.map(item => (
+            <div
+                key={item.id}
+                className="p-3 bg-gray-50 rounded-lg"
+            >
+                <p className="font-semibold text-gray-800">{item.title}</p>
+                <p className="text-sm text-gray-500">
+                {item.time} – {item.end_time}
+                </p>
+                <p className="text-sm text-gray-500">{item.location}</p>
+            </div>
+            ))}
+        </div>
+        </div>
+
+
+
+    {/* Upcoming Deadlines */}
+        <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-red-500">
+        <h2 className="text-xl font-bold text-gray-800 mb-4">
+            Upcoming Deadlines
+        </h2>
+
+        <div className="space-y-4">
+            {deadlines.length === 0 && (
+            <p className="text-sm text-gray-500">No upcoming deadlines</p>
+            )}
+
+            {deadlines.map(item => (
+            <div
+                key={item.id}
+                className="flex justify-between items-center p-4 bg-gray-50 rounded-lg"
+            >
+                <div>
+                <p className="font-semibold text-gray-800">
+                    {item.course} — {item.title}
+                </p>
+                <p className="text-sm text-gray-500">
+                    Due {item.due_date} at {item.due_time}
+                </p>
+                </div>
+
+                <span
+                className={`text-sm font-medium px-3 py-1 rounded-full
+                ${
+                    item.days_until_due <= 3
+                    ? "bg-red-100 text-red-600"
+                    : "bg-yellow-100 text-yellow-700"
+                }`}
+                >
+                {item.days_until_due} days left
+                </span>
+            </div>
+            ))}
+        </div>
+        </div>
+
+
+
+
+{/* Registered Events */}
+<div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-green-500">
+  <h2 className="text-xl font-bold text-gray-800 mb-4">
+    Upcoming Events
+  </h2>
+
+  <div className="space-y-3">
+    {events.length === 0 && (
+      <p className="text-sm text-gray-500">No registered events</p>
+    )}
+
+    {events.map(event => (
+      <div
+        key={event.id}
+        className="p-3 bg-gray-50 rounded-lg"
+      >
+        <p className="font-semibold text-gray-800">{event.title}</p>
+        <p className="text-sm text-gray-500">
+          {event.date} at {event.time}
+        </p>
+      </div>
+    ))}
+  </div>
+</div>
 
         </>
     );
