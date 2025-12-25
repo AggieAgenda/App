@@ -185,10 +185,12 @@ export default function DashboardLayout() {
                       <span className="text-sm">Settings</span>
                     </button>
                     <div className="border-t border-gray-200 mt-2 pt-2">
-                      <button className="w-full px-4 py-2 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 text-red-600">
-                        <LogOut size={16} />
-                        <span className="text-sm">Logout</span>
-                      </button>
+                      <Link to = "/">
+                        <button className="w-full px-4 py-2 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 text-red-600">
+                          <LogOut size={16} />
+                          <span className="text-sm">Logout</span>
+                        </button>
+                      </Link>
                     </div>
                   </div>
                 )}
