@@ -36,9 +36,9 @@ export default function DashboardOverview() {
     if (loading) {
         return <p className="text-gray-500">Loading dashboard...</p>;
          }
-        const deadlines = dashboard.upcoming_deadlines || [];
-        const schedule = dashboard.today_schedule || [];
-        const events = dashboard.registered_events || [];
+    const deadlines = dashboard?.upcoming_deadlines || [];
+    const schedule = dashboard?.today_schedule || [];
+    const events = dashboard?.registered_events || [];
 
     
     return (
@@ -85,33 +85,12 @@ export default function DashboardOverview() {
                 </div>
             </div>
 
-            {/* Recent Activity */}
-            <div className="bg-white rounded-xl shadow-md p-6">
-                <h2 className="text-xl font-bold text-gray-800 mb-4">Recent Activity</h2>
-                <div className="space-y-3">
-                {[
-                    { title: "CSCE 314 Syllabus uploaded", time: "2 hours ago", type: "success" },
-                    { title: "Career Fair added to calendar", time: "5 hours ago", type: "info" },
-                    { title: "MATH 251 Exam reminder", time: "1 day ago", type: "warning" }
-                ].map((item, idx) => (
-                    <div key={idx} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                    <div className={`w-2 h-2 rounded-full ${
-                        item.type === 'success' ? 'bg-green-500' : 
-                        item.type === 'info' ? 'bg-blue-500' : 'bg-yellow-500'
-                    }`}></div>
-                    <div className="flex-1">
-                        <p className="font-medium text-gray-800">{item.title}</p>
-                        <p className="text-sm text-gray-500">{item.time}</p>
-                    </div>
-                    </div>
-                ))}
-                </div>
-            </div>
+            
             </div>
 
 
                 {/* Today's Schedule */}
-        <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-blue-500">
+        <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-yellow-500">
         <h2 className="text-xl font-bold text-gray-800 mb-4">
             Today's Schedule
         </h2>
@@ -181,30 +160,30 @@ export default function DashboardOverview() {
 
 
 
-{/* Registered Events */}
-<div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-green-500">
-  <h2 className="text-xl font-bold text-gray-800 mb-4">
-    Upcoming Events
-  </h2>
+    {/* Registered Events */}
+    <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-green-500">
+    <h2 className="text-xl font-bold text-gray-800 mb-4">
+        Upcoming Events
+    </h2>
 
-  <div className="space-y-3">
-    {events.length === 0 && (
-      <p className="text-sm text-gray-500">No registered events</p>
-    )}
+    <div className="space-y-3">
+        {events.length === 0 && (
+        <p className="text-sm text-gray-500">No registered events</p>
+        )}
 
-    {events.map(event => (
-      <div
-        key={event.id}
-        className="p-3 bg-gray-50 rounded-lg"
-      >
-        <p className="font-semibold text-gray-800">{event.title}</p>
-        <p className="text-sm text-gray-500">
-          {event.date} at {event.time}
-        </p>
-      </div>
-    ))}
-  </div>
-</div>
+        {events.map(event => (
+        <div
+            key={event.id}
+            className="p-3 bg-gray-50 rounded-lg"
+        >
+            <p className="font-semibold text-gray-800">{event.title}</p>
+            <p className="text-sm text-gray-500">
+            {event.date} at {event.time}
+            </p>
+        </div>
+        ))}
+    </div>
+    </div>
 
         </>
     );

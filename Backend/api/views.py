@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.parsers import MultiPartParser, FormParser
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated,AllowAny
 
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
@@ -572,6 +572,7 @@ class DashboardOverviewView(APIView):
     Returns summary information for the user's dashboard.
     """
     # permission_classes = [IsAuthenticated]  # Uncomment for production
+    permission_classes = [AllowAny]  # Temporary for testing
     
     def get(self, request, *args, **kwargs):
         """
