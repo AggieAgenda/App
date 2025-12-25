@@ -48,9 +48,9 @@ export default function Navbar() {
             About
             <span className="absolute w-0 left-0 -bottom-1 h-[2px] bg-[#500000] transition-all duration-300 group-hover:w-full" />
           </Link>
-          <button onClick = {Func} className="px-6 py-2.5 rounded-lg bg-[#500000] text-white hover:bg-[#700000] transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+          <Link to="/login" className="px-6 py-2.5 rounded-lg bg-[#500000] text-white hover:bg-[#700000] transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
             Login
-          </button>
+          </Link>
         </div>
 
         {/* Mobile Menu Button */}

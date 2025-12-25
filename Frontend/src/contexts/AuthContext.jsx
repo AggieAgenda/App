@@ -51,7 +51,7 @@ useEffect(() => {
 
   // Login function - redirects to Google OAuth
   const login = () => {
-  const next = encodeURIComponent("http://localhost:5173/dashboard");
+  const next = encodeURIComponent("http://localhost:5173/dashboard/overview");
   window.location.href = `${API_URL}/accounts/google/login/?next=${next}`;
 };
 
