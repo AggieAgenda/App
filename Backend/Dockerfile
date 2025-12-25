@@ -22,5 +22,5 @@ COPY . /app
 EXPOSE 10000
 
 # Replace 'api' with the name of the folder containing your wsgi.py file
-CMD ["gunicorn", "api.wsgi:application", "--bind", "0.0.0.0:10000"]
+CMD ["gunicorn", "Backend.wsgi:application", "--bind", "0.0.0.0:10000"]
 
