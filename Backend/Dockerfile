@@ -18,7 +18,9 @@ COPY . /app
 
 # maybe make django user 
 
-EXPOSE 8000
+# Render uses port 10000 by default for free/starter tiers
+EXPOSE 10000
 
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# Replace 'api' with the name of the folder containing your wsgi.py file
+CMD ["gunicorn", "api.wsgi:application", "--bind", "0.0.0.0:10000"]
 
