@@ -1,4 +1,4 @@
-import Calendar from "../../pages/Calendar.jsx";
+import Calendar from "../../pages/DashboardPages/Calendar.jsx";
 import CalendarButton from "./CalendarButton.jsx"
 import React, { useState } from "react";
 

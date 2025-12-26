@@ -1,3 +1,5 @@
 AgendaKey.pem   
 myvenv/
+myenv/
 .env
+.venv
