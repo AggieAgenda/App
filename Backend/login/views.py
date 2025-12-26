@@ -23,6 +23,106 @@ def create_test_data(request):
     return HttpResponse(f"Success! Saved '{new_item.name}' to the database. Total entries: {total_count}")
 
 
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def register(request):
+    """
+    Register a new user with email and password
+    """
+    try:
+        first_name = request.data.get('first_name', '')
+        last_name = request.data.get('last_name', '')
+        email = request.data.get('email')
+        password = request.data.get('password')
+        
+        # Validation
+        if not email or not password:
+            return Response({
+                'error': 'Email and password are required'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Check if user already exists
+        if User.objects.filter(email=email).exists():
+            return Response({
+                'error': 'A user with this email already exists'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Create user
+        user = User.objects.create_user(
+            username=email,  # Use email as username
+            email=email,
+            password=password,
+            first_name=first_name,
+            last_name=last_name
+        )
+        
+        # Create token
+        token, created = Token.objects.get_or_create(user=user)
+        
+        # Serialize user data
+        serializer = UserSerializer(user)
+        
+        return Response({
+            'token': token.key,
+            'user': serializer.data,
+            'message': 'Account created successfully'
+        }, status=status.HTTP_201_CREATED)
+        
+    except Exception as e:
+        return Response({
+            'error': str(e)
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def login_with_email(request):
+    """
+    Login with email and password
+    """
+    try:
+        email = request.data.get('email')
+        password = request.data.get('password')
+        
+        if not email or not password:
+            return Response({
+                'error': 'Email and password are required'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Try to find user by email
+        try:
+            user = User.objects.get(email=email)
+            username = user.username
+        except User.DoesNotExist:
+            return Response({
+                'error': 'Invalid credentials'
+            }, status=status.HTTP_401_UNAUTHORIZED)
+        
+        # Authenticate
+        user = authenticate(username=username, password=password)
+        
+        if user is None:
+            return Response({
+                'error': 'Invalid credentials'
+            }, status=status.HTTP_401_UNAUTHORIZED)
+        
+        # Get or create token
+        token, created = Token.objects.get_or_create(user=user)
+        
+        # Serialize user data
+        serializer = UserSerializer(user)
+        
+        return Response({
+            'token': token.key,
+            'user': serializer.data
+        })
+        
+    except Exception as e:
+        return Response({
+            'error': str(e)
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def google_login(request):

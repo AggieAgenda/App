@@ -47,8 +47,8 @@ export default function SyllabusReader() {
 
                 const formData = new FormData();
                 formData.append("file", file);
-
-                const res = await fetch("http://127.0.0.1:8000/api/syllabus/", {
+                console.log("test")
+                const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/syllabus/`, {
                     method: "POST",
                     body: formData,
                 });
@@ -97,7 +97,9 @@ export default function SyllabusReader() {
 
                 for (const date of result.data.dates) {
                     try {
-                        const res = await fetch("http://127.0.0.1:8000/api/calendar/events/", {
+                        console.log(`${import.meta.env.VITE_BACKEND_URL}/api/calendar/events/" `)
+                        console.log("Testing")
+                        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/calendar/events/`, {
                             method: "POST",
                             headers: {
                                 "Content-Type": "application/json",

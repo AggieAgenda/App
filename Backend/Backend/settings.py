@@ -5,6 +5,8 @@ Django settings for Backend project.
 from pathlib import Path
 import environ
 import os
+from dotenv import load_dotenv
+from urllib.parse import urlparse, parse_qsl
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,8 +23,6 @@ SECRET_KEY = env('SECRET_KEY')  # Move secret key to .env file!
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool('DEBUG', default=False)
-
-ALLOWED_HOSTS = ['localhost','127.0.0.1'] # only works with local host
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['localhost', '127.0.0.1'])
 
@@ -136,11 +136,7 @@ CORS_ALLOWED_ORIGINS = ["http://localhost:5173"]
 
 CSRF_TRUSTED_ORIGINS = ["http://localhost:5173"]
 
-SESSION_COOKIE_SAMESITE = "None"
-CSRF_COOKIE_SAMESITE = "None"
 
-SESSION_COOKIE_SECURE = False   # local dev (http)
-CSRF_COOKIE_SECURE = False
 
 
 ROOT_URLCONF = 'Backend.urls'
@@ -168,11 +164,12 @@ tmpPostgres = urlparse(os.getenv("DATABASE_URL"))
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME', ''),
-        'USER': os.environ.get('DB_USER', ''),
-        'PASSWORD': os.environ.get('DB_PASSWORD', ''),
-        'HOST': os.environ.get('DB_HOST', ''),
-        'PORT': os.environ.get('DB_PORT', '')
+        'NAME': tmpPostgres.path.replace('/', ''),
+        'USER': tmpPostgres.username,
+        'PASSWORD': tmpPostgres.password,
+        'HOST': tmpPostgres.hostname,
+        'PORT': 5432,
+        'OPTIONS': dict(parse_qsl(tmpPostgres.query)),
     }
 }
 
