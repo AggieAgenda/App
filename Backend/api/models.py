@@ -8,7 +8,7 @@ class EventsEntry(models.Model):
     endTime = models.TimeField()
     # other event information
 
-class OrganizationEntry(model.Model):
+class OrganizationEntry(models.Model):
     name = models.CharField(max_length=100)
     # other organization information
     
