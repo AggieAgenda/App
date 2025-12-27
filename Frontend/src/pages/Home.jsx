@@ -10,7 +10,7 @@ import GoogleLoginButton from '../components/GoogleLoginButton';
 
 
 // Feature Card Component
-function FeatureCard({ icon: Icon, title, description, imageSrc, reverse }) {
+function FeatureCard({ Icon, title, description, imageSrc, reverse }) {
   return (
     <div className={`flex flex-col ${reverse ? 'md:flex-row-reverse' : 'md:flex-row'} items-center gap-8 md:gap-12 mb-20`}>
       <div className="flex-1 space-y-4">
@@ -66,14 +66,20 @@ export default function AggieAgendaHome() {
                 The smarter way to synchronize all your academic events. Organized, simple, and in sync.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                <Link to="dashboard\overview">
+                <Link to="/signup">
                   <button className="px-8 py-4 bg-[#500000] text-white text-lg font-semibold rounded-lg shadow-lg hover:bg-[#700000] hover:shadow-xl transform hover:-translate-y-1 transition-all flex items-center justify-center gap-2">
                     Get Started
                     <ArrowRight size={20} />
                     
                   </button>
                 </Link>
-                <GoogleLoginButton></GoogleLoginButton>
+                <Link to = "/dashboard/overview">
+                  <button className="px-8 py-4 bg-[#450000] text-white text-lg font-semibold rounded-lg shadow-lg hover:bg-[#700000] hover:shadow-xl transform hover:-translate-y-1 transition-all flex items-center justify-center gap-2">
+                    Skip Login
+                    <ArrowRight size={20} />
+                    
+                  </button>
+                </Link>
                 <Link to= "documentation/learn-more">
                 <button className="px-8 py-4 border-2 border-[#500000] text-[#500000] text-lg font-semibold rounded-lg hover:bg-[#500000] hover:text-white transition-all">
                   Learn More
@@ -113,7 +119,7 @@ export default function AggieAgendaHome() {
           </div>
 
           <FeatureCard
-            icon={Calendar}
+            Icon={Calendar}
             title="One Shot Your Calendar"
             description="Pull every assignment, exam, and event into a single clean view instantly. No more juggling Canvas, Gmail, clubs, and class reminders. One click, and you're organized for the semester."
             imageSrc="https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=800&q=80"
@@ -121,7 +127,7 @@ export default function AggieAgendaHome() {
           />
 
           <FeatureCard
-            icon={Upload}
+            Icon={Upload}
             title="Reads Your Syllabus"
             description="Stop manually entering dates. Our algorithm instantly processes your syllabus and extracts every deadline, exam, and reading. Whether it's a PDF, DOC, or photo, we find all the key dates so you don't have to."
             imageSrc="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&q=80"
@@ -129,7 +135,7 @@ export default function AggieAgendaHome() {
           />
 
           <FeatureCard
-            icon={Download}
+            Icon={Download}
             title="Export To Google Calendar"
             description="Send your full schedule straight to Google Calendar with zero manual input. Access your day at a glance whether you're on your phone rushing to class or planning out your week."
             imageSrc=" https://cdn.dribbble.com/userupload/42320361/file/original-5f30f82a2c4b30bcda8761587f11a40c.gif"
@@ -137,7 +143,7 @@ export default function AggieAgendaHome() {
           />
 
           <FeatureCard
-            icon={MapPin}
+            Icon={MapPin}
             title="Find Events on Campus"
             description="Discover everything happening at Texas A&M from career fairs to club meetings to special campus events. Stay involved, stay informed, and never miss what matters."
             imageSrc="https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=800&q=80"
@@ -145,7 +151,7 @@ export default function AggieAgendaHome() {
           />
 
           <FeatureCard
-            icon={Users}
+            Icon={Users}
             title="Running a Student Org?"
             description="Promote your organization, reach more Aggies, and boost attendance at your events all in one place. Share your schedule on Aggie Agenda and make it easier than ever for students to get involved."
             imageSrc="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&q=80"

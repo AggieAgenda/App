@@ -19,8 +19,11 @@ export default function DashboardOverview() {
     const [dashboard, setDashboard] = useState(null);
     const [loading, setLoading] = useState(true);
 
+
+    const API_URL = import.meta.env.VITE_BACKEND_URL;
+
     useEffect(() => {
-    fetch("http://localhost:8000/api/dashboard/overview/")
+    fetch(`${API_URL}/api/dashboard/overview/`)
         .then(res => res.json())
         .then(data => {
         setDashboard(data);

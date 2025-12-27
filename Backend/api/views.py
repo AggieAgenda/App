@@ -3,7 +3,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.parsers import MultiPartParser, FormParser
-from rest_framework.permissions import IsAuthenticated,AllowAny
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny
 
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
@@ -32,6 +33,7 @@ class PDFScraperView(APIView):
     API endpoint for uploading and parsing syllabus PDFs.
     Extracts dates and course information from uploaded PDF files.
     """
+    permission_classes = [AllowAny]
     parser_classes = (MultiPartParser, FormParser)
     # permission_classes = [IsAuthenticated]  # Uncomment for production
     

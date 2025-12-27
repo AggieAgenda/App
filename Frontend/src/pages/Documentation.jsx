@@ -1,5 +1,5 @@
 // src/pages/Features.jsx
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import NavBar from "../components/Navbar.jsx";
 import Footer from "../components/Footer.jsx";
 import SearchBar from '../components/SearchBar.jsx';

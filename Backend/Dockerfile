@@ -1,0 +1,26 @@
+FROM python:3.12-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 
+ENV PYTHONUNBUFFERED=1
+
+WORKDIR /app
+
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    libpq-dev \
+  && rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt /app/requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . /app
+
+# maybe make django user 
+
+# Render uses port 10000 by default for free/starter tiers
+EXPOSE 10000
+
+# Replace 'api' with the name of the folder containing your wsgi.py file
+CMD ["gunicorn", "Backend.wsgi:application", "--bind", "0.0.0.0:10000"]
+

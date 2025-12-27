@@ -1,12 +1,14 @@
 import React from 'react';
-import { useAuth } from '../contexts/AuthContext';
 
 export default function GoogleLoginButton({ className = '' }) {
-  const { login } = useAuth();
+  const handleGoogleLogin = () => {
+    // Simply redirect to backend OAuth
+    window.location.href = 'http://127.0.0.1:8000/accounts/google/login/';
+  };
 
   return (
-    <button type= "button"
-      onClick={login}
+    <button
+      onClick={handleGoogleLogin}
       className={`flex items-center justify-center gap-3 px-6 py-3 bg-white border-2 border-gray-300 rounded-lg hover:border-[#500000] hover:shadow-lg transition-all ${className}`}
     >
       <svg className="w-5 h-5" viewBox="0 0 24 24">
