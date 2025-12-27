@@ -120,13 +120,45 @@ export default function DashboardOverview() {
     const events = dashboard?.registered_events || [];
 
     return (
-        <>  
+        
             <div className="space-y-6">
-                <h1 className="text-3xl font-bold text-gray-800">Welcome to Your Dashboard</h1>
-                
-                {/* Quick Stats Cards - keep as is */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {/* ... your existing stats cards ... */}
+            <h1 className="text-3xl font-bold text-gray-800">Welcome to Your Dashboard</h1>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {/* Quick Stats Cards */}
+                <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-[#500000]">
+                <div className="flex items-center justify-between">
+                    <div>
+                    <p className="text-gray-500 text-sm">Upcoming Events</p>
+                    <p className="text-3xl font-bold text-gray-800 mt-1">0</p>
+                    </div>
+                    <div className="bg-[#500000]/10 p-3 rounded-lg">
+                    <Calendar className="text-[#500000]" size={24} />
+                    </div>
+                </div>
+                </div>
+
+                <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-blue-500">
+                <div className="flex items-center justify-between">
+                    <div>
+                    <p className="text-gray-500 text-sm">Syllabi Uploaded</p>
+                    <p className="text-3xl font-bold text-gray-800 mt-1">0</p>
+                    </div>
+                    <div className="bg-blue-500/10 p-3 rounded-lg">
+                    <FileText className="text-blue-500" size={24} />
+                    </div>
+                </div>
+                </div>
+
+                <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-green-500">
+                <div className="flex items-center justify-between">
+                    <div>
+                    <p className="text-gray-500 text-sm">Campus Events</p>
+                    <p className="text-3xl font-bold text-gray-800 mt-1">0</p>
+                    </div>
+                    <div className="bg-green-500/10 p-3 rounded-lg">
+                    <MapPin className="text-green-500" size={24} />
+                    </div>
+                </div>
                 </div>
             </div>
 
@@ -261,6 +293,6 @@ export default function DashboardOverview() {
                     ))}
                 </div>
             </div>
-        </>
+        </div>
     );
 }
