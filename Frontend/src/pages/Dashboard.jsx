@@ -245,9 +245,11 @@ export default function DashboardLayout() {
               </div>
 
               {/* Settings */}
-              <button className="p-2 rounded-lg hover:bg-gray-100 transition-colors">
-                <Settings size={22} className="text-gray-700" />
-              </button>
+              <Link to= 'settings' >
+                <button className="p-2 rounded-lg hover:bg-gray-100 transition-colors">
+                  <Settings size={22} className="text-gray-700" />
+                </button>
+              </Link>
 
               {/* User Menu */}
               <div className="relative">
@@ -269,14 +271,18 @@ export default function DashboardLayout() {
                       <p className="font-semibold text-gray-800">John Doe</p>
                       <p className="text-sm text-gray-500">john.doe@tamu.edu</p>
                     </div>
-                    <button className="w-full px-4 py-2 text-left hover:bg-gray-50 transition-colors flex items-center gap-2">
-                      <User size={16} />
-                      <span className="text-sm">Profile</span>
-                    </button>
-                    <button className="w-full px-4 py-2 text-left hover:bg-gray-50 transition-colors flex items-center gap-2">
-                      <Settings size={16} />
-                      <span className="text-sm">Settings</span>
-                    </button>
+                    <Link to="profile">
+                      <button className="w-full px-4 py-2 text-left hover:bg-gray-50 transition-colors flex items-center gap-2">
+                        <User size={16} />
+                        <span className="text-sm">Profile</span>
+                      </button>
+                    </Link>
+                    <Link to="settings">
+                      <button className="w-full px-4 py-2 text-left hover:bg-gray-50 transition-colors flex items-center gap-2">
+                        <Settings size={16} />
+                        <span className="text-sm">Settings</span>
+                      </button>
+                    </Link>
                     <div className="border-t border-gray-200 mt-2 pt-2">
                       <Link to="/">
                         <button className="w-full px-4 py-2 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 text-red-600">
@@ -295,7 +301,29 @@ export default function DashboardLayout() {
         {/* Content Area */}
         <main className="flex-1 overflow-y-auto bg-gray-50">
           <div className="max-w-7xl mx-auto p-4 md:p-6">
-            <Outlet />
+            <Outlet  />
+
+            <div className="py-10"></div>
+            <div className="bg-[#500000]/5 rounded-lg p-4">
+              <p className="text-sm font-semibold text-gray-800 mb-1">We are in beta testing</p>
+              <p className="text-xs text-gray-600 mb-3">Not all functionality may be there yet, if you have any issues feel free to reach out</p>
+              <Link to="../contact">
+                <button className="text-xs text-[#500000] font-semibold hover:underline">
+                  Reach out →
+                </button>
+              </Link>
+            </div>
+        
+            <div className="bg-[#008000]/5 rounded-lg p-4">
+              <p className="text-sm font-semibold text-gray-800 mb-1">Want to upload events ?</p>
+              <p className="text-xs text-gray-600 mb-3">Apply to get an Organization account on the settings page or reach out on instagram or by email</p>
+              <Link to="../contact">
+                <button className="text-xs text-[#008000] font-semibold hover:underline">
+                  Reach out →
+                </button>
+              </Link>
+            </div>
+            {/*Add donation link here later */}
           </div>
         </main>
       </div>
