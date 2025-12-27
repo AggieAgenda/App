@@ -31,12 +31,6 @@ export default function About() {
       linkedin: "https://www.linkedin.com/in/patricksemler/"
     }
     ,
-    {
-      name: "",
-      role: "Project Member",
-      image:"data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",
-      linkedin: "https://www.linkedin.com/in/patricksemler/"
-    }
 
   ]
   const former = [ // former stack people
