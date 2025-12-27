@@ -19,6 +19,7 @@ import SyllabusReader from './pages/DashboardPages/Syllabus.jsx'
 import Overview from './pages/DashboardPages/Overview.jsx'
 import Organizations from './pages/DashboardPages/Organizations.jsx'
 import OrganizationView from './pages/DashboardPages/OrganizationView.jsx';
+import Grades from './pages/DashboardPages/Grades.jsx'
 import {Documentation, LearnMore,Solutions} from './pages/Documentation.jsx';
 
  function App() {
@@ -47,6 +48,7 @@ import {Documentation, LearnMore,Solutions} from './pages/Documentation.jsx';
                     <Route path = 'events' element = {<Events/>}></Route>
                     <Route path = 'organizations' element = {<Organizations/>}></Route>
                     <Route path = 'organization-view' element = {<OrganizationView/>}></Route>
+                    <Route path = 'grades' element = {<Grades/>}></Route>
 
                 </Route>
                 
