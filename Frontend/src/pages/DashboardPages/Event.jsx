@@ -49,7 +49,8 @@ export default function Event() {
   const [selectedTags, setSelectedTags] = useState(new Set());
   const [calendarMonth, setCalendarMonth] = useState(() => startOfMonth(new Date()));
 
-  const events = [
+  const events = useMemo(
+    () => [
     {
       title: "Midnight Yell",
       date: "2025-02-14",
@@ -98,7 +99,9 @@ export default function Event() {
         "Celebrate receiving your Aggie Ring — a symbol of hard work, tradition, and achievement.",
       tags: ["tradition", "campus"],
     },
-  ];
+  ],
+    []
+  );
 
   // Collect all tags for chips
   const allTags = useMemo(() => {
