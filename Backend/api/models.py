@@ -1,14 +1,12 @@
 from django.db import models
 
-# Create your models here.
-class EventsEntry(models.Model):
-    name = models.CharField(max_length=100)
-    organization = models.CharField(max_length=100)
-    startTime = models.TimeField()
-    endTime = models.TimeField()
-    # other event information
+class Event(models.Model):
+    title = models.CharField(max_length=200)
+    image = models.URLField(blank=True, null=True)
+    description = models.TextField()
+    link = models.URLField(blank=True, null=True)
+    date = models.DateField()
+    tags = models.JSONField(default=list)
 
-class OrganizationEntry(model.Model):
-    name = models.CharField(max_length=100)
-    # other organization information
-    
+    def __str__(self):
+        return self.title

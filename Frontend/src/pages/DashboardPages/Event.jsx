@@ -1,5 +1,5 @@
 // src/pages/Event.jsx
-import { useMemo, useState } from "react";
+import {useEffect, useMemo, useState } from "react";
 
 const MAROON = "#500000";
 
@@ -48,57 +48,42 @@ export default function Event() {
   const [mode, setMode] = useState("recommended"); // "recommended" | "overall" | "calendar"
   const [selectedTags, setSelectedTags] = useState(new Set());
   const [calendarMonth, setCalendarMonth] = useState(() => startOfMonth(new Date()));
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const events = [
-    {
-      title: "Midnight Yell",
-      date: "2025-02-14",
-      image: "/midnight_yell.jpg",
-      description:
-        "Join fellow Aggies at Kyle Field for the iconic midnight tradition before every home game.",
-      tags: ["tradition", "free", "campus"],
-    },
-    {
-      title: "Muster",
-      date: "2025-04-21",
-      image: "/AggieMuster.jpg",
-      description:
-        "A cherished ceremony honoring Aggies who have passed, reminding us that once an Aggie, always an Aggie.",
-      tags: ["tradition", "campus"],
-    },
-    {
-      title: "Fish Camp",
-      date: "2025-08-01",
-      image: "/fish_camp_run1.jpg",
-      description:
-        "Welcome new Aggies to campus life with a week of bonding, laughter, and unforgettable traditions.",
-      tags: ["tradition", "freshmen", "campus"],
-    },
-    {
-      title: "Silver Taps",
-      date: "2025-03-03",
-      image: "/silver_taps_run1.jpg",
-      description:
-        "A solemn ceremony held to honor the memory of students who have passed away during the year.",
-      tags: ["tradition", "campus"],
-    },
-    {
-      title: "Career Fair",
-      date: "2025-09-20",
-      image: "/career_fair_run1.jpg",
-      description:
-        "Meet recruiters and explore opportunities with top companies seeking Aggie engineers and leaders.",
-      tags: ["career fair", "business", "tech", "computer science"],
-    },
-    {
-      title: "Ring Day",
-      date: "2025-04-25",
-      image: "/aggie_ringday_run1.jpg",
-      description:
-        "Celebrate receiving your Aggie Ring — a symbol of hard work, tradition, and achievement.",
-      tags: ["tradition", "campus"],
-    },
-  ];
+  useEffect(() => {
+    async function loadEvents() {
+      try {
+        const res = await fetch("http://127.0.0.1:8000/api/events/");
+        const data = await res.json();
+
+        console.log("EVENTS FROM API:", data);
+
+        const normalized = data.map(e => {
+          let tags = [];
+
+          if (Array.isArray(e.tags)) {
+            tags = e.tags;
+          } else if (typeof e.tags === "string" && e.tags.trim() !== "") {
+            tags = [e.tags]; // convert "test" → ["test"]
+          }
+
+          return {
+            ...e,
+            tags,
+            date: e.event_date,
+          };
+        });
+
+        setEvents(normalized);
+      } catch (err) {
+        console.error("Failed to load events:", err);
+      }
+    }
+
+    loadEvents();
+  }, []);
+
 
   // Collect all tags for chips
   const allTags = useMemo(() => {

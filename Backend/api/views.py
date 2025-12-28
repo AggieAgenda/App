@@ -12,6 +12,8 @@ from dj_rest_auth.registration.views import SocialLoginView
 
 import fitz
 from .syllabusReader import readPDF, extract_dates
+from .serializers import EventSerializer
+from .models import Event
 
 
 # =============================================================================
@@ -253,6 +255,17 @@ class CalendarEventsView(APIView):
             'success': True,
             'message': f'Event {event_id} deleted successfully'
         }, status=status.HTTP_200_OK)
+
+# =============================================================================
+# EVENT LIST API
+# =============================================================================
+
+class EventListAPIView(APIView):
+    permission_classes = [AllowAny]
+    def get(self, request):
+        events = Event.objects.all().order_by("date")
+        serializer = EventSerializer(events, many=True)
+        return Response(serializer.data)
 
 
 # =============================================================================
