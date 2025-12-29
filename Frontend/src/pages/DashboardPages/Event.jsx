@@ -8,8 +8,22 @@ function classNames(...xs) {
 }
 
 function formatDate(dateStr) {
+  if (!dateStr) return "No date";
+
   const d = new Date(dateStr + "T00:00:00");
-  return d.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+  if (isNaN(d)) return "No date";
+
+  return d.toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+function getEventDate(event) {
+  if (!event?.date) return null;
+
+  const d = new Date(event.date + "T00:00:00");
+  return isNaN(d) ? null : d;
 }
 
 function monthKey(date) {
@@ -57,23 +71,15 @@ export default function Event() {
         const res = await fetch("http://127.0.0.1:8000/api/events/");
         const data = await res.json();
 
-        console.log("EVENTS FROM API:", data);
-
-        const normalized = data.map(e => {
-          let tags = [];
-
-          if (Array.isArray(e.tags)) {
-            tags = e.tags;
-          } else if (typeof e.tags === "string" && e.tags.trim() !== "") {
-            tags = [e.tags]; // convert "test" → ["test"]
-          }
-
-          return {
-            ...e,
-            tags,
-            date: e.event_date,
-          };
-        });
+        const normalized = data.map(e => ({
+          ...e,
+          date: e.date, // ✅ STRING, no conversion
+          tags: Array.isArray(e.tags)
+            ? e.tags
+            : typeof e.tags === "string" && e.tags.trim() !== ""
+            ? [e.tags]
+            : [],
+        }));
 
         setEvents(normalized);
       } catch (err) {
@@ -120,7 +126,11 @@ export default function Event() {
 
         return matchesSearch && matchesTags;
       })
-      .sort((a, b) => new Date(a.date) - new Date(b.date));
+      .sort((a, b) => {
+        const da = new Date(a.date + "T00:00:00");
+        const db = new Date(b.date + "T00:00:00");
+        return da - db;
+      });
   }, [events, search, selectedTags]);
 
   // A simple “recommended” score you can improve later
@@ -138,24 +148,24 @@ export default function Event() {
     };
 
     const scoreEvent = (e) => {
-      const eventDate = new Date(e.date + "T00:00:00");
-      const daysAway = daysDiff(now, eventDate);
+      const eventDate = getEventDate(e);
+      if (!eventDate) return -999;
 
-      // Past events should drop off
+      const daysAway = daysDiff(now, eventDate);
       if (daysAway < 0) return -999;
 
-      // Upcoming boost (peaks around 0-14, fades by 45)
       const soonBoost = Math.max(0, 45 - daysAway) / 10;
 
-      // Tag match boost based on user selection
       const tagMatchBoost =
         selectedTags.size === 0
           ? 0
-          : (e.tags || []).reduce((acc, t) => acc + (selectedTags.has(t) ? 1.25 : 0), 0);
+          : e.tags.reduce(
+              (acc, t) => acc + (selectedTags.has(t) ? 1.25 : 0),
+              0
+            );
 
-      // Global tag boosts
       const tagBoost =
-        (e.tags || []).reduce((acc, t) => acc + (boosts[t] || 0), 0) / 2;
+        e.tags.reduce((acc, t) => acc + (boosts[t] || 0), 0) / 2;
 
       return soonBoost + tagMatchBoost + tagBoost;
     };
@@ -412,7 +422,11 @@ export default function Event() {
                 Events in {calendarMonth.toLocaleDateString("en-US", { month: "long" })}
               </h3>
               <EventList
-                events={filteredEvents.filter((e) => monthKey(new Date(e.date + "T00:00:00")) === monthKey(calendarMonth))}
+                events={filteredEvents.filter((e) => {
+                  if (!e.date) return false;
+                  const d = new Date(e.date + "T00:00:00");
+                  return !isNaN(d) && monthKey(d) === monthKey(calendarMonth);
+                })}
               />
             </div>
           </Section>
@@ -504,7 +518,7 @@ function EventList({ events }) {
 function EventCard({ event }) {
   const MAROON = "#500000";
   return (
-    <div className="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-md transition">
+    <div className="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-md transition hover:scale-103">
       <img src={event.image} alt={event.title} className="w-full h-44 object-cover" />
       <div className="p-4">
         <h3 className="text-xl font-extrabold mb-1" style={{ color: MAROON }}>
