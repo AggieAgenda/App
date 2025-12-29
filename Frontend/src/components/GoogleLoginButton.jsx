@@ -3,7 +3,7 @@ import React from 'react';
 export default function GoogleLoginButton({ className = '' }) {
   const handleGoogleLogin = () => {
     // Simply redirect to backend OAuth
-    window.location.href = 'http://127.0.0.1:8000/accounts/google/login/';
+    window.location.href = `${import.meta.env.VITE_BACKEND_URL}/accounts/google/login/`;
   };
 
   return (
