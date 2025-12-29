@@ -35,50 +35,46 @@ function GetEventsForDay(eventsObj, date) {
 }
 
 function ExpandRecurringEvents(eventsObj, startDate, endDate) {
-  if (!eventsObj) return [];
   const expanded = [];
-
+  
   Object.values(eventsObj).forEach(evt => {
     const eventStart = new Date(evt.start);
-
+    
+    // Non-recurring event
     if (!evt.recurrence) {
       if (eventStart >= startDate && eventStart <= endDate) {
-        expanded.push(evt);
+        expanded.push({ ...evt, instanceDate: eventStart });
       }
       return;
     }
 
+    // Recurring event - simplified expansion
     const { freq, byDay, count } = evt.recurrence;
     const dayMap = { SU: 0, MO: 1, TU: 2, WE: 3, TH: 4, FR: 5, SA: 6 };
-    const max = count || 52;
-
-    let cursor = new Date(eventStart);
+    
+    let currentDate = new Date(eventStart);
     let instances = 0;
+    const maxInstances = count || 52; // Default to ~1 year
 
-    while (cursor <= endDate && instances < max) {
-      const dayKey = Object.keys(dayMap).find(k => dayMap[k] === cursor.getDay());
-      const isValidDay =
-        freq === "DAILY" ||
-        (freq === "WEEKLY" && byDay?.includes(dayKey));
+    while (currentDate <= endDate && instances < maxInstances) {
+      const isException = evt.exceptions?.some(ex => 
+        IsSameDay(new Date(ex), currentDate)
+      );
 
-      if (isValidDay && cursor >= startDate) {
-        const start = new Date(cursor);
-        start.setHours(eventStart.getHours(), eventStart.getMinutes());
-
-        const end = evt.end
-          ? new Date(start.getTime() + (new Date(evt.end) - eventStart))
-          : null;
-
-        expanded.push({
-          ...evt,
-          start: start.toISOString(),
-          end: end?.toISOString() || null,
-        });
-
-        instances++;
+      if (!isException && currentDate >= startDate) {
+        if (freq === "DAILY" || 
+            (freq === "WEEKLY" && byDay?.includes(Object.keys(dayMap).find(k => dayMap[k] === currentDate.getDay())))) {
+          expanded.push({ 
+            ...evt, 
+            instanceDate: new Date(currentDate),
+            start: new Date(currentDate.setHours(eventStart.getHours(), eventStart.getMinutes())).toISOString(),
+            end: evt.end ? new Date(currentDate.setHours(new Date(evt.end).getHours(), new Date(evt.end).getMinutes())).toISOString() : null
+          });
+          instances++;
+        }
       }
 
-      cursor.setDate(cursor.getDate() + 1);
+      currentDate.setDate(currentDate.getDate() + (freq === "DAILY" ? 1 : 1));
     }
   });
 
@@ -210,24 +206,45 @@ export default function CalendarPage() {
     }
   };
 
-  const changeDate = delta => {
+  const changeDate = (delta) => {
     const d = new Date(currentDate);
-    view === "month" ? d.setMonth(d.getMonth() + delta) : d.setDate(d.getDate() + delta * 7);
+    if (view === "month") d.setMonth(d.getMonth() + delta);
+    else d.setDate(d.getDate() + delta * 7);
     setCurrentDate(d);
   };
 
   return (
-    <div className="p-6">
-      <CalendarHeader {...{ view, setView, currentDate, changeDate }} />
-
-      {view === "week" && (
-        <WeekView
+    <div className="w-full">
+      <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+        
+        <CalendarHeader
+          view={view}
+          setView={setView}
           currentDate={currentDate}
-          events={userCalendar.events}
-          onCellClick={setSelectedSlot}
-          onEventClick={setSelectedEvent}
+          changeDate={changeDate}
         />
-      )}
+
+        <div className="p-6">
+          {view === "month" ? (
+            <MonthView 
+              currentDate={currentDate} 
+              events={userCalendar.events}
+              onEventClick={setSelectedEvent}
+            />
+          ) : (
+            <WeekView
+              currentDate={currentDate}
+              events={userCalendar.events}
+              onCellClick={setSelectedSlot}
+              onEventClick={setSelectedEvent}
+            />
+          )}
+        </div>
+
+        <div className="border-t border-gray-200 bg-gray-50">
+          <AddEventPanel />
+        </div>
+      </div>
 
       {(selectedSlot || selectedEvent) && (
         <EventDrawer
@@ -402,59 +419,82 @@ function MonthView({ currentDate, events, onEventClick }) {
 
 function WeekView({ currentDate, events, onCellClick, onEventClick }) {
   const weekStart = StartOfWeek(currentDate);
-  const days = Array.from({ length: 7 }, (_, i) => AddDays(weekStart, i));
-  const expanded = ExpandRecurringEvents(events, weekStart, AddDays(weekStart, 6));
+  const weekEnd = AddDays(weekStart, 6);
+  const days = Array.from({ length: 7 }).map((_, i) => AddDays(weekStart, i));
+  
+  const expandedEvents = ExpandRecurringEvents(events, weekStart, weekEnd);
+  const today = new Date();
+
+  const isToday = (d) => IsSameDay(d, today);
 
   return (
-    <div className="border rounded-xl overflow-x-auto">
-      <div className="grid grid-cols-8 bg-gray-50 border-b">
-        <div />
-        {days.map(d => (
-          <div key={d.toISOString()} className="text-center font-bold py-2">
-            {d.toLocaleDateString("default", { weekday: "short", day: "numeric" })}
-          </div>
-        ))}
-      </div>
-
-      {Array.from({ length: END_HOUR - START_HOUR }).map((_, i) => {
-        const hour = START_HOUR + i;
-        return (
-          <div key={hour} className="grid grid-cols-8">
-            <div className="text-xs px-2 py-1 border-r">
-              {(hour % 12 || 12)} {hour >= 12 ? "PM" : "AM"}
+    <div className="overflow-x-auto">
+      <div className="rounded-2xl border border-gray-200 overflow-hidden">
+        <div className="grid grid-cols-8 gap-0 min-w-max bg-gray-50 border-b border-gray-200">
+          <div className="w-16 px-3 py-2" />
+          {days.map(d => (
+            <div 
+              key={d.toISOString()} 
+              className={`text-center font-bold w-28 px-3 py-2 ${
+                isToday(d) ? "text-white" : ""
+              }`}
+              style={isToday(d) ? { backgroundColor: MAROON } : undefined}
+            >
+              <div className="text-xs">
+                {d.toLocaleDateString("default", { weekday: "short" })}
+              </div>
+              <div className="text-base mt-1">
+                {d.getDate()}
+              </div>
             </div>
+          ))}
+        </div>
 
-            {days.map(d => {
-              const matches = expanded.filter(e => {
-                const s = new Date(e.start);
-                return IsSameDay(s, d) && s.getHours() === hour;
-              });
-
-              return (
-                <div
-                  key={`${d.toISOString()}-${hour}`}
-                  className="h-12 border hover:bg-gray-50 cursor-pointer relative"
-                  onClick={() => onCellClick({ date: d, hour })}
-                >
-                  {matches.map(evt => (
-                    <div
-                      key={evt.id}
-                      onClick={e => {
-                        e.stopPropagation();
-                        onEventClick(evt);
-                      }}
-                      className="absolute inset-1 rounded text-xs text-white p-1"
-                      style={{ backgroundColor: MAROON }}
-                    >
-                      {evt.title}
-                    </div>
-                  ))}
+        <div className="grid grid-cols-8 gap-0 min-w-max">
+          {Array.from({ length: END_HOUR - START_HOUR }).map((_, i) => {
+            const hour = START_HOUR + i;
+            return (
+              <div key={hour} className="contents">
+                <div className="text-xs text-gray-600 font-bold py-2 px-3 w-16 border-b border-r border-gray-200">
+                  {(hour % 12 || 12)}:00 {hour >= 12 ? 'PM' : 'AM'}
                 </div>
-              );
-            })}
-          </div>
-        );
-      })}
+                {days.map(d => {
+                  const dayEvents = expandedEvents.filter(e => {
+                    const eventDate = new Date(e.start);
+                    return IsSameDay(eventDate, d) && eventDate.getHours() === hour;
+                  });
+
+                  return (
+                    <div
+                      key={`${d.toISOString()}-${hour}`}
+                      className="border-b border-r border-gray-200 h-20 hover:bg-gray-50 transition cursor-pointer w-28 relative"
+                      onClick={() => onCellClick({ date: d, hour })}
+                    >
+                      {dayEvents.map((evt, idx) => (
+                        <div
+                          key={`${evt.id}-${idx}`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onEventClick(evt);
+                          }}
+                          className="absolute inset-1 rounded text-xs text-white p-1 overflow-hidden"
+                          style={{ backgroundColor: MAROON }}
+                          title={evt.title}
+                        >
+                          <div className="font-semibold">{evt.title}</div>
+                          {evt.location && (
+                            <div className="text-[10px] opacity-90">{evt.location}</div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 }
