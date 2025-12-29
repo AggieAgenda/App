@@ -15,7 +15,7 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [loading, setLoading] = useState(true);
 
-  const API_URL = 'http://localhost:8000'; // Your Django backend URL
+  const API_URL = `${import.meta.env.VITE_BACKEND_URL}`; // Your Django backend URL
 
   // Fetch current user data
   const fetchUser = async () => {
@@ -51,7 +51,7 @@ useEffect(() => {
 
   // Login function - redirects to Google OAuth
   const login = () => {
-  const next = encodeURIComponent("http://localhost:5173/dashboard/overview");
+  const next = encodeURIComponent(`${import.meta.env.VITE_BACKEND_URL}/dashboard/overview`);
   window.location.href = `${API_URL}/accounts/google/login/?next=${next}`;
 };
 

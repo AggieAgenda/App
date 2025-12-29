@@ -65,10 +65,12 @@ export default function Event() {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  
+  
   useEffect(() => {
     async function loadEvents() {
       try {
-        const res = await fetch("http://127.0.0.1:8000/api/events/");
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/events/`);
         const data = await res.json();
 
         const normalized = data.map(e => ({
@@ -88,7 +90,9 @@ export default function Event() {
     }
 
     loadEvents();
-  }, []);
+  }, []); 
+
+  
 
 
   // Collect all tags for chips
@@ -206,6 +210,10 @@ export default function Event() {
     }
     return days;
   }, [firstDayOfGrid]);
+  
+
+
+
 
   return (
     <div className=" flex flex-col items-center ">
@@ -548,3 +556,58 @@ function EventCard({ event }) {
     </div>
   );
 }
+
+/* Old mock data
+const events = useMemo(
+    () => [
+    {
+      title: "Midnight Yell",
+      date: "2025-02-14",
+      image: "/midnight_yell.jpg",
+      description:
+        "Join fellow Aggies at Kyle Field for the iconic midnight tradition before every home game.",
+      tags: ["tradition", "free", "campus"],
+    },
+    {
+      title: "Muster",
+      date: "2025-04-21",
+      image: "/AggieMuster.jpg",
+      description:
+        "A cherished ceremony honoring Aggies who have passed, reminding us that once an Aggie, always an Aggie.",
+      tags: ["tradition", "campus"],
+    },
+    {
+      title: "Fish Camp",
+      date: "2025-08-01",
+      image: "/fish_camp_run1.jpg",
+      description:
+        "Welcome new Aggies to campus life with a week of bonding, laughter, and unforgettable traditions.",
+      tags: ["tradition", "freshmen", "campus"],
+    },
+    {
+      title: "Silver Taps",
+      date: "2025-03-03",
+      image: "/silver_taps_run1.jpg",
+      description:
+        "A solemn ceremony held to honor the memory of students who have passed away during the year.",
+      tags: ["tradition", "campus"],
+    },
+    {
+      title: "Career Fair",
+      date: "2025-09-20",
+      image: "/career_fair_run1.jpg",
+      description:
+        "Meet recruiters and explore opportunities with top companies seeking Aggie engineers and leaders.",
+      tags: ["career fair", "business", "tech", "computer science"],
+    },
+    {
+      title: "Ring Day",
+      date: "2025-04-25",
+      image: "/aggie_ringday_run1.jpg",
+      description:
+        "Celebrate receiving your Aggie Ring — a symbol of hard work, tradition, and achievement.",
+      tags: ["tradition", "campus"],
+    },
+  ],
+    []
+  ); */
