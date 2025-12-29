@@ -581,111 +581,290 @@ class OrganizationDetailView(APIView):
 # DASHBOARD OVERVIEW API
 # =============================================================================
 
+USE_DATABASE = False  # Set to True to enable real database queries
 class DashboardOverviewView(APIView):
     """
     API endpoint for dashboard overview data.
     Returns summary information for the user's dashboard.
     """
-    # permission_classes = [IsAuthenticated]  # Uncomment for production
-    permission_classes = [AllowAny]  # Temporary for testing
+    permission_classes = [AllowAny]  # Change to [IsAuthenticated] when ready
     
     def get(self, request, *args, **kwargs):
         """
         Get dashboard overview data for the authenticated user.
         """
-        # Mock dashboard data - replace with actual database queries
-        mock_data = {
-            'success': True,
-            'user': {
-                'name': 'John Doe',
-                'email': 'john.doe@university.edu',
-                'student_id': '12345678',
-                'major': 'Computer Science',
-                'year': 'Junior'
-            },
-            'upcoming_deadlines': [
-                {
-                    'id': 1,
-                    'title': 'Math Assignment',
-                    'due_date': '2025-12-25',
-                    'due_time': '23:59',
-                    'course': 'MATH 101',
-                    'type': 'assignment',
-                    'days_until_due': 8
-                },
-                {
-                    'id': 2,
-                    'title': 'Physics Exam',
-                    'due_date': '2025-12-28',
-                    'due_time': '10:00',
-                    'course': 'PHYS 201',
-                    'type': 'exam',
-                    'days_until_due': 7
-                }
-            ],
-            'today_schedule': [
-                {
-                    'id': 1,
-                    'title': 'CS 301 Lecture',
-                    'time': '10:00',
-                    'end_time': '11:30',
-                    'location': 'Engineering Building 205'
-                },
-                {
-                    'id': 2,
-                    'title': 'Study Group',
-                    'time': '15:00',
-                    'end_time': '17:00',
-                    'location': 'Library Room 3B'
-                }
-            ],
-            'registered_events': [
-                {
-                    'id': 1,
-                    'title': 'Winter Concert',
-                    'date': '2024-12-30',
-                    'time': '19:00'
-                }
-            ],
-            'organizations': [
-                {
-                    'id': 101,
-                    'name': 'Computer Science Club',
-                    'logo_url': 'https://example.com/cs-club.png'
-                },
-                {
-                    'id': 102,
-                    'name': 'Photography Society',
-                    'logo_url': 'https://example.com/photo-society.png'
-                }
-            ],
-            'statistics': {
-                'total_assignments': 12,
-                'completed_assignments': 9,
-                'upcoming_exams': 3,
-                'events_attended': 5
-            }
-        }
         
-        # --- SORT SECTIONS ---
+        if USE_DATABASE:
+            # ===== REAL DATABASE VERSION =====
+            user = request.user
+            today = timezone.now().date()
+            current_weekday = today.strftime('%A')
+            
+            # Get upcoming deadlines (next 30 days)
+            upcoming_deadlines = Deadline.objects.filter(
+                user=user,
+                due_date__gte=today,
+                due_date__lte=today + timedelta(days=30)
+            ).order_by('due_date', 'due_time')
+            
+            deadlines_data = []
+            for deadline in upcoming_deadlines:
+                days_until = (deadline.due_date - today).days
+                deadlines_data.append({
+                    'id': deadline.id,
+                    'title': deadline.title,
+                    'due_date': deadline.due_date.strftime('%Y-%m-%d'),
+                    'due_time': deadline.due_time.strftime('%H:%M'),
+                    'course': deadline.course,
+                    'type': deadline.type,
+                    'days_until_due': days_until,
+                    'completed': deadline.completed
+                })
+            
+            # Get today's schedule
+            today_schedule = Schedule.objects.filter(
+                user=user,
+                day_of_week=current_weekday
+            ).order_by('time')
+            
+            schedule_data = []
+            for item in today_schedule:
+                schedule_data.append({
+                    'id': item.id,
+                    'title': item.title,
+                    'time': item.time.strftime('%H:%M'),
+                    'end_time': item.end_time.strftime('%H:%M'),
+                    'location': item.location,
+                    'completed': item.completed
+                })
+            
+            # Get registered events (next 30 days)
+            registered_events = EventsEntry.objects.filter(
+                user=user,
+                date__gte=today,
+                date__lte=today + timedelta(days=30)
+            ).order_by('date', 'startTime')
+            
+            events_data = []
+            for event in registered_events:
+                events_data.append({
+                    'id': event.id,
+                    'title': event.name,
+                    'date': event.date.strftime('%Y-%m-%d'),
+                    'time': event.startTime.strftime('%H:%M'),
+                    'completed': event.completed
+                })
 
-        # Deadlines: soonest first
-        mock_data['upcoming_deadlines'].sort(
-            key=lambda d: d['days_until_due']
-        )
+                total_assignments = Deadline.objects.filter(
+                    user=user,
+                    type='assignment'
+                ).count()
 
-        # Today's schedule: earliest time first
-        mock_data['today_schedule'].sort(
-            key=lambda s: s['time']
-        )
+                completed_assignments = Deadline.objects.filter(
+                    user=user,
+                    type='assignment',
+                    completed=True
+                ).count()
 
-        # Events: earliest date first
-        mock_data['registered_events'].sort(
-            key=lambda e: e['date']
-        )
+            response_data = {
+                'success': True,
+                'user': {
+                    'name': user.get_full_name() or user.username,
+                    'email': user.email,
+                },
+                'upcoming_deadlines': deadlines_data,
+                'today_schedule': schedule_data,
+                'registered_events': events_data,
+                'statistics': {
+                    'total_assignments': total_assignments,
+                    'completed_assignments': completed_assignments,
+                    'assignments_remaining': total_assignments - completed_assignments,
+                    'upcoming_exams': Deadline.objects.filter(
+                        user=user,
+                        type='exam',
+                        due_date__gte=today
+                    ).count(),
+                    'events_attended': EventsEntry.objects.filter(user=user).count(),
+                }
+            }
+        
+        else:
+            # ===== MOCK DATA VERSION =====
+            response_data = {
+                'success': True,
+                'user': {
+                    'name': 'John Doe',
+                    'email': 'john.doe@university.edu',
+                    'student_id': '12345678',
+                    'major': 'Computer Science',
+                    'year': 'Junior'
+                },
+                'upcoming_deadlines': [
+                    {
+                        'id': 1,
+                        'title': 'Math Assignment',
+                        'due_date': '2025-12-31',
+                        'due_time': '23:59',
+                        'course': 'MATH 101',
+                        'type': 'assignment',
+                        'days_until_due': 2,
+                        'completed': False
+                    },
+                    {
+                        'id': 2,
+                        'title': 'Physics Exam',
+                        'due_date': '2025-12-30',
+                        'due_time': '10:00',
+                        'course': 'PHYS 201',
+                        'type': 'exam',
+                        'days_until_due': 1,
+                        'completed': False
+                    }
+                ],
+                'today_schedule': [
+                    {
+                        'id': 1,
+                        'title': 'CS 301 Lecture',
+                        'time': '10:00',
+                        'end_time': '11:30',
+                        'location': 'Engineering Building 205',
+                        'completed': False
+                    },
+                    {
+                        'id': 2,
+                        'title': 'Study Group',
+                        'time': '15:00',
+                        'end_time': '17:00',
+                        'location': 'Library Room 3B',
+                        'completed': False
+                    }
+                ],
+                'registered_events': [
+                    {
+                        'id': 1,
+                        'title': 'Winter Concert',
+                        'date': '2024-12-30',
+                        'time': '19:00',
+                        'completed': False
+                    },
+                    {
+                        'id': 2,
+                        'title': 'Tech Career Fair',
+                        'date': '2024-12-27',
+                        'time': '14:00',
+                        'completed': False
+                    }
+                ],
+                'organizations': [
+                    {
+                        'id': 101,
+                        'name': 'Computer Science Club',
+                        'logo_url': 'https://example.com/cs-club.png'
+                    },
+                    {
+                        'id': 102,
+                        'name': 'Photography Society',
+                        'logo_url': 'https://example.com/photo-society.png'
+                    }
+                ],
+                'statistics': {
+                    'total_assignments': 12,
+                    'completed_assignments': 11,
+                    'assignments_remaining': 12 - 11,
+                    'upcoming_exams': 3,
+                    'events_attended': 5
+                }
+            }
+        
+        # Sort sections (works for both mock and real data)
+        response_data['upcoming_deadlines'].sort(key=lambda d: d['days_until_due'])
+        response_data['today_schedule'].sort(key=lambda s: s['time'])
+        response_data['registered_events'].sort(key=lambda e: e['date'])
+
+        return Response(response_data, status=status.HTTP_200_OK)
 
 
-        return Response(mock_data, status=status.HTTP_200_OK)
+# =============================================================================
+# TOGGLE ENDPOINTS (These will work with both mock and real data)
+# =============================================================================
+
+class ToggleDeadlineView(APIView):
+    permission_classes = [AllowAny]
+    
+    def patch(self, request, deadline_id, *args, **kwargs):
+        if USE_DATABASE:
+            try:
+                deadline = Deadline.objects.get(id=deadline_id, user=request.user)
+                deadline.completed = not deadline.completed
+                deadline.save()
+                
+                return Response({
+                    'success': True,
+                    'completed': deadline.completed
+                }, status=status.HTTP_200_OK)
+            except Deadline.DoesNotExist:
+                return Response({
+                    'error': 'Deadline not found',
+                    'success': False
+                }, status=status.HTTP_404_NOT_FOUND)
+        else:
+            # Mock response - just toggle and return
+            return Response({
+                'success': True,
+                'completed': True  # In mock mode, just return toggled state
+            }, status=status.HTTP_200_OK)
+
+
+class ToggleScheduleView(APIView):
+    permission_classes = [AllowAny]
+    
+    def patch(self, request, schedule_id, *args, **kwargs):
+        if USE_DATABASE:
+            try:
+                schedule = Schedule.objects.get(id=schedule_id, user=request.user)
+                schedule.completed = not schedule.completed
+                schedule.save()
+                
+                return Response({
+                    'success': True,
+                    'completed': schedule.completed
+                }, status=status.HTTP_200_OK)
+            except Schedule.DoesNotExist:
+                return Response({
+                    'error': 'Schedule item not found',
+                    'success': False
+                }, status=status.HTTP_404_NOT_FOUND)
+        else:
+            return Response({
+                'success': True,
+                'completed': True
+            }, status=status.HTTP_200_OK)
+
+
+class ToggleEventView(APIView):
+    permission_classes = [AllowAny]
+    
+    def patch(self, request, event_id, *args, **kwargs):
+        if USE_DATABASE:
+            try:
+                event = EventsEntry.objects.get(id=event_id, user=request.user)
+                event.completed = not event.completed
+                event.save()
+                
+                return Response({
+                    'success': True,
+                    'completed': event.completed
+                }, status=status.HTTP_200_OK)
+            except EventsEntry.DoesNotExist:
+                return Response({
+                    'error': 'Event not found',
+                    'success': False
+                }, status=status.HTTP_404_NOT_FOUND)
+        else:
+            return Response({
+                'success': True,
+                'completed': True
+            }, status=status.HTTP_200_OK)
 
 
 # =============================================================================
@@ -700,3 +879,6 @@ event_search = EventSearchView.as_view()
 organization_search = OrganizationSearchView.as_view()
 organization_detail = OrganizationDetailView.as_view()
 dashboard_overview = DashboardOverviewView.as_view()
+toggle_deadline = ToggleDeadlineView.as_view()
+toggle_schedule = ToggleScheduleView.as_view()
+toggle_event = ToggleEventView.as_view()
