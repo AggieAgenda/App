@@ -15,13 +15,14 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Syllabus_Event',
+            name='Event',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=255)),
-                ('event_type', models.CharField(choices=[('exam', 'Exam'), ('assignment', 'Assignment')], max_length=20)),
-                ('start_date', models.DateTimeField()),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                ('title', models.CharField(max_length=200)),
+                ('date', models.DateField()),
+                ('image', models.URLField()),
+                ('description', models.TextField()),
+                ('tags', models.JSONField(default=list)),
             ],
         ),
     ]

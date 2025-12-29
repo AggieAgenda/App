@@ -1,5 +1,5 @@
 // src/pages/Event.jsx
-import { useMemo, useState } from "react";
+import {useEffect, useMemo, useState } from "react";
 
 const MAROON = "#500000";
 
@@ -8,8 +8,22 @@ function classNames(...xs) {
 }
 
 function formatDate(dateStr) {
+  if (!dateStr) return "No date";
+
   const d = new Date(dateStr + "T00:00:00");
-  return d.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+  if (isNaN(d)) return "No date";
+
+  return d.toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+function getEventDate(event) {
+  if (!event?.date) return null;
+
+  const d = new Date(event.date + "T00:00:00");
+  return isNaN(d) ? null : d;
 }
 
 function monthKey(date) {
@@ -48,60 +62,38 @@ export default function Event() {
   const [mode, setMode] = useState("recommended"); // "recommended" | "overall" | "calendar"
   const [selectedTags, setSelectedTags] = useState(new Set());
   const [calendarMonth, setCalendarMonth] = useState(() => startOfMonth(new Date()));
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const events = useMemo(
-    () => [
-    {
-      title: "Midnight Yell",
-      date: "2025-02-14",
-      image: "/midnight_yell.jpg",
-      description:
-        "Join fellow Aggies at Kyle Field for the iconic midnight tradition before every home game.",
-      tags: ["tradition", "free", "campus"],
-    },
-    {
-      title: "Muster",
-      date: "2025-04-21",
-      image: "/AggieMuster.jpg",
-      description:
-        "A cherished ceremony honoring Aggies who have passed, reminding us that once an Aggie, always an Aggie.",
-      tags: ["tradition", "campus"],
-    },
-    {
-      title: "Fish Camp",
-      date: "2025-08-01",
-      image: "/fish_camp_run1.jpg",
-      description:
-        "Welcome new Aggies to campus life with a week of bonding, laughter, and unforgettable traditions.",
-      tags: ["tradition", "freshmen", "campus"],
-    },
-    {
-      title: "Silver Taps",
-      date: "2025-03-03",
-      image: "/silver_taps_run1.jpg",
-      description:
-        "A solemn ceremony held to honor the memory of students who have passed away during the year.",
-      tags: ["tradition", "campus"],
-    },
-    {
-      title: "Career Fair",
-      date: "2025-09-20",
-      image: "/career_fair_run1.jpg",
-      description:
-        "Meet recruiters and explore opportunities with top companies seeking Aggie engineers and leaders.",
-      tags: ["career fair", "business", "tech", "computer science"],
-    },
-    {
-      title: "Ring Day",
-      date: "2025-04-25",
-      image: "/aggie_ringday_run1.jpg",
-      description:
-        "Celebrate receiving your Aggie Ring — a symbol of hard work, tradition, and achievement.",
-      tags: ["tradition", "campus"],
-    },
-  ],
-    []
-  );
+  
+  
+  useEffect(() => {
+    async function loadEvents() {
+      try {
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/events/`);
+        const data = await res.json();
+
+        const normalized = data.map(e => ({
+          ...e,
+          date: e.date, // ✅ STRING, no conversion
+          tags: Array.isArray(e.tags)
+            ? e.tags
+            : typeof e.tags === "string" && e.tags.trim() !== ""
+            ? [e.tags]
+            : [],
+        }));
+
+        setEvents(normalized);
+      } catch (err) {
+        console.error("Failed to load events:", err);
+      }
+    }
+
+    loadEvents();
+  }, []); 
+
+  
+
 
   // Collect all tags for chips
   const allTags = useMemo(() => {
@@ -138,7 +130,11 @@ export default function Event() {
 
         return matchesSearch && matchesTags;
       })
-      .sort((a, b) => new Date(a.date) - new Date(b.date));
+      .sort((a, b) => {
+        const da = new Date(a.date + "T00:00:00");
+        const db = new Date(b.date + "T00:00:00");
+        return da - db;
+      });
   }, [events, search, selectedTags]);
 
   // A simple “recommended” score you can improve later
@@ -156,24 +152,24 @@ export default function Event() {
     };
 
     const scoreEvent = (e) => {
-      const eventDate = new Date(e.date + "T00:00:00");
-      const daysAway = daysDiff(now, eventDate);
+      const eventDate = getEventDate(e);
+      if (!eventDate) return -999;
 
-      // Past events should drop off
+      const daysAway = daysDiff(now, eventDate);
       if (daysAway < 0) return -999;
 
-      // Upcoming boost (peaks around 0-14, fades by 45)
       const soonBoost = Math.max(0, 45 - daysAway) / 10;
 
-      // Tag match boost based on user selection
       const tagMatchBoost =
         selectedTags.size === 0
           ? 0
-          : (e.tags || []).reduce((acc, t) => acc + (selectedTags.has(t) ? 1.25 : 0), 0);
+          : e.tags.reduce(
+              (acc, t) => acc + (selectedTags.has(t) ? 1.25 : 0),
+              0
+            );
 
-      // Global tag boosts
       const tagBoost =
-        (e.tags || []).reduce((acc, t) => acc + (boosts[t] || 0), 0) / 2;
+        e.tags.reduce((acc, t) => acc + (boosts[t] || 0), 0) / 2;
 
       return soonBoost + tagMatchBoost + tagBoost;
     };
@@ -214,6 +210,10 @@ export default function Event() {
     }
     return days;
   }, [firstDayOfGrid]);
+  
+
+
+
 
   return (
     <div className=" flex flex-col items-center ">
@@ -430,7 +430,11 @@ export default function Event() {
                 Events in {calendarMonth.toLocaleDateString("en-US", { month: "long" })}
               </h3>
               <EventList
-                events={filteredEvents.filter((e) => monthKey(new Date(e.date + "T00:00:00")) === monthKey(calendarMonth))}
+                events={filteredEvents.filter((e) => {
+                  if (!e.date) return false;
+                  const d = new Date(e.date + "T00:00:00");
+                  return !isNaN(d) && monthKey(d) === monthKey(calendarMonth);
+                })}
               />
             </div>
           </Section>
@@ -522,7 +526,7 @@ function EventList({ events }) {
 function EventCard({ event }) {
   const MAROON = "#500000";
   return (
-    <div className="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-md transition">
+    <div className="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-md transition hover:scale-103">
       <img src={event.image} alt={event.title} className="w-full h-44 object-cover" />
       <div className="p-4">
         <h3 className="text-xl font-extrabold mb-1" style={{ color: MAROON }}>
@@ -552,3 +556,58 @@ function EventCard({ event }) {
     </div>
   );
 }
+
+/* Old mock data
+const events = useMemo(
+    () => [
+    {
+      title: "Midnight Yell",
+      date: "2025-02-14",
+      image: "/midnight_yell.jpg",
+      description:
+        "Join fellow Aggies at Kyle Field for the iconic midnight tradition before every home game.",
+      tags: ["tradition", "free", "campus"],
+    },
+    {
+      title: "Muster",
+      date: "2025-04-21",
+      image: "/AggieMuster.jpg",
+      description:
+        "A cherished ceremony honoring Aggies who have passed, reminding us that once an Aggie, always an Aggie.",
+      tags: ["tradition", "campus"],
+    },
+    {
+      title: "Fish Camp",
+      date: "2025-08-01",
+      image: "/fish_camp_run1.jpg",
+      description:
+        "Welcome new Aggies to campus life with a week of bonding, laughter, and unforgettable traditions.",
+      tags: ["tradition", "freshmen", "campus"],
+    },
+    {
+      title: "Silver Taps",
+      date: "2025-03-03",
+      image: "/silver_taps_run1.jpg",
+      description:
+        "A solemn ceremony held to honor the memory of students who have passed away during the year.",
+      tags: ["tradition", "campus"],
+    },
+    {
+      title: "Career Fair",
+      date: "2025-09-20",
+      image: "/career_fair_run1.jpg",
+      description:
+        "Meet recruiters and explore opportunities with top companies seeking Aggie engineers and leaders.",
+      tags: ["career fair", "business", "tech", "computer science"],
+    },
+    {
+      title: "Ring Day",
+      date: "2025-04-25",
+      image: "/aggie_ringday_run1.jpg",
+      description:
+        "Celebrate receiving your Aggie Ring — a symbol of hard work, tradition, and achievement.",
+      tags: ["tradition", "campus"],
+    },
+  ],
+    []
+  ); */

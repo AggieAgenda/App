@@ -1,5 +1,22 @@
-AgendaKey.pem   
-myvenv/
-myenv/
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+
+# Django
+db.sqlite3
+staticfiles/
+media/
+
+# Node
+node_modules/
+dist/
+
+# OS
+.DS_Store
+
+# Env
 .env
-.venv

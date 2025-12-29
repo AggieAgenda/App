@@ -1,6 +1,8 @@
 from django.urls import path
 from . import views
 
+from .views import EventListAPIView
+
 urlpatterns = [
     # Authentication
     path('auth/google/', views.google_login, name='google_login'),
@@ -13,6 +15,7 @@ urlpatterns = [
     path('calendar/events/<int:event_id>/', views.calendar_events, name='calendar_event_detail'),
     
     # Event Search
+    path("events/", EventListAPIView.as_view(), name="events"),
     path('events/search/', views.event_search, name='event_search'),
     path('events/register/', views.event_search, name='event_register'),
     
