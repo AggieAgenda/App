@@ -17,7 +17,7 @@ export default function About() {
       role: "Project Co-Manager",
       image: "https://media.licdn.com/dms/image/v2/D4E03AQFiX2jfSmZ5wg/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1686291366602?e=1767830400&v=beta&t=lSozkdxPvLks_Vttqi-Tgy9BdB-nOo2uurHMJN_DMKs",
       linkedin: "linkedin.com/in/aniekanekanem/"
-    },
+    },/*
     {
       name: "Mustafa Argin",
       role: "Project Member",
@@ -28,15 +28,9 @@ export default function About() {
       name: "Patrick Semler",
       role: "Project Member",
       image:"data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",
-      linkedin: "https://www.linkedin.com/in/patricksemler/"
+      linkedin: "linkedin.com/in/patricksemler/"
     }
-    ,
-    {
-      name: "",
-      role: "Project Member",
-      image:"data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",
-      linkedin: "https://www.linkedin.com/in/patricksemler/"
-    }
+    ,*/
 
   ]
   const former = [ // former stack people
@@ -68,6 +62,7 @@ export default function About() {
 
       {/* --- Hero Section --- */}
       <section className="flex flex-col items-center justify-center px-10 md:px-20 py-16 max-w-7xl mx-auto w-full">
+        <h1 className = "py-5"></h1>
         <h1 className="text-6xl font-extrabold text-red-900 drop-shadow-md mb-8 text-center">
           About Us
         </h1>
@@ -81,7 +76,7 @@ export default function About() {
               Our Mission
             </h2>
             <p className="text-lg text-gray-700 leading-relaxed text-center max-w-4xl mx-auto">
-              To empower Texas A&M students with a unified platform that simplifies time management, 
+              To connect Texas A&M students with a unified platform that simplifies time management, 
               helping Aggies balance academics, social life, and the rich traditions that make our 
               university unique. We believe every student deserves tools that work as hard as they do.
             </p>
@@ -140,6 +135,7 @@ export default function About() {
             </div>
           ))}
         </div>
+       
       </section>
 
       <Footer />
