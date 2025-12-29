@@ -149,6 +149,7 @@ export default function DashboardOverview() {
     const deadlines = dashboard?.upcoming_deadlines || [];
     const schedule = dashboard?.today_schedule || [];
     const events = dashboard?.registered_events || [];
+    const stats = dashboard?.statistics || [];
     
     return (
         <div className="space-y-6">
@@ -171,8 +172,11 @@ export default function DashboardOverview() {
                 <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-blue-500">
                 <div className="flex items-center justify-between">
                     <div>
-                    <p className="text-gray-500 text-sm">Syllabi Uploaded</p>
-                    <p className="text-3xl font-bold text-gray-800 mt-1">0</p>
+                    <p className="text-gray-500 text-sm">Assignments Remaining</p>
+                    <p className="text-3xl font-bold text-gray-800 mt-1">
+                        {stats?.assignments_remaining ?? 0}
+                    </p>
+
                     </div>
                     <div className="bg-blue-500/10 p-3 rounded-lg">
                     <FileText className="text-blue-500" size={24} />
