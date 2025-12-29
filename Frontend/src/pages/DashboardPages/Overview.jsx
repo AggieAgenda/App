@@ -244,7 +244,9 @@ export default function DashboardOverview() {
                         <p className="text-sm text-gray-500">No upcoming deadlines</p>
                     )}
 
-                    {deadlines.map(item => (
+                    {deadlines
+                        .filter(item => item.days_until_due <= 3)
+                        .map(item => (
                         <div
                             key={item.id}
                             className="flex justify-between items-center p-4 bg-gray-50 rounded-lg group hover:bg-[#500000]/5 transition-colors"

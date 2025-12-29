@@ -22,4 +22,7 @@ urlpatterns = [
     
     # Dashboard Overview
     path('dashboard/overview/', views.dashboard_overview, name='dashboard_overview'),
+    path('deadlines/<int:deadline_id>/toggle/', views.toggle_deadline),
+    path('schedule/<int:schedule_id>/toggle/', views.toggle_schedule),
+    path('events/<int:event_id>/toggle/', views.toggle_event),
 ]
