@@ -12,7 +12,7 @@ import {
   Bell,
   Search,
   X,
-  Check  // ADD THIS
+  Check
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -35,22 +35,18 @@ export default function DashboardOverview() {
             });
     }, []);
 
-    // ADD TOGGLE FUNCTIONS
     const toggleDeadline = async (deadlineId) => {
         try {
             const response = await fetch(`${API_URL}/api/deadlines/${deadlineId}/toggle/`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
-                    // Add auth token if needed
-                    // 'Authorization': `Token ${localStorage.getItem('authToken')}`
                 }
             });
             
             const data = await response.json();
             
             if (data.success) {
-                // Update local state
                 setDashboard(prev => ({
                     ...prev,
                     upcoming_deadlines: prev.upcoming_deadlines.map(d =>
@@ -111,18 +107,53 @@ export default function DashboardOverview() {
         }
     };
 
+    // Skeleton Loading
     if (loading) {
-        return <p className="text-gray-500">Loading dashboard...</p>;
+        return (
+            <div className="space-y-6">
+                <div className="h-9 bg-gray-200 rounded w-1/3 animate-pulse"></div>
+                
+                {/* Skeleton Stats Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {[1, 2, 3].map(i => (
+                        <div key={i} className="bg-white rounded-xl shadow-md p-6 border-l-4 border-gray-200">
+                            <div className="flex items-center justify-between">
+                                <div className="flex-1">
+                                    <div className="h-4 bg-gray-200 rounded w-2/3 mb-2 animate-pulse"></div>
+                                    <div className="h-8 bg-gray-200 rounded w-1/3 animate-pulse"></div>
+                                </div>
+                                <div className="bg-gray-200 p-3 rounded-lg w-12 h-12 animate-pulse"></div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                {/* Skeleton Sections */}
+                {[1, 2, 3].map(section => (
+                    <div key={section} className="bg-white rounded-xl shadow-md p-6 border-l-4 border-gray-200">
+                        <div className="h-6 bg-gray-200 rounded w-1/4 mb-4 animate-pulse"></div>
+                        <div className="space-y-3">
+                            {[1, 2].map(item => (
+                                <div key={item} className="p-3 bg-gray-50 rounded-lg">
+                                    <div className="h-5 bg-gray-200 rounded w-3/4 mb-2 animate-pulse"></div>
+                                    <div className="h-4 bg-gray-200 rounded w-1/2 animate-pulse"></div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                ))}
+            </div>
+        );
     }
 
     const deadlines = dashboard?.upcoming_deadlines || [];
     const schedule = dashboard?.today_schedule || [];
     const events = dashboard?.registered_events || [];
-
+    
     return (
-        
-            <div className="space-y-6">
-            <h1 className="text-3xl font-bold text-gray-800">Welcome to Your Dashboard</h1>
+        <div className="space-y-6">
+            <h1 className="text-3xl font-bold text-[#500000]">Welcome to Your Dashboard</h1>
+            
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {/* Quick Stats Cards */}
                 <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-[#500000]">
@@ -162,9 +193,9 @@ export default function DashboardOverview() {
                 </div>
             </div>
 
-            {/* Today's Schedule */}
-            <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-yellow-500">
-                <h2 className="text-xl font-bold text-gray-800 mb-4">
+            {/* Today's Schedule with Maroon accent */}
+            <div className="bg-white rounded-xl shadow-md p-6">
+                <h2 className="text-xl font-bold text-[#500000] mb-4">
                     Today's Schedule
                 </h2>
 
@@ -176,7 +207,7 @@ export default function DashboardOverview() {
                     {schedule.map(item => (
                         <div
                             key={item.id}
-                            className="p-3 bg-gray-50 rounded-lg flex items-center justify-between group hover:bg-gray-100 transition-colors"
+                            className="p-3 bg-gray-50 rounded-lg flex items-center justify-between group hover:bg-[#500000]/5 transition-colors"
                         >
                             <div className={item.completed ? 'line-through text-gray-400' : ''}>
                                 <p className="font-semibold text-gray-800">{item.title}</p>
@@ -202,9 +233,9 @@ export default function DashboardOverview() {
                 </div>
             </div>
 
-            {/* Upcoming Deadlines */}
-            <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-red-500">
-                <h2 className="text-xl font-bold text-gray-800 mb-4">
+            {/* Upcoming Deadlines with Maroon accent */}
+            <div className="bg-white rounded-xl shadow-md p-6 ">
+                <h2 className="text-xl font-bold text-[#500000] mb-4">
                     Upcoming Deadlines
                 </h2>
 
@@ -216,7 +247,7 @@ export default function DashboardOverview() {
                     {deadlines.map(item => (
                         <div
                             key={item.id}
-                            className="flex justify-between items-center p-4 bg-gray-50 rounded-lg group hover:bg-gray-100 transition-colors"
+                            className="flex justify-between items-center p-4 bg-gray-50 rounded-lg group hover:bg-[#500000]/5 transition-colors"
                         >
                             <div className={item.completed ? 'line-through text-gray-400' : ''}>
                                 <p className="font-semibold text-gray-800">
@@ -232,7 +263,7 @@ export default function DashboardOverview() {
                                     className={`text-sm font-medium px-3 py-1 rounded-full ${
                                         item.days_until_due <= 3
                                             ? "bg-red-100 text-red-600"
-                                            : "bg-yellow-100 text-yellow-700"
+                                            : "bg-[#500000]/10 text-[#500000]"
                                     }`}
                                 >
                                     {item.days_until_due} days left
@@ -255,9 +286,9 @@ export default function DashboardOverview() {
                 </div>
             </div>
 
-            {/* Registered Events */}
-            <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-green-500">
-                <h2 className="text-xl font-bold text-gray-800 mb-4">
+            {/* Registered Events with Maroon accent */}
+            <div className="bg-white rounded-xl shadow-md p-6 ">
+                <h2 className="text-xl font-bold text-[#500000] mb-4">
                     Upcoming Events
                 </h2>
 
@@ -269,7 +300,7 @@ export default function DashboardOverview() {
                     {events.map(event => (
                         <div
                             key={event.id}
-                            className="p-3 bg-gray-50 rounded-lg flex items-center justify-between group hover:bg-gray-100 transition-colors"
+                            className="p-3 bg-gray-50 rounded-lg flex items-center justify-between group hover:bg-[#500000]/5 transition-colors"
                         >
                             <div className={event.completed ? 'line-through text-gray-400' : ''}>
                                 <p className="font-semibold text-gray-800">{event.title}</p>
