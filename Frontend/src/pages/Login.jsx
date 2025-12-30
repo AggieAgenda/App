@@ -11,6 +11,7 @@ export default function Login() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const { login } = useAuth();
+  const { loginWithEmail } = useAuth();
 
   const handleEmailLogin = async (e) => {
     e.preventDefault();
@@ -18,27 +19,13 @@ export default function Login() {
     setError('');
 
     try {
-      const response = await fetch(`${API_URL}/api/auth/login/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        localStorage.setItem('token', data.token);
-        navigate('/dashboard/overview');
-      } else {
-        const errorData = await response.json();
-        setError(errorData.message || 'Invalid credentials');
-      }
-    } catch (err) {
-      setError('Network error. Please try again.');
-    } finally {
-      setLoading(false);
-    }
+    await loginWithEmail({ email, password });
+    navigate("/dashboard/overview");
+  } catch (err) {
+    setError(err.message || "Invalid credentials");
+  } finally {
+    setLoading(false);
+  }
   };
 
   return (

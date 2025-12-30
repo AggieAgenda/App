@@ -22,7 +22,7 @@ GOOGLE_CLIENT_SECRET = env('GOOGLE_CLIENT_SECRET')
 SECRET_KEY = env('SECRET_KEY')  # Move secret key to .env file!
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = env.bool("Debug",default=False)
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['localhost', '127.0.0.1'])
 
@@ -36,6 +36,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     
+    #my apps
+    'accounts',
+    'api',
+    
+
     # REST framework
     'corsheaders',
     'rest_framework',
@@ -49,9 +54,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     
-    # My apps
-    'api',
-    'login',
+    
 ]
 
 SITE_ID = 1
@@ -65,7 +68,8 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
-
+AUTH_USER_MODEL = 'accounts.User'
+ACCOUNT_USER_MODEL_USERNAME_FIELD = "username"
 # Allauth settings
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 ACCOUNT_EMAIL_REQUIRED = True
@@ -101,7 +105,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.IsAuthenticated', # set public endpoints to allowAny if you want to bypass
     ],
 }
 
@@ -136,6 +140,16 @@ CORS_ALLOWED_ORIGINS = ["http://localhost:5173"]
 
 CSRF_TRUSTED_ORIGINS = ["http://localhost:5173"]
 
+''' change later
+CORS_ALLOW_ALL_ORIGINS = env.bool('CORS_ALLOW_ALL_ORIGINS', default=False)
+CORS_ALLOWED_ORIGINS = env.list('CORS_ALLOWED_ORIGINS', default=["http://localhost:5173"])
+CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS', default=["http://localhost:5173"])
+
+CORS_ALLOWED_ORIGINS=https://your-vercel-domain.vercel.app,https://aggieagenda.com
+
+CSRF_TRUSTED_ORIGINS=https://your-vercel-domain.vercel.app,https://aggieagenda.com
+
+'''
 
 
 

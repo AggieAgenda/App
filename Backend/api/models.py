@@ -1,5 +1,7 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
+
+
 
 
 class Event(models.Model):
@@ -18,7 +20,7 @@ class OrganizationEntry(models.Model):
     
 
 class Deadline(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     course = models.CharField(max_length=100)
     due_date = models.DateField()
@@ -30,7 +32,7 @@ class Deadline(models.Model):
         return f"{self.course} - {self.title}"
 
 class Schedule(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     day_of_week = models.CharField(max_length=20)  # Monday, Tuesday, etc.
     time = models.TimeField()
