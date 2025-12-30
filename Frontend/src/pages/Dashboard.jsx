@@ -15,18 +15,50 @@ import {
   Building2,
   GraduationCap,
 } from "lucide-react";
-import { Outlet, Link, useLocation } from "react-router-dom";
+import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
+import {useAuth} from "../contexts/AuthContext"
 
 export default function DashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false); // mobile drawer
   const [sidebarVisibleDesktop, setSidebarVisibleDesktop] = useState(true); // desktop show/hide
   const [showNotifications, setShowNotifications] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
-
-  const user = {
+  const navigate = useNavigate();
+  /*const user = {
     name: "bob",
     email: "sdlkfj",
     isOrganization: false,
+  };*/
+  const { uiUser } = useAuth();
+  const user = uiUser ?? { name: "Guest", email: "", isOrganization: false };
+  console.log(user)
+  
+
+  const handleLogout = async () => {
+    const token = localStorage.getItem("token");
+
+
+
+    try {
+      if (token) {
+        await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/logout/`, {
+          method: "POST",
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        });
+
+        // Helpful debug:
+        //console.log("Logout status:", res.status);
+        //const text = await res.text();
+        //console.log("Logout body:", text);
+      }
+    } catch (err) {
+      console.error("Logout error:", err);
+    } finally {
+      localStorage.removeItem("token");
+      navigate("/");
+    }
   };
 
   const navItems = useMemo(
@@ -261,15 +293,15 @@ export default function DashboardLayout() {
                   className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-100 transition-colors"
                 >
                   <div className="w-8 h-8 bg-[#500000] rounded-full flex items-center justify-center text-white text-sm font-semibold">
-                    JD
+                    {user.initials}
                   </div>
                 </button>
 
                 {showUserMenu && (
                   <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-200 py-2 z-50">
                     <div className="px-4 py-3 border-b border-gray-200">
-                      <p className="font-semibold text-gray-800">John Doe</p>
-                      <p className="text-sm text-gray-500">john.doe@tamu.edu</p>
+                      <p className="font-semibold text-gray-800">{user.name}</p>
+                      <p className="text-sm text-gray-500">{user.email}</p>
                     </div>
                     <Link to="profile">
                       <button className="w-full px-4 py-2 text-left hover:bg-gray-50 transition-colors flex items-center gap-2">
@@ -284,12 +316,12 @@ export default function DashboardLayout() {
                       </button>
                     </Link>
                     <div className="border-t border-gray-200 mt-2 pt-2">
-                      <Link to="/">
-                        <button className="w-full px-4 py-2 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 text-red-600">
+                      
+                        <button onClick = {handleLogout} className="w-full px-4 py-2 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 text-red-600">
                           <LogOut size={16} />
                           <span className="text-sm">Logout</span>
                         </button>
-                      </Link>
+                      
                     </div>
                   </div>
                 )}

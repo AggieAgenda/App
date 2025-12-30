@@ -1,5 +1,5 @@
 
-import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate,  } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import AuthCallback from './pages/AuthCallback';
@@ -43,7 +43,7 @@ import {Documentation, LearnMore,Solutions} from './pages/Documentation.jsx';
                 <Route path = "/about" element = {<About/>} />
                 <Route path = "/privacy" element = {<Privacy/>} />
                 <Route path= "*" element = {<Navigate to='/ '></Navigate>} />
-                <Route path = '/dashboard'element = { /*<ProtectedRoute> */  <Dashboard/> /*</ProtectedRoute> */     }>
+                <Route path = '/dashboard'element = { <ProtectedRoute>   <Dashboard/> </ProtectedRoute>     }>
                     <Route path = 'overview' element = {<Overview/>}></Route>
                     <Route path = 'syllabus' element = {<SyllabusReader/>}></Route>
                     <Route path = 'calendar' element = {<Calendar/>}></Route>
