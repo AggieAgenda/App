@@ -7,9 +7,23 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 
+from dj_rest_auth.registration.views import SocialLoginView
+from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+from allauth.socialaccount.providers.oauth2.client import OAuth2Client
+
 from .serializers import UserSerializer
 
 User = get_user_model()
+
+from allauth.socialaccount.providers.oauth2.client import OAuth2Client
+
+class PatchedOAuth2Client(OAuth2Client):
+    def __init__(self, *args, **kwargs):
+        # dj-rest-auth may pass scope_delimiter but your allauth OAuth2Client signature
+        # conflicts; safest is to remove it and let allauth handle defaults.
+        kwargs.pop("scope_delimiter", None)
+        super().__init__(*args, **kwargs)
+
 
 
 @api_view(["POST"])
@@ -145,21 +159,21 @@ def update_profile(request):
 
     user.save()
     return Response({"success": True, "user": UserSerializer(user).data})
+class GoogleCodeLogin(SocialLoginView):
+    permission_classes = [AllowAny]  # ✅ THIS is what you want
+    adapter_class = GoogleOAuth2Adapter
+    client_class = PatchedOAuth2Client
+    callback_url = settings.FRONTEND_URL+"/auth/callback"
+    print(callback_url)
+
+    def get_response(self):
+        user = self.user
+        token, _ = Token.objects.get_or_create(user=user)
+        return Response({
+            "success": True,
+            "token": token.key,
+            "user": UserSerializer(user).data,
+        })
 
 
-# Optional: keep your existing google endpoints, but I'd strongly recommend
-# using dj-rest-auth / allauth for production.
-@api_view(["GET"])
-@permission_classes([AllowAny])
-def google_login(request):
-    return Response(
-        {"success": True, "message": "Use /accounts/google/login/ or dj-rest-auth google endpoints."},
-        status=status.HTTP_200_OK,
-    )
-
-
-@api_view(["GET"])
-@permission_classes([AllowAny])
-def google_callback(request):
-    frontend_url = "http://localhost:5173"
-    return redirect(f"{frontend_url}/auth/callback?error=use_dj_rest_auth")
+    
