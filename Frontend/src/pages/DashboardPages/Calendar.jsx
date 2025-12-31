@@ -4,6 +4,18 @@ const MAROON = "#500000";
 const START_HOUR = 6;
 const END_HOUR = 22;
 
+// ==================== IMPORT/EXPORT FUNCTIONS ====================
+
+function handleImportICS() {
+  // TODO: Implement ICS import functionality
+  console.log("Import ICS clicked");
+}
+
+function handleExportToGoogle() {
+  // TODO: Implement Google Calendar export functionality
+  console.log("Export to Google Calendar clicked");
+}
+
 // ==================== UTILITY FUNCTIONS ====================
 
 function StartOfWeek(date) {
@@ -222,6 +234,7 @@ export default function CalendarPage() {
           setView={setView}
           currentDate={currentDate}
           changeDate={changeDate}
+           onImport={handleImportICS} onExport={handleExportToGoogle}
         />
 
         <div className="p-6">
@@ -262,7 +275,7 @@ export default function CalendarPage() {
 
 // ==================== HEADER COMPONENT ====================
 
-function CalendarHeader({ view, setView, currentDate, changeDate }) {
+function CalendarHeader({ view, setView, currentDate, changeDate, onImport, onExport }) {
   const monthName = currentDate.toLocaleString("default", { month: "long" });
   const year = currentDate.getFullYear();
 
@@ -286,6 +299,22 @@ function CalendarHeader({ view, setView, currentDate, changeDate }) {
         </button>
       </div>
 
+      <div>
+        <button
+            onClick={onImport}
+            className="px-4 py-2 border-2 rounded-xl font-semibold hover:bg-gray-50 transition-all"
+            style={{ borderColor: MAROON, color: MAROON }}
+          >
+            Import ICS
+          </button>
+          <button
+            onClick={onExport}
+            className="px-4 py-2 text-white rounded-xl font-semibold hover:opacity-90 transition-all"
+            style={{ backgroundColor: MAROON }}
+          >
+            Export to Google
+          </button>
+      </div>
       <div className="flex rounded-xl border border-gray-200 bg-gray-50 p-1 w-full sm:w-auto">
         <button
           className={`flex-1 sm:flex-none px-4 py-2 rounded-lg text-sm font-semibold transition ${
@@ -467,7 +496,7 @@ function WeekView({ currentDate, events, onCellClick, onEventClick }) {
                   return (
                     <div
                       key={`${d.toISOString()}-${hour}`}
-                      className="border-b border-r border-gray-200 h-20 hover:bg-gray-50 transition cursor-pointer w-28 relative"
+                      className="border-b border-r border-gray-200 h-12 hover:bg-gray-50 transition cursor-pointer w-28 relative"
                       onClick={() => onCellClick({ date: d, hour })}
                     >
                       {dayEvents.map((evt, idx) => (
@@ -504,9 +533,14 @@ function WeekView({ currentDate, events, onCellClick, onEventClick }) {
 function AddEventPanel() {
   return (
     <div className="p-6">
-      <h3 className="text-xl font-extrabold text-gray-900 mb-4">
-        Add Event
-      </h3>
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="text-xl font-extrabold text-gray-900">
+          Add Event
+        </h3>
+        <div className="flex gap-2">
+          
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <div>

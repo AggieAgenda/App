@@ -12,7 +12,6 @@ import Login from './pages/Login.jsx';
 import Signup from './pages/Signup.jsx';
 import Calendar from './pages/DashboardPages/Calendar.jsx';
 import Events from './pages/DashboardPages/Event.jsx';
-import Program from './pages/Program';
 import Privacy from './pages/Privacy';
 import Dashboard from './pages/Dashboard.jsx'
 import SyllabusReader from './pages/DashboardPages/Syllabus.jsx'
