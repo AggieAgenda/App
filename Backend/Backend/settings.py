@@ -5,7 +5,6 @@ Django settings for Backend project.
 from pathlib import Path
 import environ
 import os
-from dotenv import load_dotenv
 from urllib.parse import urlparse, parse_qsl
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
