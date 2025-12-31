@@ -210,12 +210,7 @@ export default function AggieAgendaHome() {
                     </button>
                   </Link>
 
-                  <Link to="/dashboard/overview">
-                    <button className="px-8 py-4 bg-[#450000] text-white text-lg font-semibold rounded-lg shadow-lg hover:bg-[#700000] hover:shadow-xl transform hover:-translate-y-1 transition-all flex items-center justify-center gap-2 active:scale-[0.98] focus:outline-none focus-visible:ring-4 focus-visible:ring-[#500000]/20">
-                      Skip Login
-                      <ArrowRight size={20} />
-                    </button>
-                  </Link>
+                  
 
                   <Link to="documentation/learn-more">
                     <button className="px-8 py-4 border-2 border-[#500000] text-[#500000] text-lg font-semibold rounded-lg hover:bg-[#500000] hover:text-white transition-all active:scale-[0.98] focus:outline-none focus-visible:ring-4 focus-visible:ring-[#500000]/20">
