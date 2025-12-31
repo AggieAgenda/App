@@ -57,7 +57,8 @@ INSTALLED_APPS = [
 ]
 
 SITE_ID = 1
-FRONTEND_URL = env("FRONTEND_URL", default="http://localhost:5173").rstrip("/")
+FRONTEND_URL = env("FRONTEND_URL", default="http://localhost:5173")
+print(FRONTEND_URL)
 
 LOGIN_REDIRECT_URL = FRONTEND_URL+"/dashboard"
 LOGOUT_REDIRECT_URL = FRONTEND_URL+"/"
