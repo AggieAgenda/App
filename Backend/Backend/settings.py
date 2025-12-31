@@ -138,10 +138,14 @@ CORS_ALLOW_CREDENTIALS = True
 
 # For production, use:
 # CORS_ALLOWED_ORIGINS = env.list('CORS_ALLOWED_ORIGINS', default=[])
-CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOWED_ORIGINS = ["http://localhost:5173"]
-
-CSRF_TRUSTED_ORIGINS = ["http://localhost:5173"]
+CORS_ALLOWED_ORIGINS = [
+    "https://aggieagenda.com",
+    "https://www.aggieagenda.com",
+]
+CSRF_TRUSTED_ORIGINS = [
+    "https://aggieagenda.com",
+    "https://www.aggieagenda.com",
+]
 
 ''' change later
 CORS_ALLOW_ALL_ORIGINS = env.bool('CORS_ALLOW_ALL_ORIGINS', default=False)
