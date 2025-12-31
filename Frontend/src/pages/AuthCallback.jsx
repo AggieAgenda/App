@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { Loader2 } from 'lucide-react';
@@ -8,30 +8,47 @@ export default function AuthCallback() {
   const navigate = useNavigate();
   const { handleCallback } = useAuth();
   const [error, setError] = useState(null);
-
+  const hasFetched = useRef(false);
   useEffect(() => {
-    const token = searchParams.get('token');
-    const errorParam = searchParams.get('error');
+  const code = searchParams.get('code'); // Google sends 'code', not 'token'
+  const errorParam = searchParams.get('error');
 
-    if (errorParam) {
-      setError('Authentication failed. Please try again.');
-      setTimeout(() => {
-        navigate('/');
-      }, 3000);
-      return;
-    }
 
-    if (token) {
-      handleCallback(token);
-      // Redirect to dashboard after successful login
-      navigate('/dashboard/overview');
-    } else {
-      setError('No authentication token received.');
-      setTimeout(() => {
-        navigate('/');
-      }, 3000);
-    }
-  }, [searchParams, handleCallback, navigate]);
+  if (errorParam) {
+    setError('Authentication failed.');
+    setTimeout(() => navigate('/'), 3000);
+    return;
+  }
+  console.log(code)
+  if (code && !hasFetched.current) {
+    hasFetched.current = true;
+    // 1. Call your BACKEND API with the code
+    const exchangeCodeForToken = async () => {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/google/`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code: code })
+        });
+        
+        const data = await response.json();
+
+        if (data.token) {
+          // 2. Pass the final backend token to your AuthContext
+          handleCallback(data.token); 
+          navigate('/dashboard/overview');
+        } else {
+          throw new Error('No token returned from backend');
+        }
+      } catch (error) {
+        setError('Backend exchange failed. \n Account made with password not Oauth');
+        setTimeout(() => navigate('/'), 3000);
+      }
+    };
+
+    exchangeCodeForToken();
+  } 
+}, [searchParams, handleCallback, navigate]);
 
   if (error) {
     return (

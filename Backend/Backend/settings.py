@@ -58,10 +58,12 @@ INSTALLED_APPS = [
 ]
 
 SITE_ID = 1
+FRONTEND_URL = env("FRONTEND_URL", default="http://localhost:5173").rstrip("/")
 
-LOGIN_REDIRECT_URL = "http://localhost:5173/dashboard"
-LOGOUT_REDIRECT_URL = "http://localhost:5173/"
+LOGIN_REDIRECT_URL = FRONTEND_URL+"/dashboard"
+LOGOUT_REDIRECT_URL = FRONTEND_URL+"/"
 ACCOUNT_LOGOUT_ON_GET = True  # optional, just behavior
+
 
 
 AUTHENTICATION_BACKENDS = [
@@ -92,7 +94,7 @@ SOCIALACCOUNT_PROVIDERS = {
             'email',
         ],
         'AUTH_PARAMS': {
-            'access_type': 'online',
+            'access_type': 'offline', "prompt":"consent",
         },
         'OAUTH_PKCE_ENABLED': True,
     }
@@ -102,7 +104,7 @@ SOCIALACCOUNT_PROVIDERS = {
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
+        #'rest_framework.authentication.SessionAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated', # set public endpoints to allowAny if you want to bypass
@@ -112,7 +114,7 @@ REST_FRAMEWORK = {
 # dj-rest-auth settings
 REST_AUTH = {
     'USE_JWT': False,
-    'SESSION_LOGIN': True,
+    'SESSION_LOGIN': False,
     'TOKEN_MODEL': 'rest_framework.authtoken.models.Token',
 }
 
@@ -128,6 +130,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
 ]
+
 
 # CORS settings - adjust for production
 CORS_ALLOW_ALL_ORIGINS = env.bool('CORS_ALLOW_ALL_ORIGINS', default=True)
@@ -184,7 +187,10 @@ DATABASES = {
         "PASSWORD": tmpPostgres.password,
         "HOST": tmpPostgres.hostname,
         "PORT": 5432,
-        "OPTIONS": dict(parse_qsl(tmpPostgres.query)),
+        "OPTIONS": {
+            **dict(parse_qsl(tmpPostgres.query)),
+            
+        },
     }
 }
 

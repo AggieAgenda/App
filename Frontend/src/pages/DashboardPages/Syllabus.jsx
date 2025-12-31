@@ -140,7 +140,7 @@ export default function SyllabusReader() {
     return (
         <div className="max-w-4xl mx-auto mt-6 p-6 bg-white rounded-2xl shadow-lg">
             <div className="flex items-center gap-3 mb-4">
-                <BookOpen className="w-8 h-8 text-blue-600" />
+                <BookOpen className="w-8 h-8  " />
                 <h1 className="text-2xl font-bold">Syllabus Reader</h1>
             </div>
 

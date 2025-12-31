@@ -9,6 +9,5 @@ urlpatterns = [
     path("profile/", views.update_profile, name="update_profile"),
 
     # Optional
-    path("google/", views.google_login, name="google_login"),
-    path("google/callback/", views.google_callback, name="google_callback"),
+    path("google/", views.GoogleCodeLogin.as_view(), name="google_login"),
 ]
