@@ -1,4 +1,3 @@
-// src/pages/Organizations.jsx
 import { useMemo, useState } from "react";
 
 const MAROON = "#500000";
@@ -9,13 +8,14 @@ function classNames(...xs) {
 
 export default function Organizations() {
   const [search, setSearch] = useState("");
-  const [mode, setMode] = useState("recommended"); // "recommended" | "overall"
+  const [mode, setMode] = useState("recommended");
   const [selectedTags, setSelectedTags] = useState(new Set());
+  const [selectedOrg, setSelectedOrg] = useState(null);
 
-  // Replace this with your API fetch later
   const organizations = useMemo(
     () => [
       {
+        id: 1,
         name: "Aggie Coding Club",
         image: "/org_coding_club.jpg",
         description:
@@ -24,9 +24,12 @@ export default function Organizations() {
         members: 240,
         meetingTime: "Thurs 7:00 PM",
         location: "Zachry 101",
-        link: "https://example.com",
+        link: "https://aggiecodingclub.com",
+        contact_email: "contact@aggiecodingclub.com",
+        founded: "2018"
       },
       {
+        id: 2,
         name: "Aggie Business Society",
         image: "/org_business.jpg",
         description:
@@ -35,9 +38,12 @@ export default function Organizations() {
         members: 180,
         meetingTime: "Tues 6:30 PM",
         location: "Wehner 113",
-        link: "https://example.com",
+        link: "https://aggiebusiness.org",
+        contact_email: "info@aggiebusiness.org",
+        founded: "2015"
       },
       {
+        id: 3,
         name: "Volunteer Aggies",
         image: "/org_volunteer.jpg",
         description:
@@ -46,9 +52,12 @@ export default function Organizations() {
         members: 320,
         meetingTime: "Varies",
         location: "Off-campus",
-        link: "https://example.com",
+        link: "https://volunteeraggies.org",
+        contact_email: "volunteer@tamu.edu",
+        founded: "2012"
       },
       {
+        id: 4,
         name: "Aggie Design Team",
         image: "/org_design.jpg",
         description:
@@ -57,9 +66,12 @@ export default function Organizations() {
         members: 95,
         meetingTime: "Mon 7:00 PM",
         location: "MSC 2400",
-        link: "https://example.com",
+        link: "https://aggiedesign.com",
+        contact_email: "design@tamu.edu",
+        founded: "2019"
       },
       {
+        id: 5,
         name: "Pre-Health Aggies",
         image: "/org_prehealth.jpg",
         description:
@@ -68,9 +80,12 @@ export default function Organizations() {
         members: 210,
         meetingTime: "Wed 6:00 PM",
         location: "ILCB 110",
-        link: "https://example.com",
+        link: "https://prehealthaggies.org",
+        contact_email: "prehealth@tamu.edu",
+        founded: "2016"
       },
       {
+        id: 6,
         name: "Aggie Outdoors",
         image: "/org_outdoors.jpg",
         description:
@@ -79,13 +94,14 @@ export default function Organizations() {
         members: 160,
         meetingTime: "Fri evenings",
         location: "Meet-up spots vary",
-        link: "https://example.com",
+        link: "https://aggieoutdoors.com",
+        contact_email: "outdoors@tamu.edu",
+        founded: "2017"
       },
     ],
     []
   );
 
-  // Collect all tags for chips
   const allTags = useMemo(() => {
     const set = new Set();
     for (const o of organizations) (o.tags || []).forEach((t) => set.add(t));
@@ -101,7 +117,6 @@ export default function Organizations() {
     });
   };
 
-  // Search + tag filtering (shared across modes)
   const filteredOrganizations = useMemo(() => {
     const q = search.trim().toLowerCase();
 
@@ -123,10 +138,6 @@ export default function Organizations() {
       .sort((a, b) => a.name.localeCompare(b.name));
   }, [organizations, search, selectedTags]);
 
-  // Simple “recommended” scoring:
-  // - boosts selected tag matches
-  // - boosts org size slightly
-  // - boosts certain tags globally
   const recommendedOrganizations = useMemo(() => {
     const boosts = {
       career: 1.4,
@@ -139,12 +150,12 @@ export default function Organizations() {
     const scoreOrg = (o) => {
       const tagMatchBoost =
         selectedTags.size === 0
-          ? 0.4 // small baseline so list doesn't feel random
+          ? 0.4
           : (o.tags || []).reduce((acc, t) => acc + (selectedTags.has(t) ? 1.25 : 0), 0);
 
       const tagBoost = (o.tags || []).reduce((acc, t) => acc + (boosts[t] || 0), 0);
 
-      const sizeBoost = Math.min(1.2, (o.members || 0) / 300); // cap
+      const sizeBoost = Math.min(1.2, (o.members || 0) / 300);
 
       return tagMatchBoost + tagBoost + sizeBoost;
     };
@@ -159,7 +170,6 @@ export default function Organizations() {
   return (
     <div className="flex flex-col items-center">
       <div className="w-full max-w-6xl px-6 pb-10">
-        {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
           <div>
             <h1 className="text-3xl font-extrabold text-gray-900">Organizations</h1>
@@ -168,7 +178,6 @@ export default function Organizations() {
             </p>
           </div>
 
-          {/* Mode Switcher */}
           <div className="flex rounded-xl border border-gray-200 bg-gray-50 p-1 w-full sm:w-auto">
             {[
               { key: "recommended", label: "Recommended" },
@@ -189,7 +198,6 @@ export default function Organizations() {
           </div>
         </div>
 
-        {/* Search */}
         <div className="mb-4">
           <input
             type="text"
@@ -201,7 +209,6 @@ export default function Organizations() {
           />
         </div>
 
-        {/* Tag chips */}
         <div className="flex flex-wrap gap-2 mb-8">
           <button
             onClick={() => setSelectedTags(new Set())}
@@ -236,7 +243,6 @@ export default function Organizations() {
           })}
         </div>
 
-        {/* Content */}
         {mode === "recommended" && (
           <Section
             title="Recommended for you"
@@ -246,16 +252,20 @@ export default function Organizations() {
                 : "Popular picks. Select tags to personalize."
             }
           >
-            <OrganizationGrid organizations={recommendedOrganizations} />
+            <OrganizationGrid organizations={recommendedOrganizations} onOrgClick={setSelectedOrg} />
           </Section>
         )}
 
         {mode === "overall" && (
           <Section title="All organizations" subtitle="Everything that matches your search and tags.">
-            <OrganizationGrid organizations={filteredOrganizations} />
+            <OrganizationGrid organizations={filteredOrganizations} onOrgClick={setSelectedOrg} />
           </Section>
         )}
       </div>
+
+      {selectedOrg && (
+        <OrganizationModal org={selectedOrg} onClose={() => setSelectedOrg(null)} />
+      )}
     </div>
   );
 }
@@ -272,7 +282,7 @@ function Section({ title, subtitle, children }) {
   );
 }
 
-function OrganizationGrid({ organizations }) {
+function OrganizationGrid({ organizations, onOrgClick }) {
   if (!organizations.length) {
     return (
       <div className="rounded-2xl border border-gray-200 bg-gray-50 p-8 text-gray-700">
@@ -284,21 +294,23 @@ function OrganizationGrid({ organizations }) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-4">
       {organizations.map((org, idx) => (
-        <OrganizationCard key={`${org.name}-${idx}`} org={org} />
+        <OrganizationCard key={`${org.name}-${idx}`} org={org} onClick={() => onOrgClick(org)} />
       ))}
     </div>
   );
 }
 
-function OrganizationCard({ org }) {
+function OrganizationCard({ org, onClick }) {
   return (
-    <div className="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-md transition">
+    <div 
+      className="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-md transition cursor-pointer"
+      onClick={onClick}
+    >
       <img
         src={org.image}
         alt={org.name}
         className="w-full h-44 object-cover"
         onError={(e) => {
-          // optional fallback if you don't have images yet
           e.currentTarget.style.display = "none";
         }}
       />
@@ -332,17 +344,132 @@ function OrganizationCard({ org }) {
           ))}
         </div>
 
-        {org.link && (
-          <a
-            href={org.link}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex mt-4 text-sm font-semibold"
-            style={{ color: MAROON }}
+        <div className="mt-4 text-sm font-semibold" style={{ color: MAROON }}>
+          View details →
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function OrganizationModal({ org, onClose }) {
+  return (
+    <div 
+      className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+      onClick={onClose}
+    >
+      <div 
+        className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="relative">
+          <img
+            src={org.image}
+            alt={org.name}
+            className="w-full h-64 object-cover rounded-t-2xl"
+            onError={(e) => {
+              e.currentTarget.style.display = "none";
+            }}
+          />
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 bg-white rounded-full w-10 h-10 flex items-center justify-center text-gray-600 hover:text-gray-900 shadow-lg"
           >
-            View organization →
-          </a>
-        )}
+            ✕
+          </button>
+        </div>
+
+        <div className="p-8">
+          <h2 className="text-3xl font-extrabold mb-2" style={{ color: MAROON }}>
+            {org.name}
+          </h2>
+
+          <div className="flex flex-wrap gap-4 text-sm text-gray-600 mb-6">
+            <span>👥 <strong>{org.members}</strong> members</span>
+            <span>📅 Meets <strong>{org.meetingTime}</strong></span>
+            <span>📍 <strong>{org.location}</strong></span>
+            {org.founded && <span>🎯 Founded <strong>{org.founded}</strong></span>}
+          </div>
+
+          <div className="mb-6">
+            <h3 className="text-lg font-extrabold text-gray-900 mb-2">About</h3>
+            <p className="text-gray-700">{org.description}</p>
+          </div>
+
+          <div className="mb-6">
+            <h3 className="text-lg font-extrabold text-gray-900 mb-2">Tags</h3>
+            <div className="flex flex-wrap gap-2">
+              {org.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="px-3 py-1.5 rounded-full border text-sm"
+                  style={{
+                    borderColor: `${MAROON}33`,
+                    backgroundColor: `${MAROON}0D`,
+                    color: MAROON,
+                  }}
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <div className="mb-6">
+            <h3 className="text-lg font-extrabold text-gray-900 mb-2">Contact</h3>
+            <div className="space-y-2 text-gray-700">
+              {org.contact_email && (
+                <div>
+                  <span className="font-semibold">Email: </span>
+                  <a 
+                    href={`mailto:${org.contact_email}`}
+                    className="hover:underline"
+                    style={{ color: MAROON }}
+                  >
+                    {org.contact_email}
+                  </a>
+                </div>
+              )}
+              {org.link && (
+                <div>
+                  <span className="font-semibold">Website: </span>
+                  <a
+                    href={org.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:underline"
+                    style={{ color: MAROON }}
+                  >
+                    {org.link}
+                  </a>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="flex gap-3">
+            {org.link && (
+              <a
+                href={org.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 py-3 rounded-xl text-white font-semibold text-center hover:opacity-90 transition"
+                style={{ backgroundColor: MAROON }}
+              >
+                Visit Website
+              </a>
+            )}
+            {org.contact_email && (
+              <a
+                href={`mailto:${org.contact_email}`}
+                className="flex-1 py-3 rounded-xl border-2 font-semibold text-center hover:bg-gray-50 transition"
+                style={{ borderColor: MAROON, color: MAROON }}
+              >
+                Contact Us
+              </a>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );
