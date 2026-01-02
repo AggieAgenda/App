@@ -1,341 +1,520 @@
 import { useState } from "react";
-import { UploadCloud, FileText, Loader, CheckCircle, XCircle, Calendar, BookOpen } from "lucide-react";
+import { Plus, BookOpen, MapPin, User, Calendar, GraduationCap, Clock, Edit, Trash2, X, UploadCloud, FileText, Loader, CheckCircle, XCircle } from "lucide-react";
 
-export default function SyllabusReader() {
-    const [files, setFiles] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [saving, setSaving] = useState(false);
-    const [response, setResponse] = useState(null);
-    const [error, setError] = useState(null);
-    const [processingFile, setProcessingFile] = useState(null);
-    const [savingFile, setSavingFile] = useState(null);
+const MAROON = "#500000";
 
-    const handleFileChange = (e) => {
-        const selectedFiles = [...e.target.files];
+export default function Classes() {
+  const [classes, setClasses] = useState([
+    {
+      id: 1,
+      name: "CSCE 314",
+      fullName: "Programming Languages",
+      professor: "Dr. Smith",
+      location: "HRBB 124",
+      examDate: "2025-05-10",
+      creditHours: 3,
+      meetingTimes: "MWF 10:20-11:10 AM",
+      color: "#3B82F6"
+    },
+    {
+      id: 2,
+      name: "MATH 251",
+      fullName: "Engineering Mathematics III",
+      professor: "Dr. Johnson",
+      location: "BLOC 150",
+      examDate: "2025-05-08",
+      creditHours: 3,
+      meetingTimes: "TR 12:45-2:00 PM",
+      color: "#10B981"
+    }
+  ]);
 
-        // Validate file types
-        const invalidFiles = selectedFiles.filter(file => !file.name.endsWith('.pdf'));
-        if (invalidFiles.length > 0) {
-            setError(`Invalid file type: ${invalidFiles.map(f => f.name).join(', ')}. Only PDFs are allowed.`);
-            return;
-        }
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [editingClass, setEditingClass] = useState(null);
+  const [showSyllabusReader, setShowSyllabusReader] = useState(false);
 
-        // Validate file size (10MB limit)
-        const MAX_SIZE = 10 * 1024 * 1024;
-        const oversizedFiles = selectedFiles.filter(file => file.size > MAX_SIZE);
-        if (oversizedFiles.length > 0) {
-            setError(`File too large: ${oversizedFiles.map(f => f.name).join(', ')}. Maximum size is 10MB.`);
-            return;
-        }
+  const handleDeleteClass = (classId) => {
+    if (confirm("Are you sure you want to delete this class?")) {
+      setClasses(prev => prev.filter(c => c.id !== classId));
+    }
+  };
 
-        setFiles(selectedFiles);
-        setError(null);
-        setResponse(null);
-    };
+  const handleCreateClass = (classData) => {
+    if (editingClass) {
+      setClasses(prev => prev.map(c => 
+        c.id === editingClass.id ? { ...classData, id: c.id } : c
+      ));
+    } else {
+      setClasses(prev => [...prev, { ...classData, id: Date.now() }]);
+    }
+    setShowCreateModal(false);
+    setEditingClass(null);
+  };
 
-    const handleSubmit = async () => {
-        if (files.length === 0) return;
+  return (
+    <div className="max-w-7xl mx-auto">
+      <div className="flex justify-between items-center mb-6">
+        <div>
+          <h1 className="text-3xl font-extrabold text-gray-900">My Classes</h1>
+          <p className="text-gray-600 mt-1">Manage your course schedule and information</p>
+        </div>
+        <button
+          onClick={() => {
+            setEditingClass(null);
+            setShowCreateModal(true);
+          }}
+          className="px-6 py-3 rounded-xl text-white font-semibold hover:opacity-90 transition shadow-sm flex items-center gap-2"
+          style={{ backgroundColor: MAROON }}
+        >
+          <Plus size={20} />
+          Add Class
+        </button>
+      </div>
 
-        setLoading(true);
-        setError(null);
-        const results = [];
+      {/* Classes Grid */}
+      {classes.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {classes.map(classItem => (
+            <ClassCard
+              key={classItem.id}
+              classItem={classItem}
+              onEdit={() => {
+                setEditingClass(classItem);
+                setShowCreateModal(true);
+              }}
+              onDelete={() => handleDeleteClass(classItem.id)}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-12 text-center">
+          <BookOpen className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+          <h3 className="text-xl font-bold text-gray-900 mb-2">No classes yet</h3>
+          <p className="text-gray-600 mb-6">Add your first class to get started</p>
+          <button
+            onClick={() => setShowCreateModal(true)}
+            className="px-6 py-3 rounded-xl text-white font-semibold hover:opacity-90 transition inline-flex items-center gap-2"
+            style={{ backgroundColor: MAROON }}
+          >
+            <Plus size={20} />
+            Add Your First Class
+          </button>
+        </div>
+      )}
 
-        try {
-            // Process each file individually
-            for (const file of files) {
-                setProcessingFile(file.name);
+      {/* Create/Edit Modal */}
+      {showCreateModal && (
+        <ClassFormModal
+          classData={editingClass}
+          onClose={() => {
+            setShowCreateModal(false);
+            setEditingClass(null);
+            setShowSyllabusReader(false);
+          }}
+          onSave={handleCreateClass}
+          showSyllabusReader={showSyllabusReader}
+          setShowSyllabusReader={setShowSyllabusReader}
+        />
+      )}
+    </div>
+  );
+}
 
-                const formData = new FormData();
-                formData.append("file", file);
-                console.log("test")
-                const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/syllabus/`, {
-                    method: "POST",
-                    body: formData,
-                });
+function ClassCard({ classItem, onEdit, onDelete }) {
+  return (
+    <div className="bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md transition overflow-hidden">
+      <div className="h-2" style={{ backgroundColor: classItem.color }}></div>
+      
+      <div className="p-6">
+        <div className="flex justify-between items-start mb-4">
+          <div>
+            <h3 className="text-xl font-extrabold text-gray-900">{classItem.name}</h3>
+            <p className="text-sm text-gray-600">{classItem.fullName}</p>
+          </div>
+          <div className="flex gap-2">
+            <button
+              onClick={onEdit}
+              className="p-2 rounded-lg hover:bg-gray-100 transition"
+              title="Edit class"
+            >
+              <Edit size={18} className="text-gray-600" />
+            </button>
+            <button
+              onClick={onDelete}
+              className="p-2 rounded-lg hover:bg-red-50 transition"
+              title="Delete class"
+            >
+              <Trash2 size={18} className="text-red-600" />
+            </button>
+          </div>
+        </div>
 
-                const data = await res.json();
+        <div className="space-y-2 text-sm">
+          <div className="flex items-center gap-2 text-gray-700">
+            <User size={16} className="text-gray-400" />
+            <span>{classItem.professor}</span>
+          </div>
+          <div className="flex items-center gap-2 text-gray-700">
+            <MapPin size={16} className="text-gray-400" />
+            <span>{classItem.location}</span>
+          </div>
+          <div className="flex items-center gap-2 text-gray-700">
+            <Clock size={16} className="text-gray-400" />
+            <span>{classItem.meetingTimes}</span>
+          </div>
+          <div className="flex items-center gap-2 text-gray-700">
+            <Calendar size={16} className="text-gray-400" />
+            <span>Exam: {new Date(classItem.examDate).toLocaleDateString()}</span>
+          </div>
+          <div className="flex items-center gap-2 text-gray-700">
+            <GraduationCap size={16} className="text-gray-400" />
+            <span>{classItem.creditHours} Credit Hours</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
-                if (!res.ok) {
-                    results.push({
-                        fileName: file.name,
-                        success: false,
-                        error: data.error || "Failed to process file"
-                    });
-                } else {
-                    results.push({
-                        fileName: file.name,
-                        success: true,
-                        data: data
-                    });
-                }
-            }
+function ClassFormModal({ classData, onClose, onSave, showSyllabusReader, setShowSyllabusReader }) {
+  const [formData, setFormData] = useState(classData || {
+    name: "",
+    fullName: "",
+    professor: "",
+    location: "",
+    examDate: "",
+    creditHours: 3,
+    meetingTimes: "",
+    color: "#3B82F6"
+  });
 
-            setResponse(results);
-        } catch (err) {
-            setError(`Network error: ${err.message}. Make sure the Django server is running.`);
-            console.error(err);
-        } finally {
-            setLoading(false);
-            setProcessingFile(null);
-        }
-    };
+  const handleSubmit = () => {
+    if (!formData.name || !formData.fullName || !formData.professor) {
+      alert("Please fill in required fields (Class Code, Full Name, Professor)");
+      return;
+    }
+    onSave(formData);
+  };
 
-    const saveToCalendar = async () => {
-        if (response == null) return;
+  const handleSyllabusData = (extractedData) => {
+    // Auto-fill form with extracted syllabus data
+    // This is a placeholder - you'll customize based on your syllabus extraction format
+    if (extractedData.courseName) setFormData(prev => ({ ...prev, fullName: extractedData.courseName }));
+    if (extractedData.professor) setFormData(prev => ({ ...prev, professor: extractedData.professor }));
+    if (extractedData.location) setFormData(prev => ({ ...prev, location: extractedData.location }));
+  };
 
-        setSaving(true);
-        setError(null);
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
+      <div 
+        className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center">
+          <h2 className="text-2xl font-extrabold text-gray-900">
+            {classData ? "Edit Class" : "Add New Class"}
+          </h2>
+          <button
+            onClick={onClose}
+            className="p-2 hover:bg-gray-100 rounded-lg transition"
+          >
+            <X size={24} className="text-gray-600" />
+          </button>
+        </div>
 
-        try {
-            for (const result of response) {
-                if (!result.success) {
-                    console.log(`Skipping ${result.fileName} - processing failed`);
-                    continue;
-                }
+        <div className="p-6">
+          {/* Syllabus Reader Toggle */}
+          <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <UploadCloud className="text-blue-600" size={24} />
+                <div>
+                  <p className="font-semibold text-gray-900">Auto-fill from Syllabus</p>
+                  <p className="text-sm text-gray-600">Upload your syllabus PDF to extract course information</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowSyllabusReader(!showSyllabusReader)}
+                className="px-4 py-2 rounded-lg font-semibold transition"
+                style={{ 
+                  backgroundColor: showSyllabusReader ? "#E5E7EB" : MAROON,
+                  color: showSyllabusReader ? "#374151" : "white"
+                }}
+              >
+                {showSyllabusReader ? "Hide" : "Upload Syllabus"}
+              </button>
+            </div>
+          </div>
 
-                setSavingFile(result.fileName);
+          {/* Syllabus Reader Component */}
+          {showSyllabusReader && (
+            <div className="mb-6">
+              <SyllabusReader onDataExtracted={handleSyllabusData} />
+            </div>
+          )}
 
-                for (const date of result.data.dates) {
-                    try {
-                        console.log(`${import.meta.env.VITE_BACKEND_URL}/api/calendar/events/" `)
-                        console.log("Testing")
-                        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/calendar/events/`, {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                            },
-                            body: JSON.stringify({
-                                'title': date.description,
-                                'description': `From ${result.fileName}`,
-                                'date': date.date,
-                                'time': '8:00', // Replace this later
-                                'type': date.event_type,
-                                'course': 'MATH 151', // Replace this later
-                                'color': '#FF5733' // Replace this later
-                            })
-                        });
+          {/* Manual Form */}
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block font-semibold mb-2 text-sm" style={{ color: MAROON }}>
+                  Class Code *
+                </label>
+                <input
+                  type="text"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  placeholder="Ex: CSCE 314"
+                  className="w-full p-3 rounded-lg border border-gray-300 focus:ring-2"
+                  style={{ outlineColor: MAROON }}
+                />
+              </div>
 
-                        const data = await res.json();
+              <div>
+                <label className="block font-semibold mb-2 text-sm" style={{ color: MAROON }}>
+                  Full Name *
+                </label>
+                <input
+                  type="text"
+                  value={formData.fullName}
+                  onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                  placeholder="Ex: Programming Languages"
+                  className="w-full p-3 rounded-lg border border-gray-300 focus:ring-2"
+                  style={{ outlineColor: MAROON }}
+                />
+              </div>
+            </div>
 
-                        // Could check if the request was successful here (data.success) and then add to a counter of successfully added events
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block font-semibold mb-2 text-sm" style={{ color: MAROON }}>
+                  Professor *
+                </label>
+                <input
+                  type="text"
+                  value={formData.professor}
+                  onChange={(e) => setFormData({ ...formData, professor: e.target.value })}
+                  placeholder="Ex: Dr. Smith"
+                  className="w-full p-3 rounded-lg border border-gray-300 focus:ring-2"
+                  style={{ outlineColor: MAROON }}
+                />
+              </div>
 
-                    } catch (err) {
-                        console.error(`Failed to create event: ${date.description}`);
-                    }
-                }
-            }
-        } catch (err) {
-            setError(`Network error: ${err.message}. Make sure the Django server is running.`);
-            console.error(err);
-        } finally {
-            setSaving(false);
-            setSavingFile(null);
-        }
+              <div>
+                <label className="block font-semibold mb-2 text-sm" style={{ color: MAROON }}>
+                  Location
+                </label>
+                <input
+                  type="text"
+                  value={formData.location}
+                  onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                  placeholder="Ex: HRBB 124"
+                  className="w-full p-3 rounded-lg border border-gray-300 focus:ring-2"
+                  style={{ outlineColor: MAROON }}
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block font-semibold mb-2 text-sm" style={{ color: MAROON }}>
+                Meeting Times
+              </label>
+              <input
+                type="text"
+                value={formData.meetingTimes}
+                onChange={(e) => setFormData({ ...formData, meetingTimes: e.target.value })}
+                placeholder="Ex: MWF 10:20-11:10 AM"
+                className="w-full p-3 rounded-lg border border-gray-300 focus:ring-2"
+                style={{ outlineColor: MAROON }}
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block font-semibold mb-2 text-sm" style={{ color: MAROON }}>
+                  Exam Date
+                </label>
+                <input
+                  type="date"
+                  value={formData.examDate}
+                  onChange={(e) => setFormData({ ...formData, examDate: e.target.value })}
+                  className="w-full p-3 rounded-lg border border-gray-300 focus:ring-2"
+                  style={{ outlineColor: MAROON }}
+                />
+              </div>
+
+              <div>
+                <label className="block font-semibold mb-2 text-sm" style={{ color: MAROON }}>
+                  Credit Hours
+                </label>
+                <input
+                  type="number"
+                  value={formData.creditHours}
+                  onChange={(e) => setFormData({ ...formData, creditHours: parseInt(e.target.value) })}
+                  min="1"
+                  max="6"
+                  className="w-full p-3 rounded-lg border border-gray-300 focus:ring-2"
+                  style={{ outlineColor: MAROON }}
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block font-semibold mb-2 text-sm" style={{ color: MAROON }}>
+                Color Tag
+              </label>
+              <div className="flex gap-3">
+                {["#3B82F6", "#10B981", "#F59E0B", "#EF4444", "#8B5CF6", "#EC4899"].map(color => (
+                  <button
+                    key={color}
+                    onClick={() => setFormData({ ...formData, color })}
+                    className="w-10 h-10 rounded-lg border-2 transition"
+                    style={{ 
+                      backgroundColor: color,
+                      borderColor: formData.color === color ? MAROON : "transparent"
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex gap-3 mt-6">
+            <button
+              onClick={onClose}
+              className="flex-1 py-3 rounded-lg border-2 font-semibold hover:bg-gray-50 transition"
+              style={{ borderColor: MAROON, color: MAROON }}
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleSubmit}
+              className="flex-1 py-3 rounded-lg text-white font-semibold hover:opacity-90 transition"
+              style={{ backgroundColor: MAROON }}
+            >
+              {classData ? "Save Changes" : "Add Class"}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SyllabusReader({ onDataExtracted }) {
+  const [files, setFiles] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [response, setResponse] = useState(null);
+  const [error, setError] = useState(null);
+
+  const handleFileChange = (e) => {
+    const selectedFiles = [...e.target.files];
+
+    const invalidFiles = selectedFiles.filter(file => !file.name.endsWith('.pdf'));
+    if (invalidFiles.length > 0) {
+      setError(`Invalid file type. Only PDFs are allowed.`);
+      return;
     }
 
-    const removeFile = (index) => {
-        setFiles(files.filter((_, i) => i !== index));
-    };
+    const MAX_SIZE = 10 * 1024 * 1024;
+    const oversizedFiles = selectedFiles.filter(file => file.size > MAX_SIZE);
+    if (oversizedFiles.length > 0) {
+      setError(`File too large. Maximum size is 10MB.`);
+      return;
+    }
 
-    return (
-        <div className="max-w-4xl mx-auto mt-6 p-6 bg-white rounded-2xl shadow-lg">
-            <div className="flex items-center gap-3 mb-4">
-                <BookOpen className="w-8 h-8  " />
-                <h1 className="text-2xl font-bold">Syllabus Reader</h1>
-            </div>
+    setFiles(selectedFiles);
+    setError(null);
+    setResponse(null);
+  };
 
-            <p className="text-gray-600 mb-6">
-                Upload syllabus PDF files to automatically extract important dates, deadlines, and course information.
-            </p>
+  const handleSubmit = async () => {
+    if (files.length === 0) return;
 
-            {/* Error Alert */}
-            {error && (
-                <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
-                    <XCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
-                    <div className="flex-1">
-                        <p className="text-red-800 font-medium">Error</p>
-                        <p className="text-red-700 text-sm">{error}</p>
-                    </div>
-                </div>
-            )}
+    setLoading(true);
+    setError(null);
 
-            {/* Upload Box */}
-            <label className="flex flex-col items-center justify-center w-full p-10 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition">
-                <UploadCloud className="w-10 h-10 text-gray-500 mb-3" />
-                <span className="text-gray-700 font-medium">Click to upload PDFs</span>
-                <span className="text-gray-500 text-sm">(You can select multiple files)</span>
+    try {
+      const formData = new FormData();
+      formData.append("file", files[0]);
 
-                <input
-                    type="file"
-                    accept="application/pdf"
-                    multiple
-                    className="hidden"
-                    onChange={handleFileChange}
-                />
-            </label>
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/syllabus/`, {
+        method: "POST",
+        body: formData,
+      });
 
-            {/* File List */}
-            {files.length > 0 && (
-                <div className="mt-6 space-y-2">
-                    <h2 className="font-medium text-gray-700">Selected Files ({files.length}):</h2>
+      const data = await res.json();
 
-                    {files.map((file, idx) => (
-                        <div
-                            key={idx}
-                            className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border hover:bg-gray-100 transition"
-                        >
-                            <div className="flex items-center gap-3">
-                                <FileText className="text-blue-600 w-5 h-5" />
-                                <div>
-                                    <p className="text-gray-800 font-medium">{file.name}</p>
-                                    <p className="text-gray-500 text-xs">
-                                        {(file.size / 1024 / 1024).toFixed(2)} MB
-                                    </p>
-                                </div>
-                            </div>
+      if (!res.ok) {
+        setError(data.error || "Failed to process file");
+      } else {
+        setResponse(data);
+        if (onDataExtracted) {
+          onDataExtracted(data);
+        }
+      }
+    } catch (err) {
+      setError(`Network error: ${err.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-                            <button
-                                onClick={() => removeFile(idx)}
-                                className="text-red-500 hover:text-red-700 text-sm font-medium"
-                                disabled={loading}
-                            >
-                                Remove
-                            </button>
-                        </div>
-                    ))}
-                </div>
-            )}
+  return (
+    <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 bg-gray-50">
+      <div className="flex items-center gap-3 mb-4">
+        <FileText className="text-blue-600" size={24} />
+        <h3 className="font-bold text-gray-900">Syllabus Parser</h3>
+      </div>
 
-            {/* Submit Button */}
-            <div className="mt-6 space-y-2">
-                <button
-                    onClick={handleSubmit}
-                    disabled={loading || files.length === 0}
-                    className="w-full py-3 bg-blue-600 text-white rounded-xl shadow hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition flex items-center justify-center gap-2 font-medium"
-                >
-                    {loading ? (
-                        <>
-                            <Loader className="w-5 h-5 animate-spin" />
-                            Processing {processingFile}...
-                        </>
-                    ) : (
-                        <>Process {files.length} {files.length === 1 ? 'PDF' : 'PDFs'}</>
-                    )}
-                </button>
-
-                {/* Save to Calendar Button */}
-                {response && (
-                    <button
-                        onClick={saveToCalendar}
-                        disabled={saving}
-                        className="w-full py-3 bg-green-600 text-white rounded-xl shadow hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition flex items-center justify-center gap-2 font-medium"
-                    >
-                        {saving ? (
-                            <>
-                                <Loader className="w-5 h-5 animate-spin" />
-                                Saving {savingFile} results...
-                            </>
-                        ) : (
-                            <>Save results to Calendar</>
-                        )}
-                    </button>
-                )}
-            </div>
-
-            {/* Response Preview */}
-            {response && (
-                <div className="mt-8 space-y-4">
-                    <h3 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
-                        <Calendar className="w-6 h-6 text-blue-600" />
-                        Extraction Results
-                    </h3>
-
-                    {response.map((result, idx) => (
-                        <div
-                            key={idx}
-                            className={`p-5 rounded-xl border ${result.success
-                                ? 'bg-green-50 border-green-200'
-                                : 'bg-red-50 border-red-200'
-                                }`}
-                        >
-                            <div className="flex items-start gap-3 mb-3">
-                                {result.success ? (
-                                    <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-                                ) : (
-                                    <XCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
-                                )}
-                                <div className="flex-1">
-                                    <h4 className="font-semibold text-gray-800">{result.fileName}</h4>
-
-                                    {result.success ? (
-                                        <div className="mt-3 space-y-3">
-                                            {/* Summary */}
-                                            <div className="text-sm text-gray-700">
-                                                Found <span className="font-semibold text-blue-600">
-                                                    {result.data.total_dates_found}
-                                                </span> date(s)
-                                            </div>
-
-                                            {/* Dates List */}
-                                            {result.data.dates && result.data.dates.length > 0 && (
-                                                <div className="space-y-2">
-                                                    <p className="text-sm font-medium text-gray-700">Extracted Dates:</p>
-                                                    <div className="space-y-2 max-h-64 overflow-y-auto">
-                                                        {result.data.dates.map((dateInfo, dateIdx) => (
-                                                            <div
-                                                                key={dateIdx}
-                                                                className="p-3 bg-white rounded-lg border border-gray-200"
-                                                            >
-                                                                <div className="flex items-start justify-between gap-3">
-                                                                    <div className="flex-1">
-                                                                        <p className="font-medium text-gray-800">
-                                                                            {dateInfo.date}
-                                                                        </p>
-                                                                        <p className="text-sm text-gray-600 mt-1">
-                                                                            {dateInfo.description}
-                                                                        </p>
-                                                                    </div>
-                                                                    <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full font-medium">
-                                                                        {dateInfo.event_type}
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            )}
-
-                                            {/* Text Preview */}
-                                            {result.data.text_preview && (
-                                                <details className="mt-3">
-                                                    <summary className="cursor-pointer text-sm text-blue-600 hover:text-blue-700 font-medium">
-                                                        View text preview
-                                                    </summary>
-                                                    <pre className="mt-2 text-xs text-gray-600 bg-white p-3 rounded border overflow-x-auto">
-                                                        {result.data.text_preview}
-                                                    </pre>
-                                                </details>
-                                            )}
-                                        </div>
-                                    ) : (
-                                        <p className="text-sm text-red-700 mt-2">{result.error}</p>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-
-                    {/* Raw JSON Toggle */}
-                    <details className="bg-gray-50 p-4 rounded-lg border">
-                        <summary className="cursor-pointer text-sm font-medium text-gray-700 hover:text-gray-900">
-                            View Raw JSON
-                        </summary>
-                        <pre className="mt-3 text-xs text-gray-800 overflow-x-auto">
-                            {JSON.stringify(response, null, 2)}
-                        </pre>
-                    </details>
-                </div>
-            )}
+      {error && (
+        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2">
+          <XCircle className="w-5 h-5 text-red-600" />
+          <p className="text-red-800 text-sm">{error}</p>
         </div>
-    );
+      )}
+
+      <label className="flex flex-col items-center justify-center p-8 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition">
+        <UploadCloud className="w-8 h-8 text-gray-400 mb-2" />
+        <span className="text-gray-700 font-medium">Upload Syllabus PDF</span>
+        <input
+          type="file"
+          accept="application/pdf"
+          className="hidden"
+          onChange={handleFileChange}
+        />
+      </label>
+
+      {files.length > 0 && (
+        <div className="mt-4">
+          <p className="text-sm text-gray-700 mb-2">Selected: {files[0].name}</p>
+          <button
+            onClick={handleSubmit}
+            disabled={loading}
+            className="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 transition flex items-center justify-center gap-2"
+          >
+            {loading ? (
+              <>
+                <Loader className="w-4 h-4 animate-spin" />
+                Processing...
+              </>
+            ) : (
+              "Extract Information"
+            )}
+          </button>
+        </div>
+      )}
+
+      {response && (
+        <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+          <div className="flex items-center gap-2 mb-2">
+            <CheckCircle className="w-5 h-5 text-green-600" />
+            <p className="font-semibold text-green-800">Successfully extracted!</p>
+          </div>
+          <p className="text-sm text-green-700">Found {response.total_dates_found} dates and events</p>
+        </div>
+      )}
+    </div>
+  );
 }
