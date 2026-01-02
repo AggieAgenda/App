@@ -2,8 +2,17 @@
 import { Link,useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 export function Profile() {
+  const navigate = useNavigate()
+
   return (
     <div className="min-h-screen bg-gray-50 p-6">
+      <button
+          onClick={() => {navigate(-1)}}
+          className="mb-4 inline-flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Go back
+        </button>
       <div className="max-w-4xl mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Profile</h1>
@@ -64,8 +73,16 @@ export function Profile() {
 
 
 export function Settings() {
+  const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-gray-50 p-6">
+      <button
+          onClick={() => {navigate(-1)}}
+          className="mb-4 inline-flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Go back
+        </button>
       <div className="max-w-4xl mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Settings</h1>

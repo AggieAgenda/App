@@ -39,6 +39,11 @@ export default function Login() {
           <h1 className="text-3xl font-bold text-[#500000]">Aggie Agenda</h1>
           <p className="text-gray-600 mt-2">Sign in to continue</p>
         </div>
+        <div className="text-xs text-gray-500 text-center">
+          Loading may take 50+ seconds to keep prices down and aggie agenda free
+        </div>
+
+
 
         {/* Login Card */}
         <div className="bg-white rounded-2xl shadow-xl p-8 space-y-6">
@@ -100,6 +105,7 @@ export default function Login() {
                 Forgot password?
               </Link>
             </div>
+            
 
             {/* Error Message */}
             {error && (
