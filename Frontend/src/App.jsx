@@ -20,6 +20,7 @@ import {Settings, Profile} from './pages/DashboardPages/Settings.jsx';
 import Organizations from './pages/DashboardPages/Organizations.jsx'
 import OrganizationView from './pages/DashboardPages/OrganizationView.jsx';
 import Grades from './pages/DashboardPages/Grades.jsx'
+import NotFound from './pages/NotFound.jsx';
 import {Documentation, LearnMore,Solutions} from './pages/Documentation.jsx';
 
  function App() {
@@ -41,10 +42,10 @@ import {Documentation, LearnMore,Solutions} from './pages/Documentation.jsx';
                 
                 <Route path = "/about" element = {<About/>} />
                 <Route path = "/privacy" element = {<Privacy/>} />
-                <Route path= "*" element = {<Navigate to='/ '></Navigate>} />
+                <Route path= "*" element = {<NotFound/>} />
                 <Route path = '/dashboard'element = { <ProtectedRoute>   <Dashboard/> </ProtectedRoute>     }>
                     <Route path = 'overview' element = {<Overview/>}></Route>
-                    <Route path = 'syllabus' element = {<SyllabusReader/>}></Route>
+                    <Route path = 'classes' element = {<SyllabusReader/>}></Route>
                     <Route path = 'calendar' element = {<Calendar/>}></Route>
                     <Route path = 'events' element = {<Events/>}></Route>
                     <Route path = 'organizations' element = {<Organizations/>}></Route>

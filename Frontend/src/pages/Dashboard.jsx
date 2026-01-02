@@ -5,7 +5,7 @@ import {
   User,
   LogOut,
   Home,
-  FileText,
+  BookOpen,
   Calendar,
   MapPin,
   Users,
@@ -64,7 +64,7 @@ export default function DashboardLayout() {
   const navItems = useMemo(
     () => [
       { id: "overview", label: "Dashboard", icon: Home, path: "/dashboard/overview" },
-      { id: "syllabus", label: "Syllabus Reader", icon: FileText, path: "/dashboard/syllabus" },
+      { id: "classes", label: "Your Classes", icon:  BookOpen, path: "/dashboard/classes" },
       { id: "calendar", label: "Calendar", icon: Calendar, path: "/dashboard/calendar" },
       { id: "events", label: "Find Events", icon: MapPin, path: "/dashboard/events" },
       { id: "organizations", label: "Organizations", icon: Users, path: "/dashboard/organizations" },
