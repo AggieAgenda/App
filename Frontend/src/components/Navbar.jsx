@@ -3,13 +3,11 @@ import React, { useState, useEffect } from 'react';
 import { Calendar, Upload, Download, MapPin, Users, ArrowRight, Menu, X, ChevronUp } from 'lucide-react';
 
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const navigate = useNavigate();
+
   
 
   useEffect(() => {
@@ -20,11 +18,7 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const Func =()=>{
-    navigate('/dashboard/overview')
-    //loginWithGoogle()
-    console.log("Im being called")
-  }
+  
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
       isScrolled ? 'bg-white/95 backdrop-blur-md shadow-md' : 'bg-white'
@@ -66,21 +60,27 @@ export default function Navbar() {
       {isMobileMenuOpen && (
         <div className="md:hidden bg-white border-t border-gray-200 shadow-lg">
           <div className="flex flex-col space-y-4 px-6 py-6">
-            <a href="#features" className="text-gray-700 hover:text-[#500000] transition-colors font-medium">
-              Features
-            </a>
-            <a href="#contact" className="text-gray-700 hover:text-[#500000] transition-colors font-medium">
-              Contact
-            </a>
-            <a href="#about" className="text-gray-700 hover:text-[#500000] transition-colors font-medium">
-              About
-            </a>
-            <button onClick= {Func()} className="px-6 py-2.5 rounded-lg bg-[#500000] text-white hover:bg-[#700000] transition-all text-center">
-              Login
-            </button>
+            <Link to="/documentation/solutions" className="text-gray-700 hover:text-[#500000] transition-colors font-medium">
+            Solutions
+            <span className="absolute w-0 left-0 -bottom-1 h-[2px] bg-[#500000] transition-all duration-300 group-hover:w-full" />
+          </Link>
+          <Link to="/contact" className="text-gray-700 hover:text-[#500000] transition-colors font-medium">
+            Contact
+            <span className="absolute w-0 left-0 -bottom-1 h-[2px] bg-[#500000] transition-all duration-300 group-hover:w-full" />
+          </Link>
+          <Link to="/about" className="text-gray-700 hover:text-[#500000] transition-colors font-medium">
+            About
+            <span className="absolute w-0 left-0 -bottom-1 h-[2px] bg-[#500000] transition-all duration-300 group-hover:w-full" />
+          </Link>
+          <Link to="/login" className=" px-6 py-2.5 rounded-lg bg-[#500000] text-white hover:bg-[#700000] transition-all text-center*">
+            Login
+          </Link>
           </div>
         </div>
+       
       )}
     </nav>
   );
 }
+ {/*text-gray-700 hover:text-[#500000] transition-colors font-medium
+        px-6 py-2.5 rounded-lg bg-[#500000] text-white hover:bg-[#700000] transition-all text-center*/}
