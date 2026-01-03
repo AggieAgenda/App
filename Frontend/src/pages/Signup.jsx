@@ -118,8 +118,11 @@ export default function Signup() {
           </div>
           <h1 className="text-3xl font-bold text-[#500000]">Create Your Account</h1>
           <p className="text-gray-600 mt-2">Join thousands of Aggies staying organized</p>
+           <div className="pt-2 text-xs text-gray-500 text-center">
+          Loading may take 50+ seconds to keep prices down and aggie agenda free
+        </div>  
         </div>
-
+       
         {/* Sign Up Card */}
         <div className="bg-white rounded-2xl shadow-xl p-8 space-y-6">
           {/* Google Sign Up */}

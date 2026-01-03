@@ -349,7 +349,7 @@ export default function DashboardLayout() {
             <div className="bg-[#008000]/5 rounded-lg p-4">
               <p className="text-sm font-semibold text-gray-800 mb-1">Want to upload events ?</p>
               <p className="text-xs text-gray-600 mb-3">Apply to get an Organization account on the settings page or reach out on instagram or by email</p>
-              <Link to="../contact">
+              <Link to="/dashboard/settings">
                 <button className="text-xs text-[#008000] font-semibold hover:underline">
                   Reach out →
                 </button>
