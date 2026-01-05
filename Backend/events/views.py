@@ -105,3 +105,93 @@ def create_calendar_event(request):
             'success': False,
             'error': str(e)
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def update_calendar_event(request, event_id):
+    """
+    Update an existing calendar event.
+    """
+    try:
+        calendar_entry = UserCalendarEvent.objects.get(
+            event__id=event_id, 
+            user=request.user
+        )
+        event = calendar_entry.event
+
+        data = request.data
+        
+        title = data.get('title')
+        description = data.get('description', '')
+        location_name = data.get('location_name', '')
+        starts_at = data.get('starts_at')
+        ends_at = data.get('ends_at')
+        tags = data.get('tags', [])
+        user_notes = data.get('user_notes', '')
+
+        if not title or not starts_at:
+            return Response({
+                'success': False,
+                'error': 'Title and start time are required'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        event.title = title
+        event.description = description
+        event.location_name = location_name
+        event.starts_at = starts_at
+        event.ends_at = ends_at
+        event.tags = tags
+        event.save()
+        
+        calendar_entry.notes = user_notes
+        calendar_entry.save()
+
+        return Response({
+            'success': True,
+            'message': 'Event updated successfully',
+            'event': {
+                'id': str(event.id),
+                'title': event.title,
+                'description': event.description,
+                'location_name': event.location_name,
+                'starts_at': event.starts_at,
+                'ends_at': event.ends_at,
+                'tags': event.tags,
+                'user_notes': calendar_entry.notes,
+                'updated_at': event.updated_at if hasattr(event, 'updated_at') else None
+            }
+        }, status=status.HTTP_200_OK)
+
+    except Exception as e:
+        return Response({
+            'success': False,
+            'error': str(e)
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_calendar_event(request, event_id):
+    """
+    Delete an existing calendar event.
+    """
+    try:
+        calendar_entry = UserCalendarEvent.objects.get(
+            event__id=event_id, 
+            user=request.user
+        )
+        event = calendar_entry.event
+
+        calendar_entry.delete()
+
+        event.delete()
+
+        return Response({
+            'success': True,
+            'message': 'Event deleted successfully',
+        }, status=status.HTTP_200_OK)
+        
+    except Exception as e:
+        return Response({
+            'success': False,
+            'error': str(e)
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

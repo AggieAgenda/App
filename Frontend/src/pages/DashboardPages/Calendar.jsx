@@ -29,9 +29,96 @@ const fromCentralTime = (localDatetimeString) => {
 
 // ==================== IMPORT/EXPORT FUNCTIONS ====================
 
-function handleImportICS() {
-  // TODO: Implement ICS import functionality
-  console.log("Import ICS clicked");
+function handleImportICS(onCreateEvent) {
+  // Create a file input element
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.ics';
+  input.onchange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      try {
+        const text = await file.text();
+        const events = parseICS(text);
+        
+        // Import each event
+        let successCount = 0;
+        for (const event of events) {
+          const success = await onCreateEvent(event);
+          if (success) successCount++;
+        }
+        
+        alert(`Successfully imported ${successCount} out of ${events.length} events`);
+      } catch (error) {
+        console.error('Error importing ICS:', error);
+        alert('Error importing ICS file. Please check the file format.');
+      }
+    }
+  };
+  input.click();
+}
+
+function parseICS(icsText) {
+  const events = [];
+  const lines = icsText.split('\n').map(line => line.trim());
+  
+  let currentEvent = null;
+  
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    
+    if (line === 'BEGIN:VEVENT') {
+      currentEvent = {
+        title: '',
+        location_name: '',
+        starts_at: '',
+        ends_at: '',
+        description: ''
+      };
+    } else if (line === 'END:VEVENT' && currentEvent) {
+      if (currentEvent.title && currentEvent.starts_at) {
+        events.push(currentEvent);
+      }
+      currentEvent = null;
+    } else if (currentEvent) {
+      if (line.startsWith('SUMMARY:')) {
+        currentEvent.title = line.substring(8);
+      } else if (line.startsWith('LOCATION:')) {
+        currentEvent.location_name = line.substring(9);
+      } else if (line.startsWith('DESCRIPTION:')) {
+        currentEvent.description = line.substring(12);
+      } else if (line.startsWith('DTSTART:')) {
+        const dateStr = line.substring(8);
+        currentEvent.starts_at = parseICSDate(dateStr);
+      } else if (line.startsWith('DTEND:')) {
+        const dateStr = line.substring(6);
+        currentEvent.ends_at = parseICSDate(dateStr);
+      }
+    }
+  }
+  
+  return events;
+}
+
+function parseICSDate(icsDate) {
+  // Handle different ICS date formats
+  if (icsDate.includes('T')) {
+    // Format: 20260108T140000 or 20260108T140000Z
+    const cleanDate = icsDate.replace(/[TZ]/g, '');
+    const year = cleanDate.substring(0, 4);
+    const month = cleanDate.substring(4, 6);
+    const day = cleanDate.substring(6, 8);
+    const hour = cleanDate.substring(8, 10) || '00';
+    const minute = cleanDate.substring(10, 12) || '00';
+    
+    // Create the datetime string and treat it as Central Time
+    const datetimeString = `${year}-${month}-${day}T${hour}:${minute}`;
+    
+    // Convert to Central Time for consistent storage
+    return fromCentralTime(datetimeString);
+  }
+  
+  return '';
 }
 
 function handleExportToGoogle() {
@@ -278,7 +365,8 @@ export default function CalendarPage() {
           setView={setView}
           currentDate={currentDate}
           changeDate={changeDate}
-           onImport={handleImportICS} onExport={handleExportToGoogle}
+          onImport={() => handleImportICS(handleCreateEvent)} 
+          onExport={handleExportToGoogle}
         />
 
         <div className="p-6">
@@ -611,13 +699,6 @@ function AddEventPanel({ onCreateEvent }) {
     // Convert to Central Time for consistent storage
     const starts_at = fromCentralTime(formData.starts_at);
     const ends_at = formData.ends_at ? fromCentralTime(formData.ends_at) : null;
-    
-    console.log('Converting to Central Time:', {
-      original_starts_at: formData.starts_at,
-      central_starts_at: starts_at,
-      original_ends_at: formData.ends_at,
-      central_ends_at: ends_at
-    });
     
     const success = await onCreateEvent({
       title: formData.title,
