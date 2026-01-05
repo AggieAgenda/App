@@ -31,8 +31,8 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link to="/features" className="text-gray-600 hover:text-red-900 transition-colors">
-                  Features
+                <Link to="/documentation/solutions" className="text-gray-600 hover:text-red-900 transition-colors">
+                  Solutions
                 </Link>
               </li>
             </ul>
@@ -48,12 +48,12 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link to="/faq" className="text-gray-600 hover:text-red-900 transition-colors">
+                <Link to="/contact" className="text-gray-600 hover:text-red-900 transition-colors">
                   FAQ
                 </Link>
               </li>
               <li>
-                <Link to="/support" className="text-gray-600 hover:text-red-900 transition-colors">
+                <Link to="/contact" className="text-gray-600 hover:text-red-900 transition-colors">
                   Support
                 </Link>
               </li>
