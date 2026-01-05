@@ -13,7 +13,7 @@ export default function Footer() {
             <p className="text-sm text-gray-600">
               Your unified platform for time management at Texas A&M University.
             </p>
-            <a>Donate here</a>
+            
           </div>
 
           {/* Quick Links */}
@@ -31,9 +31,9 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link to="/features" className="text-gray-600 hover:text-red-900 transition-colors">
-                  Features
-                </Link>
+                <a href="https://donate.stripe.com/14A6oG1Y06wkeBmfFQ18c01" className="text-gray-600 hover:text-red-900 transition-colors">
+                  Donate
+                </a>
               </li>
             </ul>
           </div>
@@ -48,12 +48,12 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link to="/faq" className="text-gray-600 hover:text-red-900 transition-colors">
+                <Link to="/contact" className="text-gray-600 hover:text-red-900 transition-colors">
                   FAQ
                 </Link>
               </li>
               <li>
-                <Link to="/support" className="text-gray-600 hover:text-red-900 transition-colors">
+                <Link to="/contact" className="text-gray-600 hover:text-red-900 transition-colors">
                   Support
                 </Link>
               </li>

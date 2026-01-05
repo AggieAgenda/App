@@ -10,12 +10,12 @@ export function Documentation() {
   const [selectedSection, setSelectedSection] = useState('getting-started');
 
   const sections = [
-    { id: 'getting-started', title: 'Getting Started', icon: '🚀' },
-    { id: 'calendar', title: 'Calendar Integration', icon: '📅' },
-    { id: 'syllabus', title: 'Syllabus Reader', icon: '📚' },
-    { id: 'events', title: 'Campus Events', icon: '🎉' },
-    { id: 'organizations', title: 'Organizations', icon: '👥' },
-    { id: 'faq', title: 'FAQ', icon: '❓' },
+    { id: 'getting-started', title: 'Getting Started', icon: '' },
+    { id: 'calendar', title: 'Calendar Integration', icon: '' },
+    { id: 'syllabus', title: 'Syllabus Reader', icon: '' },
+    { id: 'events', title: 'Campus Events', icon: '' },
+    { id: 'organizations', title: 'Organizations', icon: '' },
+    { id: 'faq', title: 'FAQ', icon: '' },
   ];
 
   const content = {
