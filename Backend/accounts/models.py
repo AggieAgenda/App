@@ -30,7 +30,10 @@ class User(AbstractUser):
         if not self.username:
             # create a stable-ish username from email prefix + short uuid
             prefix = (self.email.split("@")[0] if self.email else "user")
-            self.username = f"{prefix}-{str(self.id)[:8]}" if self.id else prefix
+            if not self.id:
+                # Generate a new UUID if not set
+                self.id = uuid.uuid4()
+            self.username = f"{prefix}-{str(self.id)[:8]}"
         super().save(*args, **kwargs)
     def __str__(self):
         return self.email

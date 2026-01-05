@@ -28,3 +28,15 @@ class Event(models.Model):
 
     def __str__(self):
         return self.title
+
+class UserCalendarEvent(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey("accounts.User", on_delete=models.CASCADE)
+    event = models.ForeignKey("events.Event", on_delete=models.CASCADE)
+    added_at = models.DateTimeField(auto_now_add=True)
+
+    custom_title = models.CharField(max_length=200, blank=True)
+    notes = models.TextField(blank=True)
+
+    class Meta:
+        unique_together = ['user', 'event']

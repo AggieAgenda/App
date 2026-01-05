@@ -1,8 +1,31 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const MAROON = "#500000";
 const START_HOUR = 6;
 const END_HOUR = 22;
+const API_URL = import.meta.env.VITE_BACKEND_URL;
+
+// Central Time utilities
+const toCentralTime = (dateString) => {
+  // Convert any datetime to Central Time
+  const date = new Date(dateString);
+  return new Date(date.toLocaleString("en-US", {timeZone: "America/Chicago"}));
+};
+
+const fromCentralTime = (localDatetimeString) => {
+  // Convert datetime-local input (which is in local time) to Central Time for storage
+  // Format: "2026-01-08T14:00" -> Central Time ISO string
+  const localDate = new Date(localDatetimeString);
+  
+  // Create a date object representing the same time but in Central timezone
+  const centralDate = new Date(localDate.toLocaleString("en-US", {timeZone: "America/Chicago"}));
+  
+  // Calculate the offset and adjust
+  const offset = localDate.getTime() - centralDate.getTime();
+  const adjustedDate = new Date(localDate.getTime() - offset);
+  
+  return adjustedDate.toISOString();
+};
 
 // ==================== IMPORT/EXPORT FUNCTIONS ====================
 
@@ -50,7 +73,7 @@ function ExpandRecurringEvents(eventsObj, startDate, endDate) {
   const expanded = [];
   
   Object.values(eventsObj).forEach(evt => {
-    const eventStart = new Date(evt.start);
+    const eventStart = toCentralTime(evt.start);
     
     // Non-recurring event
     if (!evt.recurrence) {
@@ -100,121 +123,105 @@ export default function CalendarPage() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [events, setEvents] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const userCalendar = {
-    userId: "user_123",
-    timezone: "America/Chicago",
-    events: {
-      evt_1: {
-        id: "evt_1",
-        title: "Phys 206",
-        location: "Bloc 202",
-        start: "2025-02-03T11:00:00-06:00",
-        end: "2025-02-03T13:00:00-06:00",
-        recurrence: {
-          freq: "WEEKLY",
-          byDay: ["MO", "WE", "FR"],
-          count: 10
-        },
-        exceptions: []
-      },
-      evt_2: {
-        id: "evt_2",
-        title: "ACC Party",
-        location: "TBD",
-        start: "2025-02-15T12:00:00-06:00",
-        end: null,
-        recurrence: null,
-        exceptions: []
-      },
-      evt_3: {
-        id: "evt_3",
-        title: "Part-Time Job",
-        location: "Work",
-        start: "2025-02-03T15:00:00-06:00",
-        end: "2025-02-03T19:00:00-06:00",
-        recurrence: {
-          freq: "WEEKLY",
-          byDay: ["MO", "WE"]
-        },
-        exceptions: []
-      },
-      evt_4: {
-        id: "evt_4",
-        title: "CS 341 Lecture",
-        location: "Engineering Hall 101",
-        start: "2025-02-04T09:30:00-06:00",
-        end: "2025-02-04T10:45:00-06:00",
-        recurrence: {
-          freq: "WEEKLY",
-          byDay: ["TU", "TH"]
-        },
-        exceptions: []
-      },
-      evt_5: {
-        id: "evt_5",
-        title: "Gym",
-        location: "Rec Center",
-        start: "2025-02-05T18:00:00-06:00",
-        end: "2025-02-05T19:00:00-06:00",
-        recurrence: {
-          freq: "DAILY",
-          count: 5
-        },
-        exceptions: ["2025-02-07T18:00:00-06:00"]
-      },
-      evt_6: {
-        id: "evt_6",
-        title: "Midterm Exam",
-        location: "Bloc 202",
-        start: "2025-02-21T19:00:00-06:00",
-        end: "2025-02-21T21:00:00-06:00",
-        recurrence: null,
-        exceptions: []
-      },
-      evt_7: {
-        id: "evt_7",
-        title: "Hackathon",
-        location: "Student Union",
-        start: "2025-02-08T10:00:00-06:00",
-        end: "2025-02-09T10:00:00-06:00",
-        recurrence: null,
-        exceptions: []
-      },
-      evt_8: {
-        id: "evt_8",
-        title: "Team Standup",
-        location: "Zoom",
-        start: "2025-02-03T10:00:00-06:00",
-        end: "2025-02-03T10:15:00-06:00",
-        recurrence: {
-          freq: "WEEKLY",
-          byDay: ["MO", "TU", "WE", "TH", "FR"]
-        },
-        exceptions: []
-      },
-      evt_9: {
-        id: "evt_9",
-        title: "Doctor Appointment",
-        location: "Health Center",
-        start: "2025-02-12T14:30:00-06:00",
-        end: "2025-02-12T15:15:00-06:00",
-        recurrence: null,
-        exceptions: []
-      },
-      evt_10: {
-        id: "evt_10",
-        title: "Study Group",
-        location: "Library Room 3",
-        start: "2025-02-06T17:00:00-06:00",
-        end: "2025-02-06T19:00:00-06:00",
-        recurrence: {
-          freq: "WEEKLY",
-          byDay: ["TH"],
-          count: 4
-        },
-        exceptions: []
+  // Fetch calendar data on component mount
+  useEffect(() => {
+    fetchCalendarData();
+  }, []);
+
+  const fetchCalendarData = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setError('No authentication token found');
+        return;
       }
+
+      const response = await fetch(`${API_URL}/api/events/calendar/`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Token ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch calendar: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      
+      if (data.success) {
+        // Convert backend events to frontend format
+        const eventsObj = {};
+        data.calendar.forEach((event, index) => {
+          eventsObj[`evt_${index}`] = {
+            id: event.id,
+            title: event.title,
+            location: event.location_name,
+            start: event.starts_at,
+            end: event.ends_at,
+            description: event.description,
+            tags: event.tags,
+            user_notes: event.user_notes,
+            // For now, no recurrence from backend
+            recurrence: null,
+            exceptions: []
+          };
+        });
+        
+        setEvents(eventsObj);
+      } else {
+        setError(data.error || 'Failed to load calendar');
+      }
+    } catch (err) {
+      setError(err.message);
+      console.error('Error fetching calendar:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCreateEvent = async (eventData) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setError('No authentication token found');
+        return false;
+      }
+
+      const response = await fetch(`${API_URL}/api/events/calendar/create/`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Token ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(eventData),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to create event: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      if (data.success) {
+        // Refresh calendar data
+        await fetchCalendarData();
+        return true;
+      } else {
+        setError(data.error || 'Failed to create event');
+        return false;
+      }
+    } catch (err) {
+      setError(err.message);
+      console.error('Error creating event:', err);
+      return false;
     }
   };
 
@@ -224,6 +231,43 @@ export default function CalendarPage() {
     else d.setDate(d.getDate() + delta * 7);
     setCurrentDate(d);
   };
+
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="w-full">
+        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+          <div className="flex items-center justify-center h-64">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#500000] mx-auto mb-4"></div>
+              <p className="text-gray-600">Loading calendar...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="w-full">
+        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+          <div className="flex items-center justify-center h-64">
+            <div className="text-center">
+              <p className="text-red-600 mb-4">Error loading calendar: {error}</p>
+              <button 
+                onClick={fetchCalendarData}
+                className="px-4 py-2 bg-[#500000] text-white rounded-lg hover:bg-[#700000] transition"
+              >
+                Retry
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full">
@@ -241,13 +285,13 @@ export default function CalendarPage() {
           {view === "month" ? (
             <MonthView 
               currentDate={currentDate} 
-              events={userCalendar.events}
+              events={events}
               onEventClick={setSelectedEvent}
             />
           ) : (
             <WeekView
               currentDate={currentDate}
-              events={userCalendar.events}
+              events={events}
               onCellClick={setSelectedSlot}
               onEventClick={setSelectedEvent}
             />
@@ -255,14 +299,15 @@ export default function CalendarPage() {
         </div>
 
         <div className="border-t border-gray-200 bg-gray-50">
-          <AddEventPanel />
+          <AddEventPanel onCreateEvent={handleCreateEvent} />
         </div>
       </div>
 
-      {(selectedSlot || selectedEvent) && (
+        {(selectedSlot || selectedEvent) && (
         <EventDrawer
           slot={selectedSlot}
           event={selectedEvent}
+          onCreateEvent={handleCreateEvent}
           onClose={() => {
             setSelectedSlot(null);
             setSelectedEvent(null);
@@ -383,7 +428,7 @@ function MonthView({ currentDate, events, onEventClick }) {
         {days.map((day, idx) => {
           const cellDate = day ? new Date(year, month, day) : null;
           const dayEvents = cellDate ? expandedEvents.filter(evt => 
-            IsSameDay(new Date(evt.start), cellDate)
+            IsSameDay(toCentralTime(evt.start), cellDate)
           ) : [];
 
           return (
@@ -488,9 +533,17 @@ function WeekView({ currentDate, events, onCellClick, onEventClick }) {
                   {(hour % 12 || 12)}:00 {hour >= 12 ? 'PM' : 'AM'}
                 </div>
                 {days.map(d => {
-                  const dayEvents = expandedEvents.filter(e => {
-                    const eventDate = new Date(e.start);
-                    return IsSameDay(eventDate, d) && eventDate.getHours() === hour;
+                  // Get all events for this day first
+                  const allDayEvents = expandedEvents.filter(e => {
+                    const eventDate = toCentralTime(e.start);
+                    return IsSameDay(eventDate, d);
+                  });
+
+                  // Then filter by hour using Central Time
+                  const dayEvents = allDayEvents.filter(e => {
+                    const eventDate = toCentralTime(e.start);
+                    const eventHour = eventDate.getHours();
+                    return eventHour === hour;
                   });
 
                   return (
@@ -530,68 +583,204 @@ function WeekView({ currentDate, events, onCellClick, onEventClick }) {
 
 // ==================== ADD EVENT PANEL ====================
 
-function AddEventPanel() {
+function AddEventPanel({ onCreateEvent }) {
+  const [formData, setFormData] = useState({
+    title: '',
+    location_name: '',
+    starts_at: '',
+    ends_at: '',
+    description: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!formData.title || !formData.starts_at) {
+      alert('Please fill in title and start time');
+      return;
+    }
+
+    setIsSubmitting(true);
+    
+    // Convert to Central Time for consistent storage
+    const starts_at = fromCentralTime(formData.starts_at);
+    const ends_at = formData.ends_at ? fromCentralTime(formData.ends_at) : null;
+    
+    console.log('Converting to Central Time:', {
+      original_starts_at: formData.starts_at,
+      central_starts_at: starts_at,
+      original_ends_at: formData.ends_at,
+      central_ends_at: ends_at
+    });
+    
+    const success = await onCreateEvent({
+      title: formData.title,
+      location_name: formData.location_name,
+      starts_at,
+      ends_at,
+      description: formData.description
+    });
+
+    if (success) {
+      // Reset form
+      setFormData({
+        title: '',
+        location_name: '',
+        starts_at: '',
+        ends_at: '',
+        description: ''
+      });
+    }
+    
+    setIsSubmitting(false);
+  };
+
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-xl font-extrabold text-gray-900">
           Add Event
         </h3>
-        <div className="flex gap-2">
-          
-        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
-            Event Title
-          </label>
-          <input
-            className="w-full border border-gray-200 rounded-xl p-3 text-gray-900 focus:outline-none focus:ring-2 transition-all bg-white"
-            style={{ outlineColor: MAROON }}
-            placeholder="Team meeting..."
-          />
+      <form onSubmit={handleSubmit}>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
+              Event Title *
+            </label>
+            <input
+              name="title"
+              value={formData.title}
+              onChange={handleInputChange}
+              className="w-full border border-gray-200 rounded-xl p-3 text-gray-900 focus:outline-none focus:ring-2 transition-all bg-white"
+              style={{ outlineColor: MAROON }}
+              placeholder="Team meeting..."
+              required
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
+              Location
+            </label>
+            <input
+              name="location_name"
+              value={formData.location_name}
+              onChange={handleInputChange}
+              className="w-full border border-gray-200 rounded-xl p-3 text-gray-900 focus:outline-none focus:ring-2 transition-all bg-white"
+              style={{ outlineColor: MAROON }}
+              placeholder="Conference room A..."
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
+              Start Time *
+            </label>
+            <input 
+              name="starts_at"
+              value={formData.starts_at}
+              onChange={handleInputChange}
+              type="datetime-local" 
+              className="w-full border border-gray-200 rounded-xl p-3 text-gray-900 focus:outline-none focus:ring-2 transition-all bg-white"
+              style={{ outlineColor: MAROON }}
+              required
+            />
+          </div>
+          
+          <div className="flex items-end">
+            <button 
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full text-white rounded-xl py-3 font-semibold hover:opacity-90 transition-all shadow-sm disabled:opacity-50"
+              style={{ backgroundColor: MAROON }}
+            >
+              {isSubmitting ? 'Adding...' : 'Add Event'}
+            </button>
+          </div>
         </div>
-        
-        <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
-            Location
-          </label>
-          <input
-            className="w-full border border-gray-200 rounded-xl p-3 text-gray-900 focus:outline-none focus:ring-2 transition-all bg-white"
-            style={{ outlineColor: MAROON }}
-            placeholder="Conference room A..."
-          />
-        </div>
-        
-        <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
-            Start Time
-          </label>
-          <input 
-            type="datetime-local" 
-            className="w-full border border-gray-200 rounded-xl p-3 text-gray-900 focus:outline-none focus:ring-2 transition-all bg-white"
-            style={{ outlineColor: MAROON }}
-          />
-        </div>
-        
-        <div className="flex items-end">
-          <button 
-            className="w-full text-white rounded-xl py-3 font-semibold hover:opacity-90 transition-all shadow-sm"
-            style={{ backgroundColor: MAROON }}
-          >
-            Add Event
-          </button>
-        </div>
-      </div>
+      </form>
     </div>
   );
 }
 
 // ==================== EVENT DRAWER ====================
 
-function EventDrawer({ slot, event, onClose }) {
+function EventDrawer({ slot, event, onCreateEvent, onClose }) {
+  const [formData, setFormData] = useState({
+    title: '',
+    location_name: '',
+    starts_at: '',
+    ends_at: '',
+    description: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Pre-fill form when slot is selected (clicking on time slot)
+  useEffect(() => {
+    if (slot && !event) {
+      // Format the date and hour for datetime-local input
+      const year = slot.date.getFullYear();
+      const month = String(slot.date.getMonth() + 1).padStart(2, '0');
+      const day = String(slot.date.getDate()).padStart(2, '0');
+      const hour = String(slot.hour).padStart(2, '0');
+      const dateTimeString = `${year}-${month}-${day}T${hour}:00`;
+      
+      setFormData(prev => ({
+        ...prev,
+        starts_at: dateTimeString
+      }));
+    }
+  }, [slot, event]);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!formData.title || !formData.starts_at) {
+      alert('Please fill in title and start time');
+      return;
+    }
+
+    setIsSubmitting(true);
+    
+    // Convert to Central Time for consistent storage
+    const starts_at = fromCentralTime(formData.starts_at);
+    const ends_at = formData.ends_at ? fromCentralTime(formData.ends_at) : null;
+    
+    const success = await onCreateEvent({
+      title: formData.title,
+      location_name: formData.location_name,
+      starts_at,
+      ends_at,
+      description: formData.description
+    });
+
+    if (success) {
+      // Reset form and close drawer
+      setFormData({
+        title: '',
+        location_name: '',
+        starts_at: '',
+        ends_at: '',
+        description: ''
+      });
+      onClose();
+    }
+    
+    setIsSubmitting(false);
+  };
   return (
     <div className="fixed inset-0 bg-black/30 flex justify-end z-50" onClick={onClose}>
       <div 
@@ -627,7 +816,14 @@ function EventDrawer({ slot, event, onClose }) {
             <div>
               <label className="text-sm font-semibold text-gray-600">Start</label>
               <p className="text-gray-900">
-                {new Date(event.start).toLocaleString()}
+                {toCentralTime(event.start).toLocaleString("en-US", {
+                  timeZone: "America/Chicago",
+                  weekday: "short",
+                  month: "short", 
+                  day: "numeric",
+                  hour: "numeric",
+                  minute: "2-digit"
+                })} CST
               </p>
             </div>
             
@@ -635,7 +831,14 @@ function EventDrawer({ slot, event, onClose }) {
               <div>
                 <label className="text-sm font-semibold text-gray-600">End</label>
                 <p className="text-gray-900">
-                  {new Date(event.end).toLocaleString()}
+                  {toCentralTime(event.end).toLocaleString("en-US", {
+                    timeZone: "America/Chicago",
+                    weekday: "short",
+                    month: "short",
+                    day: "numeric", 
+                    hour: "numeric",
+                    minute: "2-digit"
+                  })} CST
                 </p>
               </div>
             )}
@@ -649,16 +852,29 @@ function EventDrawer({ slot, event, onClose }) {
                 </p>
               </div>
             )}
+            
+            <button
+              onClick={onClose}
+              className="mt-6 w-full text-white py-3 rounded-xl font-semibold hover:opacity-90 transition"
+              style={{ backgroundColor: MAROON }}
+            >
+              Close
+            </button>
           </div>
         ) : (
-          <div className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Event Title
+                Event Title *
               </label>
               <input
+                name="title"
+                value={formData.title}
+                onChange={handleInputChange}
                 className="w-full border border-gray-200 rounded-xl p-3"
-                placeholder="Event title"
+                style={{ outlineColor: MAROON }}
+                placeholder="Team meeting..."
+                required
               />
             </div>
 
@@ -667,31 +883,48 @@ function EventDrawer({ slot, event, onClose }) {
                 Location
               </label>
               <input
+                name="location_name"
+                value={formData.location_name}
+                onChange={handleInputChange}
                 className="w-full border border-gray-200 rounded-xl p-3"
+                style={{ outlineColor: MAROON }}
                 placeholder="Location"
               />
             </div>
 
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Description
+              </label>
+              <textarea
+                name="description"
+                value={formData.description}
+                onChange={handleInputChange}
+                className="w-full border border-gray-200 rounded-xl p-3 h-20 resize-none"
+                style={{ outlineColor: MAROON }}
+                placeholder="Event description..."
+              />
+            </div>
+
             {slot && (
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Date & Time
-                </label>
-                <p className="text-gray-900">
+              <div className="bg-gray-50 p-3 rounded-lg">
+                <p className="text-sm text-gray-600">
+                  <strong>Selected time slot:</strong><br/>
                   {slot.date.toLocaleDateString()} at {slot.hour}:00
                 </p>
               </div>
             )}
-          </div>
-        )}
 
-        <button
-          onClick={onClose}
-          className="mt-6 w-full text-white py-3 rounded-xl font-semibold hover:opacity-90 transition"
-          style={{ backgroundColor: MAROON }}
-        >
-          {event ? "Close" : "Save Event"}
-        </button>
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full text-white py-3 rounded-xl font-semibold hover:opacity-90 transition disabled:opacity-50"
+              style={{ backgroundColor: MAROON }}
+            >
+              {isSubmitting ? 'Creating Event...' : 'Add Event'}
+            </button>
+          </form>
+        )}
       </div>
     </div>
   );
