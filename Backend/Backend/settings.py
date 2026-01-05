@@ -21,7 +21,7 @@ GOOGLE_CLIENT_SECRET = env('GOOGLE_CLIENT_SECRET')
 SECRET_KEY = env('SECRET_KEY')  # Move secret key to .env file!
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.bool("Debug",default=False)
+DEBUG = env.bool("DEBUG", default=False)
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['localhost', '127.0.0.1'])
 
@@ -38,6 +38,11 @@ INSTALLED_APPS = [
     #my apps
     'accounts',
     'api',
+    'events',
+    'calendars',
+    'courses',
+    'login',
+    'organizations',
     
 
     # REST framework
@@ -141,10 +146,14 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "https://aggieagenda.com",
     "https://www.aggieagenda.com",
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
 ]
 CSRF_TRUSTED_ORIGINS = [
     "https://aggieagenda.com",
     "https://www.aggieagenda.com",
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
 ]
 
 ''' change later

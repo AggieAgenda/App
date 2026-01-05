@@ -34,6 +34,9 @@ urlpatterns = [
 
     # Main API
     path("api/", include("api.urls")),
+    
+    # Events API
+    path("api/events/", include("events.urls")),
 
 
 ]

@@ -33,8 +33,6 @@ def register(request):
     Register user with email + password.
     Returns Token + user.
     """
-    from django.conf import settings
-    print("DEBUG:", settings.DEBUG)
     try:
         email = request.data.get("email")
         password = request.data.get("password")
@@ -54,13 +52,13 @@ def register(request):
             )
 
         # Create user (username auto-filled in save())
-        user = User.objects.create_user(
-            username=email,
+        user = User(
             email=email,
-            password=password,
             first_name=first_name,
             last_name=last_name,
         )
+        user.set_password(password)
+        user.save()
 
         token, _ = Token.objects.get_or_create(user=user)
         return Response(
