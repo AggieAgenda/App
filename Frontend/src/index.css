@@ -1,6 +1,19 @@
 @import "tailwindcss";
 
 
+:root{
+  --primary-color: white;
+  --secondary-color: black;
+  --maroon: #550000;
+
+}
+
+.dark{
+  --primary-color: black;
+  --secondary-color: white;
+  --maroon: #550000;
+}
+
 html, body {
   margin: 0;
   padding: 0;
