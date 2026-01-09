@@ -230,7 +230,7 @@ export default function CalendarPage() {
         return;
       }
 
-      const response = await fetch(`${API_URL}/api/events/calendar/`, {
+      const response = await fetch(`${API_URL}/api/calendar`, {
         method: 'GET',
         headers: {
           'Authorization': `Token ${token}`,
@@ -282,8 +282,8 @@ export default function CalendarPage() {
         setError('No authentication token found');
         return false;
       }
-
-      const response = await fetch(`${API_URL}/api/events/calendar/create/`, {
+      console.log(JSON.stringify(eventData))
+      const response = await fetch(`${API_URL}/api/calendar/create`, {
         method: 'POST',
         headers: {
           'Authorization': `Token ${token}`,

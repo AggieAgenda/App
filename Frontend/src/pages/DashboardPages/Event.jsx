@@ -70,19 +70,21 @@ export default function Event() {
   useEffect(() => {
     async function loadEvents() {
       try {
-        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/events/`);
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/events/find`);
         const data = await res.json();
+        console.log(data)
 
-        const normalized = data.map(e => ({
+
+        const normalized = data.events.map(e => ({
           ...e,
-          date: e.date, // ✅ STRING, no conversion
+          date: e.starts_at ? e.starts_at.split('T')[0] :e.date, // ✅ STRING, no conversion
           tags: Array.isArray(e.tags)
             ? e.tags
             : typeof e.tags === "string" && e.tags.trim() !== ""
             ? [e.tags]
             : [],
         }));
-
+        
         setEvents(normalized);
       } catch (err) {
         console.error("Failed to load events:", err);

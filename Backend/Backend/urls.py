@@ -38,5 +38,8 @@ urlpatterns = [
     # Events API
     path("api/events/", include("events.urls")),
 
+    #Calendar API
+    path("api/calendar/", include("calendars.urls")),
+
 
 ]

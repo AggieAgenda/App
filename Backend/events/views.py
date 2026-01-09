@@ -1,10 +1,12 @@
 from django.shortcuts import render
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated,AllowAny
 from rest_framework.response import Response
 from rest_framework import status
 from .models import UserCalendarEvent, Event
 
+
+#Calendar Code
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_user_calendar(request):
@@ -195,3 +197,97 @@ def delete_calendar_event(request, event_id):
             'success': False,
             'error': str(e)
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+# Event Code
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def get_event(request):
+    """
+    Get a events from the database
+    """
+
+    try:
+        responseThing = []
+        events_entries = Event.objects.all()
+        for entry in events_entries:
+            event_data = {
+                'id': str(entry.id),
+                'title': entry.title,
+                'description': entry.description,
+                'location_name': entry.location_name,
+                'starts_at': entry.starts_at,
+                'ends_at': entry.ends_at,
+                'tags': entry.tags,
+                
+            }
+            responseThing.append(event_data)
+
+        return Response({
+            'success': True,
+            'events': responseThing,
+            'total_events': len(responseThing)
+        }) 
+
+    except Exception as e:
+        return Response({
+            'success': False,
+            'error': str(e)
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create_event(request):
+    """
+    Add a new event to database
+    """
+
+    try:
+        data = request.data
+
+        title = data.get('title')
+        description = data.get('description', '')
+        location_name = data.get('location_name', '')
+        starts_at = data.get('starts_at')
+        ends_at = data.get('ends_at')
+        tags = data.get('tags', [])
+        
+
+        if not title or not starts_at:
+            return Response({
+                'success': False,
+                'error': 'Title and start time are required'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        event = Event.objects.create(
+            title=title,
+            description=description,
+            starts_at=starts_at,
+            ends_at=ends_at,
+            location_name=location_name,
+            tags=tags
+        )
+
+        return Response({
+            'success': True,
+            'message': 'Event created successfully',
+            'event': {
+                'id': str(event.id),
+                'title': event.title,
+                'description': event.description,
+                'location_name': event.location_name,
+                'starts_at': event.starts_at,
+                'ends_at': event.ends_at,
+                'tags': event.tags,
+                
+            }
+        }, status=status.HTTP_201_CREATED) 
+
+    except Exception as e:
+        return Response({
+            'success': False,
+            'error': str(e)
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+

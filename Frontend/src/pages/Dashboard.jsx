@@ -31,7 +31,6 @@ export default function DashboardLayout() {
   };*/
   const { uiUser } = useAuth();
   const user = uiUser ?? { name: "Guest", email: "", isOrganization: false };
-  console.log(user)
   
 
   const handleLogout = async () => {
