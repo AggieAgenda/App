@@ -216,6 +216,7 @@ def get_event(request):
                 'title': entry.title,
                 'description': entry.description,
                 'location_name': entry.location_name,
+                'image': entry.image_url,
                 'starts_at': entry.starts_at,
                 'ends_at': entry.ends_at,
                 'tags': entry.tags,

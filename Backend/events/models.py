@@ -7,9 +7,10 @@ class Event(models.Model):
 
     organization = models.ForeignKey(
         "organizations.Organization",
-        on_delete=models.SET_NULL,
+        on_delete=models.CASCADE,
         null=True, blank=True,
         related_name="events",
+
     )
 
     title = models.CharField(max_length=200)
