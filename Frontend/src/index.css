@@ -18,11 +18,11 @@ html, body {
   margin: 0;
   padding: 0;
 
-  overflow-x: hidden;
-  /*overflow-y:hidden; /* hides horizontal scroll */
+  /* overflow-x: hidden;
+  /*overflow-y:hidden; hides horizontal scroll */
 
-  /* overflow-x: auto;
-  overflow-y: auto; hides horizontal scroll */
+  overflow-x: auto;
+  overflow-y: auto; /*hides horizontal scroll*/
 }
 @keyframes float1 {
   0%, 100% { transform: translateY(0px) translateX(0px); }
