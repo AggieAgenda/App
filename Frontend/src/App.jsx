@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate,  } from 'react-router
 import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import AuthCallback from './pages/AuthCallback';
+import Analytics from './contexts/AnalyticsContext.jsx';
+
 
 import Home from './pages/Home';
 import Contact from './pages/Contact.jsx';
@@ -27,6 +29,7 @@ import {Documentation, LearnMore,Solutions} from './pages/Documentation.jsx';
     
       return (
         <Router>
+          <Analytics/>
           <AuthProvider>
             <Routes >
               
