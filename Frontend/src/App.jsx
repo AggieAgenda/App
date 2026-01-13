@@ -4,12 +4,9 @@ import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import AuthCallback from './pages/AuthCallback';
 import Analytics from './contexts/AnalyticsContext.jsx';
-
-
 import Home from './pages/Home';
 import Contact from './pages/Contact.jsx';
 import About from './pages/About.jsx';
-import Template from './pages/Template.jsx';
 import Login from './pages/Login.jsx';
 import Signup from './pages/Signup.jsx';
 import Calendar from './pages/DashboardPages/Calendar.jsx';
@@ -32,7 +29,6 @@ import {Documentation, LearnMore,Solutions} from './pages/Documentation.jsx';
           <Analytics/>
           <AuthProvider>
             <Routes >
-              
                 <Route path="/" element={<Home />} />
                 <Route path="/auth/callback" element={<AuthCallback />} />
                 <Route path="/contact" element={<Contact />} />
@@ -41,8 +37,6 @@ import {Documentation, LearnMore,Solutions} from './pages/Documentation.jsx';
                 <Route path = "/documentation/solutions" element= {<Solutions/>} />
                 <Route path = "/login" element = {<Login/>} />
                 <Route path = "/signup" element = {<Signup/>} />
-
-                
                 <Route path = "/about" element = {<About/>} />
                 <Route path = "/privacy" element = {<Privacy/>} />
                 <Route path= "*" element = {<NotFound/>} />
@@ -57,12 +51,7 @@ import {Documentation, LearnMore,Solutions} from './pages/Documentation.jsx';
                     <Route path = 'settings' element = {<Settings/>}></Route>
                     <Route path = 'profile' element = {<Profile/>}></Route>
                     <Route path= "become-organization" element = {<BecomeOrganization/>} />
-
-
-
                 </Route>
-                
-              
             </Routes>
             </AuthProvider>
         </Router>
