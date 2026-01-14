@@ -1,52 +1,99 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Plus, BookOpen, MapPin, User, Calendar, GraduationCap, Clock, Edit, Trash2, X, UploadCloud, FileText, Loader, CheckCircle, XCircle } from "lucide-react";
 
 const MAROON = "#500000";
 
 export default function Classes() {
-    const [classes, setClasses] = useState([
-        {
-            id: 1,
-            name: "CSCE 314",
-            fullName: "Programming Languages",
-            professor: "Dr. Smith",
-            location: "HRBB 124",
-            examDate: "2025-05-10",
-            creditHours: 3,
-            meetingTimes: "MWF 10:20-11:10 AM",
-            color: "#3B82F6"
-        },
-        {
-            id: 2,
-            name: "MATH 251",
-            fullName: "Engineering Mathematics III",
-            professor: "Dr. Johnson",
-            location: "BLOC 150",
-            examDate: "2025-05-08",
-            creditHours: 3,
-            meetingTimes: "TR 12:45-2:00 PM",
-            color: "#10B981"
-        }
-    ]);
-
+    const [classes, setClasses] = useState([]);
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [editingClass, setEditingClass] = useState(null);
     const [showSyllabusReader, setShowSyllabusReader] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+    const [loadError, setLoadError] = useState(null);
+
+    // Load classes on component mount
+    useEffect(() => {
+        loadClasses();
+    }, []);
+
+    const loadClasses = async (forceBackend = false) => {
+        setIsLoading(true);
+        setLoadError(null);
+
+        try {
+            // If not forcing backend, prefer cache
+            if (!forceBackend) {
+            const cached = localStorage.getItem("courses");
+            if (cached) {
+                const parsed = JSON.parse(cached);
+                setClasses(Array.isArray(parsed) ? parsed : (parsed.courses ?? []));
+                setIsLoading(false);
+                return;
+            }
+            }
+
+            // Force backend OR no cache available
+            const token =
+            localStorage.getItem("token") ||
+            localStorage.getItem("authToken");
+
+            if (!token) {
+            setLoadError("No authentication token found. Please log in again.");
+            setIsLoading(false);
+            return;
+            }
+
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/courses/`, {
+            method: "GET",
+            headers: {
+                Authorization: `Token ${token}`,
+                "Content-Type": "application/json",
+            },
+            });
+
+            const data = await res.json().catch(() => null);
+
+            if (!res.ok) {
+            throw new Error(data?.detail || data?.error || `Failed to load classes (${res.status})`);
+            }
+
+            const courses = Array.isArray(data) ? data : (data?.courses ?? []);
+            setClasses(courses);
+            localStorage.setItem("courses", JSON.stringify(courses));
+        } catch (err) {
+            setLoadError(err.message || "Unknown error");
+            setClasses([]);
+        } finally {
+            setIsLoading(false);
+        }
+        };
+
+
+    const updateLocalStorage = (updatedClasses) => {
+        localStorage.setItem('courses', JSON.stringify(updatedClasses));
+    };
 
     const handleDeleteClass = (classId) => {
         if (confirm("Are you sure you want to delete this class?")) {
-            setClasses(prev => prev.filter(c => c.id !== classId));
+            const updatedClasses = classes.filter(c => c.id !== classId);
+            setClasses(updatedClasses);
+            updateLocalStorage(updatedClasses);
         }
     };
 
     const handleCreateClass = (classData) => {
+        let updatedClasses;
+        
         if (editingClass) {
-            setClasses(prev => prev.map(c =>
+            updatedClasses = classes.map(c =>
                 c.id === editingClass.id ? { ...classData, id: c.id } : c
-            ));
+            );
         } else {
-            setClasses(prev => [...prev, { ...classData, id: Date.now() }]);
+            updatedClasses = [...classes, { ...classData, id: Date.now() }];
         }
+        
+        setClasses(updatedClasses);
+        updateLocalStorage(updatedClasses);
         setShowCreateModal(false);
         setEditingClass(null);
     };
@@ -58,48 +105,81 @@ export default function Classes() {
                     <h1 className="text-3xl font-extrabold text-gray-900">My Classes</h1>
                     <p className="text-gray-600 mt-1">Manage your course schedule and information</p>
                 </div>
-                <button
-                    onClick={() => {
-                        setEditingClass(null);
-                        setShowCreateModal(true);
-                    }}
-                    className="px-6 py-3 rounded-xl text-white font-semibold hover:opacity-90 transition shadow-sm flex items-center gap-2"
-                    style={{ backgroundColor: MAROON }}
-                >
-                    <Plus size={20} />
-                    Add Class
-                </button>
-            </div>
-
-            {/* Classes Grid */}
-            {classes.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {classes.map(classItem => (
-                        <ClassCard
-                            key={classItem.id}
-                            classItem={classItem}
-                            onEdit={() => {
-                                setEditingClass(classItem);
-                                setShowCreateModal(true);
-                            }}
-                            onDelete={() => handleDeleteClass(classItem.id)}
-                        />
-                    ))}
-                </div>
-            ) : (
-                <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-12 text-center">
-                    <BookOpen className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">No classes yet</h3>
-                    <p className="text-gray-600 mb-6">Add your first class to get started</p>
+                <div className="flex gap-3">
                     <button
-                        onClick={() => setShowCreateModal(true)}
-                        className="px-6 py-3 rounded-xl text-white font-semibold hover:opacity-90 transition inline-flex items-center gap-2"
+                        onClick={loadClasses}
+                        className="px-4 py-3 rounded-xl border-2 font-semibold hover:bg-gray-50 transition flex items-center gap-2"
+                        style={{ borderColor: MAROON, color: MAROON }}
+                        disabled={isLoading}
+                    >
+                        {isLoading ? <Loader size={20} className="animate-spin" /> : <UploadCloud size={20} />}
+                        {isLoading ? "Loading..." : "Reload from Backend"}
+                    </button>
+                    <button
+                        onClick={() => {
+                            setEditingClass(null);
+                            setShowCreateModal(true);
+                        }}
+                        className="px-6 py-3 rounded-xl text-white font-semibold hover:opacity-90 transition shadow-sm flex items-center gap-2"
                         style={{ backgroundColor: MAROON }}
                     >
                         <Plus size={20} />
-                        Add Your First Class
+                        Add Class
                     </button>
                 </div>
+            </div>
+
+            {/* Error Message */}
+            {loadError && (
+                <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-3">
+                    <XCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
+                    <div>
+                        <p className="font-semibold text-red-800">Failed to load classes</p>
+                        <p className="text-sm text-red-700">{loadError}</p>
+                    </div>
+                </div>
+            )}
+
+            {/* Loading State */}
+            {isLoading && classes.length === 0 ? (
+                <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-12 text-center">
+                    <Loader className="w-16 h-16 text-gray-300 mx-auto mb-4 animate-spin" />
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">Loading your classes...</h3>
+                    <p className="text-gray-600">Please wait while we fetch your course information</p>
+                </div>
+            ) : (
+                <>
+                    {/* Classes Grid */}
+                    {classes.length > 0 ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {classes.map(classItem => (
+                                <ClassCard
+                                    key={classItem.id}
+                                    classItem={classItem}
+                                    onEdit={() => {
+                                        setEditingClass(classItem);
+                                        setShowCreateModal(true);
+                                    }}
+                                    onDelete={() => handleDeleteClass(classItem.id)}
+                                />
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-12 text-center">
+                            <BookOpen className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                            <h3 className="text-xl font-bold text-gray-900 mb-2">No classes yet</h3>
+                            <p className="text-gray-600 mb-6">Add your first class to get started</p>
+                            <button
+                                onClick={() => setShowCreateModal(true)}
+                                className="px-6 py-3 rounded-xl text-white font-semibold hover:opacity-90 transition inline-flex items-center gap-2"
+                                style={{ backgroundColor: MAROON }}
+                            >
+                                <Plus size={20} />
+                                Add Your First Class
+                            </button>
+                        </div>
+                    )}
+                </>
             )}
 
             {/* Create/Edit Modal */}
@@ -188,12 +268,19 @@ function ClassFormModal({ classData, onClose, onSave, showSyllabusReader, setSho
         color: "#3B82F6"
     });
 
-    const handleSubmit = () => {
+    const handleSubmit = async() => {
         if (!formData.name || !formData.fullName || !formData.professor) {
             alert("Please fill in required fields (Class Code, Full Name, Professor)");
             return;
         }
         onSave(formData);
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/courses/update`, {
+                method: "POST",
+                body: formData,
+            });
+        if (!res.ok){
+            console.log("ERROR Saving ")
+        }
     };
 
     const handleSyllabusData = (extractedData) => {

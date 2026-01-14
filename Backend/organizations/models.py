@@ -20,7 +20,7 @@ class Organization(models.Model):
 class OrganizationMembership(models.Model):
     ROLE_CHOICES = [
         ("admin", "Admin"),
-        ("member", "Member"),
+        ("member", "Member"), # change to owner
     ]
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 

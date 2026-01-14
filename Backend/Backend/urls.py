@@ -41,5 +41,8 @@ urlpatterns = [
     #Calendar API
     path("api/calendar/", include("calendars.urls")),
 
+    #Courses API
+    path("api/courses/", include("courses.urls")),
+
 
 ]
