@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 const MAROON = "#500000";
 
@@ -11,97 +11,36 @@ export default function Organizations() {
   const [mode, setMode] = useState("recommended");
   const [selectedTags, setSelectedTags] = useState(new Set());
   const [selectedOrg, setSelectedOrg] = useState(null);
+  const [organizations,setOrganizations] = useState([])
+  useEffect(() => {
+  let ignore = false; // prevents setting state if component unmounts mid-fetch
 
-  const organizations = useMemo(
-    () => [
-      {
-        id: 1,
-        name: "Aggie Coding Club",
-        image: "/org_coding_club.jpg",
-        description:
-          "Build projects, prep for interviews, and meet other Aggie developers. Weekly workshops + hack nights.",
-        tags: ["tech", "computer science", "workshops"],
-        members: 240,
-        meetingTime: "Thurs 7:00 PM",
-        location: "Zachry 101",
-        link: "https://aggiecodingclub.com",
-        contact_email: "contact@aggiecodingclub.com",
-        founded: "2018"
-      },
-      {
-        id: 2,
-        name: "Aggie Business Society",
-        image: "/org_business.jpg",
-        description:
-          "Professional development, networking, and case competitions for students exploring business careers.",
-        tags: ["business", "networking", "career"],
-        members: 180,
-        meetingTime: "Tues 6:30 PM",
-        location: "Wehner 113",
-        link: "https://aggiebusiness.org",
-        contact_email: "info@aggiebusiness.org",
-        founded: "2015"
-      },
-      {
-        id: 3,
-        name: "Volunteer Aggies",
-        image: "/org_volunteer.jpg",
-        description:
-          "Community service events around College Station with a social, welcoming vibe. No experience needed.",
-        tags: ["service", "community", "free"],
-        members: 320,
-        meetingTime: "Varies",
-        location: "Off-campus",
-        link: "https://volunteeraggies.org",
-        contact_email: "volunteer@tamu.edu",
-        founded: "2012"
-      },
-      {
-        id: 4,
-        name: "Aggie Design Team",
-        image: "/org_design.jpg",
-        description:
-          "Work on real product/UI projects, learn Figma, and collaborate with devs to ship polished experiences.",
-        tags: ["design", "tech", "projects"],
-        members: 95,
-        meetingTime: "Mon 7:00 PM",
-        location: "MSC 2400",
-        link: "https://aggiedesign.com",
-        contact_email: "design@tamu.edu",
-        founded: "2019"
-      },
-      {
-        id: 5,
-        name: "Pre-Health Aggies",
-        image: "/org_prehealth.jpg",
-        description:
-          "Shadowing tips, exam prep, and mentorship for students pursuing medicine, PA, nursing, and more.",
-        tags: ["health", "mentorship", "career"],
-        members: 210,
-        meetingTime: "Wed 6:00 PM",
-        location: "ILCB 110",
-        link: "https://prehealthaggies.org",
-        contact_email: "prehealth@tamu.edu",
-        founded: "2016"
-      },
-      {
-        id: 6,
-        name: "Aggie Outdoors",
-        image: "/org_outdoors.jpg",
-        description:
-          "Weekend hikes, camping trips, and outdoor skill workshops. Great way to explore Texas with friends.",
-        tags: ["outdoors", "community", "trips"],
-        members: 160,
-        meetingTime: "Fri evenings",
-        location: "Meet-up spots vary",
-        link: "https://aggieoutdoors.com",
-        contact_email: "outdoors@tamu.edu",
-        founded: "2017"
-      },
-    ],
-    []
-  );
+  async function loadOrganizations() {
+    try {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/organizations`, {
+        headers: { "Accept": "application/json" },
+      });
 
+      if (!res.ok) throw new Error(`HTTP error! ${res.status}`);
+
+      const data = await res.json();
+
+      // If your backend returns { success, organizations }, pick the right field:
+      const orgs = data.organizations ?? data;
+
+      if (!ignore) setOrganizations(orgs);
+    } catch (err) {
+      console.error("Failed to load organizations:", err);
+      // optional: setError(err.message)
+    }
+  }
+
+  loadOrganizations();
+
+  return () => {
+    ignore = true;
+  };
+}, []);
   const allTags = useMemo(() => {
     const set = new Set();
     for (const o of organizations) (o.tags || []).forEach((t) => set.add(t));

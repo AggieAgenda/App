@@ -44,5 +44,7 @@ urlpatterns = [
     #Courses API
     path("api/courses/", include("courses.urls")),
 
+    path("api/organizations/", include("organizations.urls")),
+
 
 ]
