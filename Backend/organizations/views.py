@@ -139,3 +139,45 @@ def get_organizations(request):
             'error': str(e)
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
+
+@api_view(['SET'])
+@permission_classes([AllowAny]) # need to change allowany
+def add_organization(request):
+    """
+    Get a organizations from the database
+    """
+    try:
+      models.Organization.objects.create(
+          id = 3,
+          # bunch of stuff here
+      )
+      responseThing = []
+      return Response({
+          'success': True,
+          'organizations': responseThing,   
+      }) 
+
+    except Exception as e:
+        return Response({
+            'success': False,
+            'error': str(e)
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+@api_view(['PUT']) #not sure if these all exactly correct
+@permission_classes([AllowAny])
+def join_organization(request):
+  '''will use a join code to join an org'''
+
+  try:
+    orgs = models.Organization.objects.all()
+    join = False
+    for org in orgs:
+       if request.code == org.id:
+          join = True
+
+    if join:
+       print("added as admin to org")
+    else:
+       print("not added as admin")
+  except:
+     print("problem with join code")
