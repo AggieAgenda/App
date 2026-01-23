@@ -8,16 +8,22 @@ export default function About() {
     {
       name: "Dunsin Komolafe",
       role: "Project Manager",
-      image: "https://media.licdn.com/dms/image/v2/D5603AQEtCHQ1JklxXQ/profile-displayphoto-scale_400_400/B56Zkv3EsxI4Ag-/0/1757444590874?e=1767830400&v=beta&t=-2aMBGeK4D1SDxbJuAF-vNIpa56I_WjlQhdHduu_Eps ",
+      image: "https://srhwkgyseddgftlpzkya.supabase.co/storage/v1/object/public/Images/dunsinAggieAgeanda.jpg",
       linkedin: "linkedin.com/in/dunsink",
       
     },
     {
       name: "Aniekan Ekanam",
       role: "Project Co-Manager",
-      image: "https://media.licdn.com/dms/image/v2/D4E03AQFiX2jfSmZ5wg/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1686291366602?e=1767830400&v=beta&t=lSozkdxPvLks_Vttqi-Tgy9BdB-nOo2uurHMJN_DMKs",
+      image: "https://srhwkgyseddgftlpzkya.supabase.co/storage/v1/object/public/Images/aniekanAggieAgenda.jpg ",
       linkedin: "linkedin.com/in/aniekanekanem/"
-    },/*
+    },
+    {
+      name: "Dev Team",
+      image: "https://srhwkgyseddgftlpzkya.supabase.co/storage/v1/object/public/Images/teamAggieAgenda.jpg",
+      linkedin: "linkedin.com/company/aggieagenda"
+    }
+    /*
     {
       name: "Mustafa Argin",
       role: "Project Member",

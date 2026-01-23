@@ -7,5 +7,6 @@ app_name = 'organizations'
 urlpatterns = [
 
     path('', views.get_organizations),
+    path('join', views.join_organization),
     
 ]
