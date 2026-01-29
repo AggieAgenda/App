@@ -7,10 +7,14 @@ import { Link } from 'react-router-dom';
 // src/pages/Features.jsx (or wherever Documentation lives)
 
 
+import { Search, X, BookOpen, Calendar, FileText, Users, HelpCircle, Sparkles, ChevronDown } from 'lucide-react';
+
 export function Documentation() {
   const content = {
     "getting-started": {
       title: "Getting Started with Aggie Agenda",
+      icon: Sparkles,
+      color: "emerald",
       sections: [
         {
           heading: "Quick Start",
@@ -32,6 +36,8 @@ export function Documentation() {
     },
     calendar: {
       title: "Calendar Integration",
+      icon: Calendar,
+      color: "blue",
       sections: [
         {
           heading: "Unified Calendar View",
@@ -49,6 +55,8 @@ export function Documentation() {
     },
     syllabus: {
       title: "Syllabus Reader",
+      icon: FileText,
+      color: "purple",
       sections: [
         {
           heading: "Automatic Parsing",
@@ -66,6 +74,8 @@ export function Documentation() {
     },
     events: {
       title: "Campus Events",
+      icon: Users,
+      color: "amber",
       sections: [
         {
           heading: "Discover Events",
@@ -83,6 +93,8 @@ export function Documentation() {
     },
     organizations: {
       title: "Student Organizations",
+      icon: BookOpen,
+      color: "rose",
       sections: [
         {
           heading: "Organization Directory",
@@ -100,20 +112,36 @@ export function Documentation() {
     },
     faq: {
       title: "Frequently Asked Questions",
+      icon: HelpCircle,
+      color: "indigo",
       sections: [
-        { heading: "Is Aggie Agenda free?", body: "Yes! Aggie Agenda is completely free for all Texas A&M students. We're built by Aggies, for Aggies." },
-        { heading: "How do I sync with Google Calendar?", body: 'Navigate to Settings > Integrations > Google Calendar and click "Connect". Follow the authorization prompts to enable two-way sync.' },
-        { heading: "Can I use Aggie Agenda on mobile?", body: "Absolutely! Aggie Agenda is fully responsive and works great on phones and tablets. We also have native iOS and Android apps coming soon." },
-        { heading: "What if my syllabus doesn't parse correctly?", body: "You can manually edit any information extracted by the Syllabus Reader. If you continue to have issues, contact our support team." },
+        { 
+          heading: "Is Aggie Agenda free?", 
+          body: "Yes! Aggie Agenda is completely free for all Texas A&M students. We're built by Aggies, for Aggies." 
+        },
+        { 
+          heading: "How do I sync with Google Calendar?", 
+          body: 'Navigate to Settings > Integrations > Google Calendar and click "Connect". Follow the authorization prompts to enable two-way sync.' 
+        },
+        { 
+          heading: "Can I use Aggie Agenda on mobile?", 
+          body: "Absolutely! Aggie Agenda is fully responsive and works great on phones and tablets. We also have native iOS and Android apps coming soon." 
+        },
+        { 
+          heading: "What if my syllabus doesn't parse correctly?", 
+          body: "You can manually edit any information extracted by the Syllabus Reader. If you continue to have issues, contact our support team." 
+        },
       ],
     },
   };
 
-  // Build searchable list (one “topic” per top-level section)
+  // Build searchable list (one "topic" per top-level section)
   const allTopics = useMemo(() => {
     return Object.entries(content).map(([id, value]) => ({
       id,
       title: value.title,
+      icon: value.icon,
+      color: value.color,
       // searchable text (title + all headings/bodies)
       haystack: [
         value.title,
@@ -134,103 +162,211 @@ export function Documentation() {
     return allTopics.filter((t) => t.haystack.includes(q));
   }, [query, allTopics]);
 
+  const colorClasses = {
+    emerald: {
+      bg: "bg-emerald-50",
+      border: "border-emerald-200",
+      text: "text-emerald-700",
+      icon: "text-emerald-600",
+      hover: "hover:bg-emerald-100"
+    },
+    blue: {
+      bg: "bg-blue-50",
+      border: "border-blue-200",
+      text: "text-blue-700",
+      icon: "text-blue-600",
+      hover: "hover:bg-blue-100"
+    },
+    purple: {
+      bg: "bg-purple-50",
+      border: "border-purple-200",
+      text: "text-purple-700",
+      icon: "text-purple-600",
+      hover: "hover:bg-purple-100"
+    },
+    amber: {
+      bg: "bg-amber-50",
+      border: "border-amber-200",
+      text: "text-amber-700",
+      icon: "text-amber-600",
+      hover: "hover:bg-amber-100"
+    },
+    rose: {
+      bg: "bg-rose-50",
+      border: "border-rose-200",
+      text: "text-rose-700",
+      icon: "text-rose-600",
+      hover: "hover:bg-rose-100"
+    },
+    indigo: {
+      bg: "bg-indigo-50",
+      border: "border-indigo-200",
+      text: "text-indigo-700",
+      icon: "text-indigo-600",
+      hover: "hover:bg-indigo-100"
+    }
+  };
+
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-50 via-white to-gray-100">
       <main className="flex-1">
         {/* Header / Search */}
-        <section className="px-6 pt-12 pb-6">
-          <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl font-extrabold text-red-900">
-              Documentation
-            </h1>
-            <p className="mt-3 text-gray-600">
-              Search for a topic, then click to expand.
-            </p>
+        <section className="px-6 pt-16 pb-12">
+          <div className="max-w-5xl mx-auto">
+            {/* Title */}
+            <div className="text-center mb-10">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-red-100 rounded-2xl mb-4">
+                <BookOpen className="w-8 h-8 text-red-900" />
+              </div>
+              <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-4">
+                Documentation
+              </h1>
+              <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+                Everything you need to know about Aggie Agenda
+              </p>
+            </div>
 
-            <div className="mt-8">
-              <div className="relative max-w-2xl mx-auto">
+            {/* Search Bar */}
+            <div className="relative max-w-2xl mx-auto">
+              <div className="relative">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder='Search docs (e.g. "Google", "syllabus", "reminders")'
-                  className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 pr-10 shadow-sm focus:outline-none focus:ring-2 focus:ring-red-900"
+                  placeholder='Search documentation...'
+                  className="w-full rounded-2xl border-2 border-gray-200 bg-white pl-12 pr-12 py-4 text-lg shadow-lg focus:outline-none focus:ring-2 focus:ring-red-900 focus:border-transparent transition-all"
                 />
                 {query.length > 0 && (
                   <button
                     onClick={() => setQuery("")}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                     aria-label="Clear search"
                   >
-                    ✕
+                    <X className="w-5 h-5" />
                   </button>
                 )}
               </div>
+              
+              {/* Search hint */}
+              {query.length === 0 && (
+                <div className="mt-4 flex flex-wrap gap-2 justify-center">
+                  <span className="text-sm text-gray-500">Try:</span>
+                  {["Google Calendar", "syllabus", "reminders", "events"].map((term) => (
+                    <button
+                      key={term}
+                      onClick={() => setQuery(term)}
+                      className="text-sm px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full transition-colors"
+                    >
+                      {term}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </section>
 
         {/* Topic list + expandable content */}
-        <section className="px-6 pb-12">
-          <div className="max-w-4xl mx-auto">
-            <div className="mb-4 text-sm text-gray-600">
-              Showing <span className="font-semibold">{filteredTopics.length}</span>{" "}
-              topic{filteredTopics.length === 1 ? "" : "s"}
+        <section className="px-6 pb-16">
+          <div className="max-w-5xl mx-auto">
+            {/* Results count */}
+            <div className="mb-6 flex items-center justify-between">
+              <div className="text-sm text-gray-600">
+                {query ? (
+                  <>
+                    Found <span className="font-semibold text-gray-900">{filteredTopics.length}</span>{" "}
+                    {filteredTopics.length === 1 ? "result" : "results"}
+                  </>
+                ) : (
+                  <>
+                    <span className="font-semibold text-gray-900">{filteredTopics.length}</span>{" "}
+                    {filteredTopics.length === 1 ? "topic" : "topics"} available
+                  </>
+                )}
+              </div>
             </div>
 
-            <div className="space-y-3">
+            {/* Topics */}
+            <div className="space-y-4">
               {filteredTopics.map((topic) => {
                 const isOpen = openId === topic.id;
+                const Icon = topic.icon;
+                const colors = colorClasses[topic.color];
+                
                 return (
                   <div
                     key={topic.id}
-                    className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden"
+                    className={`bg-white border-2 rounded-2xl shadow-md hover:shadow-xl transition-all duration-200 overflow-hidden ${
+                      isOpen ? 'border-red-900' : 'border-gray-200'
+                    }`}
                   >
                     <button
                       onClick={() => setOpenId(isOpen ? "" : topic.id)}
-                      className="w-full flex items-center justify-between gap-4 px-5 py-4 text-left hover:bg-gray-50"
+                      className="w-full flex items-center gap-4 px-6 py-5 text-left hover:bg-gray-50 transition-colors"
                     >
-                      <div>
-                        <div className="text-lg font-bold text-gray-900">
+                      <div className={`flex-shrink-0 w-12 h-12 rounded-xl ${colors.bg} flex items-center justify-center`}>
+                        <Icon className={`w-6 h-6 ${colors.icon}`} />
+                      </div>
+                      
+                      <div className="flex-1 min-w-0">
+                        <div className="text-xl font-bold text-gray-900 mb-1">
                           {topic.value.title}
                         </div>
-                        <div className="text-sm text-gray-600">
-                          {topic.value.sections.length} section
-                          {topic.value.sections.length === 1 ? "" : "s"}
+                        <div className="text-sm text-gray-500">
+                          {topic.value.sections.length} section{topic.value.sections.length === 1 ? "" : "s"}
                         </div>
                       </div>
-                      <span className="text-gray-500">
-                        {isOpen ? "−" : "+"}
-                      </span>
+                      
+                      <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-all ${
+                        isOpen ? 'bg-red-900 text-white rotate-180' : 'bg-gray-100 text-gray-600'
+                      }`}>
+                        <ChevronDown className="w-5 h-5" />
+                      </div>
                     </button>
 
                     {isOpen && (
-                      <div className="px-5 pb-5">
-                        <div className="space-y-4">
+                      <div className="px-6 pb-6 bg-gradient-to-b from-gray-50 to-white">
+                        <div className="space-y-4 pt-2">
                           {topic.value.sections.map((s, idx) => (
-                            <div key={idx} className="rounded-lg bg-gray-50 p-4">
-                              <h3 className="text-base font-semibold text-gray-900">
-                                {s.heading}
+                            <div 
+                              key={idx} 
+                              className="rounded-xl bg-white border border-gray-200 p-5 hover:border-gray-300 transition-colors shadow-sm"
+                            >
+                              <h3 className="text-lg font-bold text-gray-900 mb-2 flex items-start gap-2">
+                                <span className={`flex-shrink-0 w-6 h-6 rounded-full ${colors.bg} ${colors.text} flex items-center justify-center text-xs font-bold mt-0.5`}>
+                                  {idx + 1}
+                                </span>
+                                <span>{s.heading}</span>
                               </h3>
-                              <p className="mt-1 text-gray-700 leading-relaxed">
+                              <p className="text-gray-700 leading-relaxed pl-8">
                                 {s.body}
                               </p>
                             </div>
                           ))}
                         </div>
 
-                        <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                          <h4 className="font-semibold text-blue-900">
-                            Need help?
-                          </h4>
-                          <p className="text-blue-800 mt-1">
-                            Can’t find what you’re looking for? Reach out to support.
-                          </p>
-                          <Link
-                            to="/contact"
-                            className="inline-block mt-3 bg-red-900 text-white px-5 py-2 rounded-lg hover:bg-red-800 transition-colors"
-                          >
-                            Contact Support
-                          </Link>
+                        {/* Help section */}
+                        <div className="mt-6 p-5 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border-2 border-blue-200">
+                          <div className="flex items-start gap-3">
+                            <div className="flex-shrink-0 w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                              <HelpCircle className="w-5 h-5 text-blue-600" />
+                            </div>
+                            <div className="flex-1">
+                              <h4 className="font-bold text-blue-900 mb-1">
+                                Need more help?
+                              </h4>
+                              <p className="text-blue-800 text-sm mb-3">
+                                Can't find what you're looking for? Our support team is here to help.
+                              </p>
+                              <Link
+                                to="/contact"
+                                className="inline-flex items-center gap-2 bg-red-900 text-white px-5 py-2.5 rounded-lg hover:bg-red-800 transition-colors font-medium text-sm shadow-md hover:shadow-lg"
+                              >
+                                Contact Support
+                                <ChevronDown className="w-4 h-4 -rotate-90" />
+                              </Link>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     )}
@@ -238,10 +374,25 @@ export function Documentation() {
                 );
               })}
 
+              {/* No results */}
               {filteredTopics.length === 0 && (
-                <div className="bg-white border border-gray-200 rounded-xl p-8 text-center text-gray-700">
-                  No results for <span className="font-semibold">"{query}"</span>.
-                  Try a different keyword.
+                <div className="bg-white border-2 border-gray-200 rounded-2xl p-12 text-center">
+                  <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Search className="w-8 h-8 text-gray-400" />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">
+                    No results found
+                  </h3>
+                  <p className="text-gray-600 mb-4">
+                    We couldn't find anything matching{" "}
+                    <span className="font-semibold text-gray-900">"{query}"</span>
+                  </p>
+                  <button
+                    onClick={() => setQuery("")}
+                    className="text-red-900 hover:text-red-800 font-medium"
+                  >
+                    Clear search and browse all topics
+                  </button>
                 </div>
               )}
             </div>
