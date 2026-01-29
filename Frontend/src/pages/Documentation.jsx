@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 
 
 import { Search, X, BookOpen, Calendar, FileText, Users, HelpCircle, Sparkles, ChevronDown } from 'lucide-react';
+import Navbar from "../components/Navbar.jsx";
 
 export function Documentation() {
   const content = {
@@ -211,6 +212,10 @@ export function Documentation() {
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-50 via-white to-gray-100">
       <main className="flex-1">
         {/* Header / Search */}
+        <div className="py-10">
+          <Navbar />
+        </div>
+        
         <section className="px-6 pt-16 pb-12">
           <div className="max-w-5xl mx-auto">
             {/* Title */}
@@ -224,6 +229,7 @@ export function Documentation() {
               <p className="text-xl text-gray-600 max-w-2xl mx-auto">
                 Everything you need to know about Aggie Agenda
               </p>
+              {/*<button className=""> Go Back</button> make a go back button to get back to home*/}
             </div>
 
             {/* Search Bar */}
