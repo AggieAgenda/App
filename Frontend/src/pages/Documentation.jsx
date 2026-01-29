@@ -1,195 +1,253 @@
 // src/pages/Features.jsx
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import NavBar from "../components/Navbar.jsx";
 import Footer from "../components/Footer.jsx";
 import SearchBar from '../components/SearchBar.jsx';
 import { Link } from 'react-router-dom';
+// src/pages/Features.jsx (or wherever Documentation lives)
 
-// ==================== DOCUMENTATION PAGE ====================
+
 export function Documentation() {
-  const [selectedSection, setSelectedSection] = useState('getting-started');
-
-  const sections = [
-    { id: 'getting-started', title: 'Getting Started', icon: '' },
-    { id: 'calendar', title: 'Calendar Integration', icon: '' },
-    { id: 'syllabus', title: 'Syllabus Reader', icon: '' },
-    { id: 'events', title: 'Campus Events', icon: '' },
-    { id: 'organizations', title: 'Organizations', icon: '' },
-    { id: 'faq', title: 'FAQ', icon: '' },
-  ];
-
   const content = {
-    'getting-started': {
-      title: 'Getting Started with Aggie Agenda',
+    "getting-started": {
+      title: "Getting Started with Aggie Agenda",
       sections: [
         {
-          heading: 'Quick Start',
-          body: 'Welcome to Aggie Agenda! Get up and running in minutes. Create your account using your Texas A&M email, and you\'ll instantly have access to all campus events, deadlines, and organizational information.'
+          heading: "Quick Start",
+          body: "Welcome to Aggie Agenda! Get up and running in minutes. Create your account using your Texas A&M email, and you'll instantly have access to all campus events, deadlines, and organizational information.",
         },
         {
-          heading: '1. Create Your Account',
-          body: 'Sign up with your @tamu.edu email address to verify your student status and unlock all features.'
+          heading: "1. Create Your Account",
+          body: "Sign up with your @tamu.edu email address to verify your student status and unlock all features.",
         },
         {
-          heading: '2. Import Your Schedule',
-          body: 'Connect your Howdy portal or manually add your class schedule. Aggie Agenda will automatically create calendar events for all your classes.'
+          heading: "2. Import Your Schedule",
+          body: "Connect your Howdy portal or manually add your class schedule. Aggie Agenda will automatically create calendar events for all your classes.",
         },
         {
-          heading: '3. Upload Your Syllabi',
-          body: 'Use our Syllabus Reader to automatically extract assignment deadlines, exam dates, and important course information.'
+          heading: "3. Upload Your Syllabi",
+          body: "Use our Syllabus Reader to automatically extract assignment deadlines, exam dates, and important course information.",
         },
-      ]
+      ],
     },
-    'calendar': {
-      title: 'Calendar Integration',
+    calendar: {
+      title: "Calendar Integration",
       sections: [
         {
-          heading: 'Unified Calendar View',
-          body: 'See all your classes, assignments, events, and personal commitments in one unified calendar. Switch between day, week, and month views.'
+          heading: "Unified Calendar View",
+          body: "See all your classes, assignments, events, and personal commitments in one unified calendar. Switch between day, week, and month views.",
         },
         {
-          heading: 'Google Calendar Sync',
-          body: 'Export your Aggie Agenda calendar to Google Calendar with one click. Any changes you make will automatically sync across both platforms.'
+          heading: "Google Calendar Sync",
+          body: "Export your Aggie Agenda calendar to Google Calendar with one click. Any changes you make will automatically sync across both platforms.",
         },
         {
-          heading: 'Smart Reminders',
-          body: 'Set custom reminders for assignments, exams, and events. Never miss a deadline again with intelligent notification timing.'
+          heading: "Smart Reminders",
+          body: "Set custom reminders for assignments, exams, and events. Never miss a deadline again with intelligent notification timing.",
         },
-      ]
+      ],
     },
-    'syllabus': {
-      title: 'Syllabus Reader',
+    syllabus: {
+      title: "Syllabus Reader",
       sections: [
         {
-          heading: 'Automatic Parsing',
-          body: 'Upload your course syllabi and our AI-powered reader will automatically extract assignment due dates, exam schedules, office hours, and grading policies.'
+          heading: "Automatic Parsing",
+          body: "Upload your course syllabi and our AI-powered reader will automatically extract assignment due dates, exam schedules, office hours, and grading policies.",
         },
         {
-          heading: 'Supported Formats',
-          body: 'Works with PDF, Word documents, and images. Simply drag and drop your syllabus files into the upload area.'
+          heading: "Supported Formats",
+          body: "Works with PDF, Word documents, and images. Simply drag and drop your syllabus files into the upload area.",
         },
         {
-          heading: 'Manual Editing',
-          body: 'Review and edit any extracted information to ensure accuracy. Add notes or additional details to any assignment or deadline.'
+          heading: "Manual Editing",
+          body: "Review and edit any extracted information to ensure accuracy. Add notes or additional details to any assignment or deadline.",
         },
-      ]
+      ],
     },
-    'events': {
-      title: 'Campus Events',
+    events: {
+      title: "Campus Events",
       sections: [
         {
-          heading: 'Discover Events',
-          body: 'Browse all Texas A&M campus events, from career fairs to cultural celebrations. Filter by category, date, or location to find what interests you.'
+          heading: "Discover Events",
+          body: "Browse all Texas A&M campus events, from career fairs to cultural celebrations. Filter by category, date, or location to find what interests you.",
         },
         {
-          heading: 'Aggie Traditions',
-          body: 'Never miss iconic Aggie traditions like Midnight Yell, Muster, Ring Day, and Silver Taps. Get automatic reminders for these special occasions.'
+          heading: "Aggie Traditions",
+          body: "Never miss iconic Aggie traditions like Midnight Yell, Muster, Ring Day, and Silver Taps. Get automatic reminders for these special occasions.",
         },
         {
-          heading: 'Save & Share',
-          body: 'Save events to your calendar and share them with friends. See which events your friends are attending.'
+          heading: "Save & Share",
+          body: "Save events to your calendar and share them with friends. See which events your friends are attending.",
         },
-      ]
+      ],
     },
-    'organizations': {
-      title: 'Student Organizations',
+    organizations: {
+      title: "Student Organizations",
       sections: [
         {
-          heading: 'Organization Directory',
-          body: 'Explore over 1,000+ student organizations at Texas A&M. Search by interest, department, or organization type to find your community.'
+          heading: "Organization Directory",
+          body: "Explore over 1,000+ student organizations at Texas A&M. Search by interest, department, or organization type to find your community.",
         },
         {
-          heading: 'Meeting Times',
-          body: 'Track meeting times for organizations you\'re interested in or already a member of. Get reminders before meetings start.'
+          heading: "Meeting Times",
+          body: "Track meeting times for organizations you're interested in or already a member of. Get reminders before meetings start.",
         },
         {
-          heading: 'Contact Information',
-          body: 'Access officer contact information, social media links, and organization websites all in one place.'
+          heading: "Contact Information",
+          body: "Access officer contact information, social media links, and organization websites all in one place.",
         },
-      ]
+      ],
     },
-    'faq': {
-      title: 'Frequently Asked Questions',
+    faq: {
+      title: "Frequently Asked Questions",
       sections: [
-        {
-          heading: 'Is Aggie Agenda free?',
-          body: 'Yes! Aggie Agenda is completely free for all Texas A&M students. We\'re built by Aggies, for Aggies.'
-        },
-        {
-          heading: 'How do I sync with Google Calendar?',
-          body: 'Navigate to Settings > Integrations > Google Calendar and click "Connect". Follow the authorization prompts to enable two-way sync.'
-        },
-        {
-          heading: 'Can I use Aggie Agenda on mobile?',
-          body: 'Absolutely! Aggie Agenda is fully responsive and works great on phones and tablets. We also have native iOS and Android apps coming soon.'
-        },
-        {
-          heading: 'What if my syllabus doesn\'t parse correctly?',
-          body: 'You can manually edit any information extracted by the Syllabus Reader. If you continue to have issues, contact our support team.'
-        },
-      ]
+        { heading: "Is Aggie Agenda free?", body: "Yes! Aggie Agenda is completely free for all Texas A&M students. We're built by Aggies, for Aggies." },
+        { heading: "How do I sync with Google Calendar?", body: 'Navigate to Settings > Integrations > Google Calendar and click "Connect". Follow the authorization prompts to enable two-way sync.' },
+        { heading: "Can I use Aggie Agenda on mobile?", body: "Absolutely! Aggie Agenda is fully responsive and works great on phones and tablets. We also have native iOS and Android apps coming soon." },
+        { heading: "What if my syllabus doesn't parse correctly?", body: "You can manually edit any information extracted by the Syllabus Reader. If you continue to have issues, contact our support team." },
+      ],
     },
   };
 
+  // Build searchable list (one “topic” per top-level section)
+  const allTopics = useMemo(() => {
+    return Object.entries(content).map(([id, value]) => ({
+      id,
+      title: value.title,
+      // searchable text (title + all headings/bodies)
+      haystack: [
+        value.title,
+        ...value.sections.flatMap((s) => [s.heading, s.body]),
+      ]
+        .join(" ")
+        .toLowerCase(),
+      value,
+    }));
+  }, []);
+
+  const [query, setQuery] = useState("");
+  const [openId, setOpenId] = useState("getting-started");
+
+  const filteredTopics = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return allTopics;
+    return allTopics.filter((t) => t.haystack.includes(q));
+  }, [query, allTopics]);
+
   return (
-    <div className="relative min-h-screen flex flex-col bg-gray-50">
-      
-
-      <div className="flex flex-1">
-        {/* Sidebar */}
-        <aside className="hidden md:block w-64 bg-white border-r border-gray-200 p-6">
-          <h2 className="text-xl font-bold text-red-900 mb-6">Documentation</h2>
-          <nav className="space-y-2">
-            {sections.map(section => (
-              <button
-                key={section.id}
-                onClick={() => setSelectedSection(section.id)}
-                className={`w-full text-left px-4 py-2 rounded-lg transition-colors flex items-center gap-3 ${
-                  selectedSection === section.id
-                    ? 'bg-red-900 text-white'
-                    : 'text-gray-700 hover:bg-gray-100'
-                }`}
-              >
-                <span>{section.icon}</span>
-                <span>{section.title}</span>
-              </button>
-            ))}
-          </nav>
-        </aside>
-
-        {/* Main Content */}
-        <main className="flex-1 p-10 max-w-4xl">
-          <h1 className="text-4xl font-bold text-red-900 mb-8">
-            {content[selectedSection].title}
-          </h1>
-          
-          <div className="space-y-8">
-            {content[selectedSection].sections.map((section, idx) => (
-              <div key={idx} className="bg-white rounded-lg shadow-md p-6">
-                <h2 className="text-2xl font-semibold text-gray-900 mb-3">
-                  {section.heading}
-                </h2>
-                <p className="text-gray-700 leading-relaxed">
-                  {section.body}
-                </p>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-12 p-6 bg-blue-50 rounded-lg border border-blue-200">
-            <h3 className="text-lg font-semibold text-blue-900 mb-2">Need Help?</h3>
-            <p className="text-blue-800 mb-4">
-              Can't find what you're looking for? Reach out to our support team.
+    <div className="min-h-screen flex flex-col bg-gray-50">
+      <main className="flex-1">
+        {/* Header / Search */}
+        <section className="px-6 pt-12 pb-6">
+          <div className="max-w-4xl mx-auto text-center">
+            <h1 className="text-4xl md:text-5xl font-extrabold text-red-900">
+              Documentation
+            </h1>
+            <p className="mt-3 text-gray-600">
+              Search for a topic, then click to expand.
             </p>
-            <Link 
-              to="/contact" 
-              className="inline-block bg-red-900 text-white px-6 py-2 rounded-lg hover:bg-red-800 transition-colors"
-            >
-              Contact Support
-            </Link>
+
+            <div className="mt-8">
+              <div className="relative max-w-2xl mx-auto">
+                <input
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder='Search docs (e.g. "Google", "syllabus", "reminders")'
+                  className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 pr-10 shadow-sm focus:outline-none focus:ring-2 focus:ring-red-900"
+                />
+                {query.length > 0 && (
+                  <button
+                    onClick={() => setQuery("")}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    aria-label="Clear search"
+                  >
+                    ✕
+                  </button>
+                )}
+              </div>
+            </div>
           </div>
-        </main>
-      </div>
+        </section>
+
+        {/* Topic list + expandable content */}
+        <section className="px-6 pb-12">
+          <div className="max-w-4xl mx-auto">
+            <div className="mb-4 text-sm text-gray-600">
+              Showing <span className="font-semibold">{filteredTopics.length}</span>{" "}
+              topic{filteredTopics.length === 1 ? "" : "s"}
+            </div>
+
+            <div className="space-y-3">
+              {filteredTopics.map((topic) => {
+                const isOpen = openId === topic.id;
+                return (
+                  <div
+                    key={topic.id}
+                    className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden"
+                  >
+                    <button
+                      onClick={() => setOpenId(isOpen ? "" : topic.id)}
+                      className="w-full flex items-center justify-between gap-4 px-5 py-4 text-left hover:bg-gray-50"
+                    >
+                      <div>
+                        <div className="text-lg font-bold text-gray-900">
+                          {topic.value.title}
+                        </div>
+                        <div className="text-sm text-gray-600">
+                          {topic.value.sections.length} section
+                          {topic.value.sections.length === 1 ? "" : "s"}
+                        </div>
+                      </div>
+                      <span className="text-gray-500">
+                        {isOpen ? "−" : "+"}
+                      </span>
+                    </button>
+
+                    {isOpen && (
+                      <div className="px-5 pb-5">
+                        <div className="space-y-4">
+                          {topic.value.sections.map((s, idx) => (
+                            <div key={idx} className="rounded-lg bg-gray-50 p-4">
+                              <h3 className="text-base font-semibold text-gray-900">
+                                {s.heading}
+                              </h3>
+                              <p className="mt-1 text-gray-700 leading-relaxed">
+                                {s.body}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+
+                        <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                          <h4 className="font-semibold text-blue-900">
+                            Need help?
+                          </h4>
+                          <p className="text-blue-800 mt-1">
+                            Can’t find what you’re looking for? Reach out to support.
+                          </p>
+                          <Link
+                            to="/contact"
+                            className="inline-block mt-3 bg-red-900 text-white px-5 py-2 rounded-lg hover:bg-red-800 transition-colors"
+                          >
+                            Contact Support
+                          </Link>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+
+              {filteredTopics.length === 0 && (
+                <div className="bg-white border border-gray-200 rounded-xl p-8 text-center text-gray-700">
+                  No results for <span className="font-semibold">"{query}"</span>.
+                  Try a different keyword.
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+      </main>
 
       <Footer />
     </div>
