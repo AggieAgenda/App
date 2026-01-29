@@ -1,195 +1,404 @@
 // src/pages/Features.jsx
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import NavBar from "../components/Navbar.jsx";
 import Footer from "../components/Footer.jsx";
 import SearchBar from '../components/SearchBar.jsx';
 import { Link } from 'react-router-dom';
+// src/pages/Features.jsx (or wherever Documentation lives)
 
-// ==================== DOCUMENTATION PAGE ====================
+
+import { Search, X, BookOpen, Calendar, FileText, Users, HelpCircle, Sparkles, ChevronDown } from 'lucide-react';
+
 export function Documentation() {
-  const [selectedSection, setSelectedSection] = useState('getting-started');
-
-  const sections = [
-    { id: 'getting-started', title: 'Getting Started', icon: '' },
-    { id: 'calendar', title: 'Calendar Integration', icon: '' },
-    { id: 'syllabus', title: 'Syllabus Reader', icon: '' },
-    { id: 'events', title: 'Campus Events', icon: '' },
-    { id: 'organizations', title: 'Organizations', icon: '' },
-    { id: 'faq', title: 'FAQ', icon: '' },
-  ];
-
   const content = {
-    'getting-started': {
-      title: 'Getting Started with Aggie Agenda',
+    "getting-started": {
+      title: "Getting Started with Aggie Agenda",
+      icon: Sparkles,
+      color: "emerald",
       sections: [
         {
-          heading: 'Quick Start',
-          body: 'Welcome to Aggie Agenda! Get up and running in minutes. Create your account using your Texas A&M email, and you\'ll instantly have access to all campus events, deadlines, and organizational information.'
+          heading: "Quick Start",
+          body: "Welcome to Aggie Agenda! Get up and running in minutes. Create your account using your Texas A&M email, and you'll instantly have access to all campus events, deadlines, and organizational information.",
         },
         {
-          heading: '1. Create Your Account',
-          body: 'Sign up with your @tamu.edu email address to verify your student status and unlock all features.'
+          heading: "1. Create Your Account",
+          body: "Sign up with your @tamu.edu email address to verify your student status and unlock all features.",
         },
         {
-          heading: '2. Import Your Schedule',
-          body: 'Connect your Howdy portal or manually add your class schedule. Aggie Agenda will automatically create calendar events for all your classes.'
+          heading: "2. Import Your Schedule",
+          body: "Connect your Howdy portal or manually add your class schedule. Aggie Agenda will automatically create calendar events for all your classes.",
         },
         {
-          heading: '3. Upload Your Syllabi',
-          body: 'Use our Syllabus Reader to automatically extract assignment deadlines, exam dates, and important course information.'
+          heading: "3. Upload Your Syllabi",
+          body: "Use our Syllabus Reader to automatically extract assignment deadlines, exam dates, and important course information.",
         },
-      ]
+      ],
     },
-    'calendar': {
-      title: 'Calendar Integration',
+    calendar: {
+      title: "Calendar Integration",
+      icon: Calendar,
+      color: "blue",
       sections: [
         {
-          heading: 'Unified Calendar View',
-          body: 'See all your classes, assignments, events, and personal commitments in one unified calendar. Switch between day, week, and month views.'
+          heading: "Unified Calendar View",
+          body: "See all your classes, assignments, events, and personal commitments in one unified calendar. Switch between day, week, and month views.",
         },
         {
-          heading: 'Google Calendar Sync',
-          body: 'Export your Aggie Agenda calendar to Google Calendar with one click. Any changes you make will automatically sync across both platforms.'
+          heading: "Google Calendar Sync",
+          body: "Export your Aggie Agenda calendar to Google Calendar with one click. Any changes you make will automatically sync across both platforms.",
         },
         {
-          heading: 'Smart Reminders',
-          body: 'Set custom reminders for assignments, exams, and events. Never miss a deadline again with intelligent notification timing.'
+          heading: "Smart Reminders",
+          body: "Set custom reminders for assignments, exams, and events. Never miss a deadline again with intelligent notification timing.",
         },
-      ]
+      ],
     },
-    'syllabus': {
-      title: 'Syllabus Reader',
+    syllabus: {
+      title: "Syllabus Reader",
+      icon: FileText,
+      color: "purple",
       sections: [
         {
-          heading: 'Automatic Parsing',
-          body: 'Upload your course syllabi and our AI-powered reader will automatically extract assignment due dates, exam schedules, office hours, and grading policies.'
+          heading: "Automatic Parsing",
+          body: "Upload your course syllabi and our AI-powered reader will automatically extract assignment due dates, exam schedules, office hours, and grading policies.",
         },
         {
-          heading: 'Supported Formats',
-          body: 'Works with PDF, Word documents, and images. Simply drag and drop your syllabus files into the upload area.'
+          heading: "Supported Formats",
+          body: "Works with PDF, Word documents, and images. Simply drag and drop your syllabus files into the upload area.",
         },
         {
-          heading: 'Manual Editing',
-          body: 'Review and edit any extracted information to ensure accuracy. Add notes or additional details to any assignment or deadline.'
+          heading: "Manual Editing",
+          body: "Review and edit any extracted information to ensure accuracy. Add notes or additional details to any assignment or deadline.",
         },
-      ]
+      ],
     },
-    'events': {
-      title: 'Campus Events',
+    events: {
+      title: "Campus Events",
+      icon: Users,
+      color: "amber",
       sections: [
         {
-          heading: 'Discover Events',
-          body: 'Browse all Texas A&M campus events, from career fairs to cultural celebrations. Filter by category, date, or location to find what interests you.'
+          heading: "Discover Events",
+          body: "Browse all Texas A&M campus events, from career fairs to cultural celebrations. Filter by category, date, or location to find what interests you.",
         },
         {
-          heading: 'Aggie Traditions',
-          body: 'Never miss iconic Aggie traditions like Midnight Yell, Muster, Ring Day, and Silver Taps. Get automatic reminders for these special occasions.'
+          heading: "Aggie Traditions",
+          body: "Never miss iconic Aggie traditions like Midnight Yell, Muster, Ring Day, and Silver Taps. Get automatic reminders for these special occasions.",
         },
         {
-          heading: 'Save & Share',
-          body: 'Save events to your calendar and share them with friends. See which events your friends are attending.'
+          heading: "Save & Share",
+          body: "Save events to your calendar and share them with friends. See which events your friends are attending.",
         },
-      ]
+      ],
     },
-    'organizations': {
-      title: 'Student Organizations',
+    organizations: {
+      title: "Student Organizations",
+      icon: BookOpen,
+      color: "rose",
       sections: [
         {
-          heading: 'Organization Directory',
-          body: 'Explore over 1,000+ student organizations at Texas A&M. Search by interest, department, or organization type to find your community.'
+          heading: "Organization Directory",
+          body: "Explore over 1,000+ student organizations at Texas A&M. Search by interest, department, or organization type to find your community.",
         },
         {
-          heading: 'Meeting Times',
-          body: 'Track meeting times for organizations you\'re interested in or already a member of. Get reminders before meetings start.'
+          heading: "Meeting Times",
+          body: "Track meeting times for organizations you're interested in or already a member of. Get reminders before meetings start.",
         },
         {
-          heading: 'Contact Information',
-          body: 'Access officer contact information, social media links, and organization websites all in one place.'
+          heading: "Contact Information",
+          body: "Access officer contact information, social media links, and organization websites all in one place.",
         },
-      ]
+      ],
     },
-    'faq': {
-      title: 'Frequently Asked Questions',
+    faq: {
+      title: "Frequently Asked Questions",
+      icon: HelpCircle,
+      color: "indigo",
       sections: [
-        {
-          heading: 'Is Aggie Agenda free?',
-          body: 'Yes! Aggie Agenda is completely free for all Texas A&M students. We\'re built by Aggies, for Aggies.'
+        { 
+          heading: "Is Aggie Agenda free?", 
+          body: "Yes! Aggie Agenda is completely free for all Texas A&M students. We're built by Aggies, for Aggies." 
         },
-        {
-          heading: 'How do I sync with Google Calendar?',
-          body: 'Navigate to Settings > Integrations > Google Calendar and click "Connect". Follow the authorization prompts to enable two-way sync.'
+        { 
+          heading: "How do I sync with Google Calendar?", 
+          body: 'Navigate to Settings > Integrations > Google Calendar and click "Connect". Follow the authorization prompts to enable two-way sync.' 
         },
-        {
-          heading: 'Can I use Aggie Agenda on mobile?',
-          body: 'Absolutely! Aggie Agenda is fully responsive and works great on phones and tablets. We also have native iOS and Android apps coming soon.'
+        { 
+          heading: "Can I use Aggie Agenda on mobile?", 
+          body: "Absolutely! Aggie Agenda is fully responsive and works great on phones and tablets. We also have native iOS and Android apps coming soon." 
         },
-        {
-          heading: 'What if my syllabus doesn\'t parse correctly?',
-          body: 'You can manually edit any information extracted by the Syllabus Reader. If you continue to have issues, contact our support team.'
+        { 
+          heading: "What if my syllabus doesn't parse correctly?", 
+          body: "You can manually edit any information extracted by the Syllabus Reader. If you continue to have issues, contact our support team." 
         },
-      ]
+      ],
     },
   };
 
+  // Build searchable list (one "topic" per top-level section)
+  const allTopics = useMemo(() => {
+    return Object.entries(content).map(([id, value]) => ({
+      id,
+      title: value.title,
+      icon: value.icon,
+      color: value.color,
+      // searchable text (title + all headings/bodies)
+      haystack: [
+        value.title,
+        ...value.sections.flatMap((s) => [s.heading, s.body]),
+      ]
+        .join(" ")
+        .toLowerCase(),
+      value,
+    }));
+  }, []);
+
+  const [query, setQuery] = useState("");
+  const [openId, setOpenId] = useState("getting-started");
+
+  const filteredTopics = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return allTopics;
+    return allTopics.filter((t) => t.haystack.includes(q));
+  }, [query, allTopics]);
+
+  const colorClasses = {
+    emerald: {
+      bg: "bg-emerald-50",
+      border: "border-emerald-200",
+      text: "text-emerald-700",
+      icon: "text-emerald-600",
+      hover: "hover:bg-emerald-100"
+    },
+    blue: {
+      bg: "bg-blue-50",
+      border: "border-blue-200",
+      text: "text-blue-700",
+      icon: "text-blue-600",
+      hover: "hover:bg-blue-100"
+    },
+    purple: {
+      bg: "bg-purple-50",
+      border: "border-purple-200",
+      text: "text-purple-700",
+      icon: "text-purple-600",
+      hover: "hover:bg-purple-100"
+    },
+    amber: {
+      bg: "bg-amber-50",
+      border: "border-amber-200",
+      text: "text-amber-700",
+      icon: "text-amber-600",
+      hover: "hover:bg-amber-100"
+    },
+    rose: {
+      bg: "bg-rose-50",
+      border: "border-rose-200",
+      text: "text-rose-700",
+      icon: "text-rose-600",
+      hover: "hover:bg-rose-100"
+    },
+    indigo: {
+      bg: "bg-indigo-50",
+      border: "border-indigo-200",
+      text: "text-indigo-700",
+      icon: "text-indigo-600",
+      hover: "hover:bg-indigo-100"
+    }
+  };
+
   return (
-    <div className="relative min-h-screen flex flex-col bg-gray-50">
-      
-
-      <div className="flex flex-1">
-        {/* Sidebar */}
-        <aside className="hidden md:block w-64 bg-white border-r border-gray-200 p-6">
-          <h2 className="text-xl font-bold text-red-900 mb-6">Documentation</h2>
-          <nav className="space-y-2">
-            {sections.map(section => (
-              <button
-                key={section.id}
-                onClick={() => setSelectedSection(section.id)}
-                className={`w-full text-left px-4 py-2 rounded-lg transition-colors flex items-center gap-3 ${
-                  selectedSection === section.id
-                    ? 'bg-red-900 text-white'
-                    : 'text-gray-700 hover:bg-gray-100'
-                }`}
-              >
-                <span>{section.icon}</span>
-                <span>{section.title}</span>
-              </button>
-            ))}
-          </nav>
-        </aside>
-
-        {/* Main Content */}
-        <main className="flex-1 p-10 max-w-4xl">
-          <h1 className="text-4xl font-bold text-red-900 mb-8">
-            {content[selectedSection].title}
-          </h1>
-          
-          <div className="space-y-8">
-            {content[selectedSection].sections.map((section, idx) => (
-              <div key={idx} className="bg-white rounded-lg shadow-md p-6">
-                <h2 className="text-2xl font-semibold text-gray-900 mb-3">
-                  {section.heading}
-                </h2>
-                <p className="text-gray-700 leading-relaxed">
-                  {section.body}
-                </p>
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-50 via-white to-gray-100">
+      <main className="flex-1">
+        {/* Header / Search */}
+        <section className="px-6 pt-16 pb-12">
+          <div className="max-w-5xl mx-auto">
+            {/* Title */}
+            <div className="text-center mb-10">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-red-100 rounded-2xl mb-4">
+                <BookOpen className="w-8 h-8 text-red-900" />
               </div>
-            ))}
-          </div>
+              <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-4">
+                Documentation
+              </h1>
+              <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+                Everything you need to know about Aggie Agenda
+              </p>
+            </div>
 
-          <div className="mt-12 p-6 bg-blue-50 rounded-lg border border-blue-200">
-            <h3 className="text-lg font-semibold text-blue-900 mb-2">Need Help?</h3>
-            <p className="text-blue-800 mb-4">
-              Can't find what you're looking for? Reach out to our support team.
-            </p>
-            <Link 
-              to="/contact" 
-              className="inline-block bg-red-900 text-white px-6 py-2 rounded-lg hover:bg-red-800 transition-colors"
-            >
-              Contact Support
-            </Link>
+            {/* Search Bar */}
+            <div className="relative max-w-2xl mx-auto">
+              <div className="relative">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <input
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder='Search documentation...'
+                  className="w-full rounded-2xl border-2 border-gray-200 bg-white pl-12 pr-12 py-4 text-lg shadow-lg focus:outline-none focus:ring-2 focus:ring-red-900 focus:border-transparent transition-all"
+                />
+                {query.length > 0 && (
+                  <button
+                    onClick={() => setQuery("")}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                    aria-label="Clear search"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                )}
+              </div>
+              
+              {/* Search hint */}
+              {query.length === 0 && (
+                <div className="mt-4 flex flex-wrap gap-2 justify-center">
+                  <span className="text-sm text-gray-500">Try:</span>
+                  {["Google Calendar", "syllabus", "reminders", "events"].map((term) => (
+                    <button
+                      key={term}
+                      onClick={() => setQuery(term)}
+                      className="text-sm px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full transition-colors"
+                    >
+                      {term}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
-        </main>
-      </div>
+        </section>
+
+        {/* Topic list + expandable content */}
+        <section className="px-6 pb-16">
+          <div className="max-w-5xl mx-auto">
+            {/* Results count */}
+            <div className="mb-6 flex items-center justify-between">
+              <div className="text-sm text-gray-600">
+                {query ? (
+                  <>
+                    Found <span className="font-semibold text-gray-900">{filteredTopics.length}</span>{" "}
+                    {filteredTopics.length === 1 ? "result" : "results"}
+                  </>
+                ) : (
+                  <>
+                    <span className="font-semibold text-gray-900">{filteredTopics.length}</span>{" "}
+                    {filteredTopics.length === 1 ? "topic" : "topics"} available
+                  </>
+                )}
+              </div>
+            </div>
+
+            {/* Topics */}
+            <div className="space-y-4">
+              {filteredTopics.map((topic) => {
+                const isOpen = openId === topic.id;
+                const Icon = topic.icon;
+                const colors = colorClasses[topic.color];
+                
+                return (
+                  <div
+                    key={topic.id}
+                    className={`bg-white border-2 rounded-2xl shadow-md hover:shadow-xl transition-all duration-200 overflow-hidden ${
+                      isOpen ? 'border-red-900' : 'border-gray-200'
+                    }`}
+                  >
+                    <button
+                      onClick={() => setOpenId(isOpen ? "" : topic.id)}
+                      className="w-full flex items-center gap-4 px-6 py-5 text-left hover:bg-gray-50 transition-colors"
+                    >
+                      <div className={`flex-shrink-0 w-12 h-12 rounded-xl ${colors.bg} flex items-center justify-center`}>
+                        <Icon className={`w-6 h-6 ${colors.icon}`} />
+                      </div>
+                      
+                      <div className="flex-1 min-w-0">
+                        <div className="text-xl font-bold text-gray-900 mb-1">
+                          {topic.value.title}
+                        </div>
+                        <div className="text-sm text-gray-500">
+                          {topic.value.sections.length} section{topic.value.sections.length === 1 ? "" : "s"}
+                        </div>
+                      </div>
+                      
+                      <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-all ${
+                        isOpen ? 'bg-red-900 text-white rotate-180' : 'bg-gray-100 text-gray-600'
+                      }`}>
+                        <ChevronDown className="w-5 h-5" />
+                      </div>
+                    </button>
+
+                    {isOpen && (
+                      <div className="px-6 pb-6 bg-gradient-to-b from-gray-50 to-white">
+                        <div className="space-y-4 pt-2">
+                          {topic.value.sections.map((s, idx) => (
+                            <div 
+                              key={idx} 
+                              className="rounded-xl bg-white border border-gray-200 p-5 hover:border-gray-300 transition-colors shadow-sm"
+                            >
+                              <h3 className="text-lg font-bold text-gray-900 mb-2 flex items-start gap-2">
+                                <span className={`flex-shrink-0 w-6 h-6 rounded-full ${colors.bg} ${colors.text} flex items-center justify-center text-xs font-bold mt-0.5`}>
+                                  {idx + 1}
+                                </span>
+                                <span>{s.heading}</span>
+                              </h3>
+                              <p className="text-gray-700 leading-relaxed pl-8">
+                                {s.body}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+
+                        {/* Help section */}
+                        <div className="mt-6 p-5 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border-2 border-blue-200">
+                          <div className="flex items-start gap-3">
+                            <div className="flex-shrink-0 w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                              <HelpCircle className="w-5 h-5 text-blue-600" />
+                            </div>
+                            <div className="flex-1">
+                              <h4 className="font-bold text-blue-900 mb-1">
+                                Need more help?
+                              </h4>
+                              <p className="text-blue-800 text-sm mb-3">
+                                Can't find what you're looking for? Our support team is here to help.
+                              </p>
+                              <Link
+                                to="/contact"
+                                className="inline-flex items-center gap-2 bg-red-900 text-white px-5 py-2.5 rounded-lg hover:bg-red-800 transition-colors font-medium text-sm shadow-md hover:shadow-lg"
+                              >
+                                Contact Support
+                                <ChevronDown className="w-4 h-4 -rotate-90" />
+                              </Link>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+
+              {/* No results */}
+              {filteredTopics.length === 0 && (
+                <div className="bg-white border-2 border-gray-200 rounded-2xl p-12 text-center">
+                  <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Search className="w-8 h-8 text-gray-400" />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">
+                    No results found
+                  </h3>
+                  <p className="text-gray-600 mb-4">
+                    We couldn't find anything matching{" "}
+                    <span className="font-semibold text-gray-900">"{query}"</span>
+                  </p>
+                  <button
+                    onClick={() => setQuery("")}
+                    className="text-red-900 hover:text-red-800 font-medium"
+                  >
+                    Clear search and browse all topics
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+      </main>
 
       <Footer />
     </div>
