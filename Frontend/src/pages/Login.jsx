@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import GoogleLoginButton from '../components/GoogleLoginButton';
@@ -9,9 +9,96 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showGame, setShowGame] = useState(false);
+  const [gameVisible, setGameVisible] = useState(false);
+  const [gameScore, setGameScore] = useState(0);
+  const [gameTimeLeft, setGameTimeLeft] = useState(20);
+  const [fruits, setFruits] = useState([]);
+  const [gameStopped, setGameStopped] = useState(false);
   const navigate = useNavigate();
-  const { login } = useAuth();
+  //const { login } = useAuth();
   const { loginWithEmail } = useAuth();
+
+  const spawnFruit = () => ({
+    id: crypto.randomUUID(),
+    x: Math.random() * 80 + 10,
+    y: -10,
+    speed: Math.random() * 0.5 + 0.8,
+  });
+
+  const startBubbleGame = () => {
+    setGameVisible(true);
+    setShowGame(true);
+    setGameStopped(false);
+    setGameScore(0);
+    setGameTimeLeft(20);
+    setFruits([spawnFruit()]);
+  };
+
+  const stopBubbleGame = () => {
+    setGameStopped(true);
+    setShowGame(false);
+    setFruits([]);
+  };
+
+  useEffect(() => {
+    let unlockTimer;
+
+    if (loading) {
+      unlockTimer = setTimeout(() => {
+        startBubbleGame();
+      }, 6000);
+    } else {
+      setShowGame(false);
+    }
+
+    return () => {
+      if (unlockTimer) {
+        clearTimeout(unlockTimer);
+      }
+    };
+  }, [loading]);
+
+  useEffect(() => {
+    if (!showGame || gameTimeLeft <= 0 || gameStopped) {
+      return undefined;
+    }
+
+    const timer = setInterval(() => {
+      setGameTimeLeft((time) => time - 1);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [showGame, gameTimeLeft]);
+
+  useEffect(() => {
+    if (!showGame || gameTimeLeft <= 0 || gameStopped) {
+      return undefined;
+    }
+
+    const moveInterval = setInterval(() => {
+      setFruits((current) => {
+        const moved = current
+          .map((fruit) => ({ ...fruit, y: fruit.y + fruit.speed * 3 }))
+          .filter((fruit) => fruit.y <= 110);
+        return moved.length ? moved : [spawnFruit()];
+      });
+    }, 80);
+
+    return () => clearInterval(moveInterval);
+  }, [showGame, gameTimeLeft]);
+
+  useEffect(() => {
+    if (!showGame || gameTimeLeft <= 0) {
+      return undefined;
+    }
+
+    const spawnInterval = setInterval(() => {
+      setFruits((current) => [...current, spawnFruit()]);
+    }, 900);
+
+    return () => clearInterval(spawnInterval);
+  }, [showGame, gameTimeLeft]);
 
   const handleEmailLogin = async (e) => {
     e.preventDefault();
@@ -19,13 +106,22 @@ export default function Login() {
     setError('');
 
     try {
-    await loginWithEmail({ email, password });
-    navigate("/dashboard/overview");
-  } catch (err) {
-    setError(err.message || "Invalid credentials");
-  } finally {
-    setLoading(false);
-  }
+      await loginWithEmail({ email, password });
+      navigate("/dashboard/overview");
+    } catch (err) {
+      setError(err.message || "Invalid credentials");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSlice = (id) => {
+    if (!showGame || gameTimeLeft <= 0 || gameStopped) {
+      return;
+    }
+
+    setFruits((current) => current.filter((fruit) => fruit.id !== id));
+    setGameScore((score) => score + 1);
   };
 
   return (
@@ -39,11 +135,9 @@ export default function Login() {
           <h1 className="text-3xl font-bold text-[#500000]">Aggie Agenda</h1>
           <p className="text-gray-600 mt-2">Sign in to continue</p>
         </div>
-        <div className="text-xs text-gray-500 text-center">
+        <div className="text-xs text-gray-500 text-center mb-4">
           Loading may take 50+ seconds to keep prices down and aggie agenda free
         </div>
-
-
 
         {/* Login Card */}
         <div className="bg-white rounded-2xl shadow-xl p-8 space-y-6">
@@ -105,7 +199,6 @@ export default function Login() {
                 Forgot password?
               </Link>
             </div>
-            
 
             {/* Error Message */}
             {error && (
@@ -130,6 +223,76 @@ export default function Login() {
               )}
             </button>
           </form>
+
+          {/* Fruit Ninja Game Toggle */}
+          <div className="pt-2 border-t border-gray-100">
+            <div className="flex items-center justify-between text-sm text-gray-700">
+              <div className="flex items-center gap-2">
+                <span className="font-semibold">Falling maroon bubbles mini-game</span>
+                <span className="text-xs text-gray-500">(auto starts if loading ~6s)</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={startBubbleGame}
+                  className="text-xs px-3 py-2 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50"
+                >
+                  Play now
+                </button>
+                <button
+                  type="button"
+                  onClick={stopBubbleGame}
+                  className="text-xs px-3 py-2 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50"
+                >
+                  Stop
+                </button>
+              </div>
+            </div>
+
+            {gameVisible && (
+              <div className="mt-3 p-4 bg-gray-50 border border-dashed border-gray-200 rounded-xl">
+                <div className="relative w-full h-48 rounded-lg bg-white overflow-hidden">
+                  {showGame && gameTimeLeft > 0 ? (
+                    <>
+                      {fruits.map((fruit) => (
+                        <button
+                          key={fruit.id}
+                          type="button"
+                          onClick={() => handleSlice(fruit.id)}
+                          className="absolute w-10 h-10 rounded-full bg-[#500000] text-white text-[10px] shadow-lg transition transform hover:scale-110 focus:outline-none -translate-x-1/2"
+                          style={{
+                            left: `${fruit.x}%`,
+                            top: `${fruit.y}%`,
+                          }}
+                        >
+                          Slice
+                        </button>
+                      ))}
+                    </>
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center text-sm text-gray-500 px-6 text-center">
+                      {loading
+                        ? 'Starting shortly… you can also press Play now to begin immediately.'
+                        : 'Press Play now to start slicing fruit.'}
+                    </div>
+                  )}
+
+                  {showGame && gameTimeLeft <= 0 && (
+                    <div className="absolute inset-0 flex items-center justify-center text-sm font-semibold text-gray-700 bg-white/70">
+                      Time is up! Score: {gameScore}
+                    </div>
+                  )}
+                </div>
+
+                {showGame && (
+                  <div className="mt-3 flex items-center justify-between text-sm text-gray-700">
+                    <span>Time: {Math.max(gameTimeLeft, 0)}s</span>
+                    <span>Score: {gameScore}</span>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
 
           {/* Sign Up Link */}
           <p className="text-center text-sm text-gray-600">
