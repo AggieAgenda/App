@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import GoogleLoginButton from '../components/GoogleLoginButton';
@@ -9,9 +9,64 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showGame, setShowGame] = useState(false);
+  const [gameScore, setGameScore] = useState(0);
+  const [gameTimeLeft, setGameTimeLeft] = useState(20);
+  const [targetPos, setTargetPos] = useState({ x: 50, y: 50 });
   const navigate = useNavigate();
-  const { login } = useAuth();
+  //const { login } = useAuth();
   const { loginWithEmail } = useAuth();
+
+  const getRandomTargetPosition = () => ({
+    x: Math.random() * 80 + 10,
+    y: Math.random() * 70 + 10,
+  });
+
+  useEffect(() => {
+    let unlockTimer;
+
+    if (loading) {
+      unlockTimer = setTimeout(() => {
+        setShowGame(true);
+        setGameScore(0);
+        setGameTimeLeft(20);
+        setTargetPos(getRandomTargetPosition());
+      }, 6000);
+    } else {
+      setShowGame(false);
+      setGameTimeLeft(20);
+    }
+
+    return () => {
+      if (unlockTimer) {
+        clearTimeout(unlockTimer);
+      }
+    };
+  }, [loading]);
+
+  useEffect(() => {
+    if (!showGame || gameTimeLeft <= 0) {
+      return undefined;
+    }
+
+    const timer = setInterval(() => {
+      setGameTimeLeft((time) => time - 1);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [showGame, gameTimeLeft]);
+
+  useEffect(() => {
+    if (!showGame || gameTimeLeft <= 0) {
+      return undefined;
+    }
+
+    const moveInterval = setInterval(() => {
+      setTargetPos(getRandomTargetPosition());
+    }, 1200);
+
+    return () => clearInterval(moveInterval);
+  }, [showGame, gameTimeLeft]);
 
   const handleEmailLogin = async (e) => {
     e.preventDefault();
@@ -19,13 +74,22 @@ export default function Login() {
     setError('');
 
     try {
-    await loginWithEmail({ email, password });
-    navigate("/dashboard/overview");
-  } catch (err) {
-    setError(err.message || "Invalid credentials");
-  } finally {
-    setLoading(false);
-  }
+      await loginWithEmail({ email, password });
+      navigate("/dashboard/overview");
+    } catch (err) {
+      setError(err.message || "Invalid credentials");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleHit = () => {
+    if (!showGame || gameTimeLeft <= 0) {
+      return;
+    }
+
+    setGameScore((score) => score + 1);
+    setTargetPos(getRandomTargetPosition());
   };
 
   return (
@@ -130,6 +194,39 @@ export default function Login() {
               )}
             </button>
           </form>
+
+          {loading && showGame && (
+            <div className="border border-gray-200 rounded-xl p-4 bg-gray-50">
+              <div className="flex items-center justify-between text-sm font-semibold text-gray-700 mb-2">
+                <span>Mini challenge while you wait</span>
+                <span>Time: {gameTimeLeft}s · Score: {gameScore}</span>
+              </div>
+              <div className="relative w-full h-48 bg-white border border-dashed border-gray-300 rounded-lg overflow-hidden">
+                {gameTimeLeft > 0 && (
+                  <button
+                    type="button"
+                    onClick={handleHit}
+                    className="absolute w-10 h-10 rounded-full bg-[#500000] text-white text-xs shadow-lg transition transform hover:scale-110 focus:outline-none -translate-x-1/2 -translate-y-1/2"
+                    style={{
+                      left: `${targetPos.x}%`,
+                      top: `${targetPos.y}%`,
+                    }}
+                  >
+                    Tap me
+                  </button>
+                )}
+
+                {gameTimeLeft <= 0 && (
+                  <div className="absolute inset-0 flex items-center justify-center text-sm font-semibold text-gray-600">
+                    Time is up! Score: {gameScore}
+                  </div>
+                )}
+              </div>
+              <p className="text-xs text-gray-500 mt-2">
+                Keep tapping the maroon dot while we finish signing you in.
+              </p>
+            </div>
+          )}
 
           {/* Sign Up Link */}
           <p className="text-center text-sm text-gray-600">
