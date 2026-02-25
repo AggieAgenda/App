@@ -173,5 +173,39 @@ class GoogleCodeLogin(SocialLoginView):
             "user": UserSerializer(user).data,
         })
 
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def add_to_google_calendar(request):
+    # 1) Validate incoming JSON (simplified—use a serializer in production)
+    payload = request.data or {}
+    required = ["summary", "start", "end"]  # start/end must have datetime + timeZone
+    if any(k not in payload for k in required):
+        return Response({"success": False, "error": "summary, start, end required"},
+                        status=status.HTTP_400_BAD_REQUEST)
 
-    
+    # 2) Load the user’s stored Google tokens (access + refresh)
+    # Example if you stored them on the user model:
+    creds = Credentials(
+        token=request.user.google_access_token,
+        refresh_token=request.user.google_refresh_token,
+        client_id=settings.GOOGLE_CLIENT_ID,
+        client_secret=settings.GOOGLE_CLIENT_SECRET,
+        token_uri="https://oauth2.googleapis.com/token",
+    )
+
+    # 3) Build Calendar client
+    service = build("calendar", "v3", credentials=creds, cache_discovery=False)
+
+    # 4) Construct event body (match Google Calendar schema)
+    event_body = {
+        "summary": payload.get("summary"),
+        "description": payload.get("description", ""),
+        "location": payload.get("location", ""),
+        "start": payload["start"],  # e.g. {"dateTime": "...", "timeZone": "America/Chicago"}
+        "end": payload["end"],      # same shape as start
+        "attendees": payload.get("attendees", []),
+        "reminders": payload.get("reminders", {"useDefault": True}),
+    }
+
+    # 5) Insert into primary calendar
+    created = service.events().insert(calendarId="primary", body=event_body).execute()

@@ -10,4 +10,5 @@ urlpatterns = [
 
     # Optional
     path("google/", views.GoogleCodeLogin.as_view(), name="google_login"),
+    path("google/calendar", views.add_to_google_calendar, name="google calendar")
 ]
