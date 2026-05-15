@@ -20,29 +20,26 @@ export default function Navbar() {
 
   
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-      isScrolled ? 'bg-white/95 backdrop-blur-md shadow-md' : 'bg-white'
-    } py-4`}>
-      <div className="max-w-7xl mx-auto flex justify-between items-center px-6 md:px-8">
-        <Link to='/' className="text-3xl md:text-4xl font-extrabold text-[#500000] hover:opacity-90 transition-opacity">
+    <nav className={`transition-all duration-300 ${
+      isScrolled ? 'bg-gray-100/95 backdrop-blur-md shadow-lg' : 'bg-gray-100'
+    } rounded-full px-8 py-4 mx-auto max-w-fit my-8`}>
+      <div className="flex justify-between items-center gap-12">
+        <Link to='/' className="text-2xl font-extrabold text-[#500000] hover:opacity-90 transition-opacity whitespace-nowrap">
           Aggie Agenda
         </Link>
 
         {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center space-x-8 text-lg font-medium">
-          <Link to="/documentation/solutions" className="relative group text-gray-700 hover:text-[#500000] transition-colors">
+        <div className="hidden md:flex items-center space-x-8 text-base font-medium">
+          <Link to="/documentation/solutions" className="text-gray-700 hover:text-[#500000] transition-colors">
             Solutions
-            <span className="absolute w-0 left-0 -bottom-1 h-[2px] bg-[#500000] transition-all duration-300 group-hover:w-full" />
           </Link>
-          <Link to="/contact" className="relative group text-gray-700 hover:text-[#500000] transition-colors">
+          <Link to="/contact" className="text-gray-700 hover:text-[#500000] transition-colors">
             Contact
-            <span className="absolute w-0 left-0 -bottom-1 h-[2px] bg-[#500000] transition-all duration-300 group-hover:w-full" />
           </Link>
-          <Link to="/about" className="relative group text-gray-700 hover:text-[#500000] transition-colors">
+          <Link to="/about" className="text-gray-700 hover:text-[#500000] transition-colors">
             About
-            <span className="absolute w-0 left-0 -bottom-1 h-[2px] bg-[#500000] transition-all duration-300 group-hover:w-full" />
           </Link>
-          <Link to="/login" className="px-6 py-2.5 rounded-lg bg-[#500000] text-white hover:bg-[#700000] transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+          <Link to="/login" className="text-gray-700 hover:text-[#500000] transition-colors font-semibold">
             Login
           </Link>
         </div>
@@ -52,32 +49,28 @@ export default function Navbar() {
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           className="md:hidden text-gray-700 hover:text-[#500000] transition-colors"
         >
-          {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+          {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden bg-white border-t border-gray-200 shadow-lg">
-          <div className="flex flex-col space-y-4 px-6 py-6">
+        <div className="md:hidden border-t border-gray-300 mt-4 pt-4">
+          <div className="flex flex-col space-y-3">
             <Link to="/documentation/solutions" className="text-gray-700 hover:text-[#500000] transition-colors font-medium">
-            Solutions
-            <span className="absolute w-0 left-0 -bottom-1 h-[2px] bg-[#500000] transition-all duration-300 group-hover:w-full" />
-          </Link>
-          <Link to="/contact" className="text-gray-700 hover:text-[#500000] transition-colors font-medium">
-            Contact
-            <span className="absolute w-0 left-0 -bottom-1 h-[2px] bg-[#500000] transition-all duration-300 group-hover:w-full" />
-          </Link>
-          <Link to="/about" className="text-gray-700 hover:text-[#500000] transition-colors font-medium">
-            About
-            <span className="absolute w-0 left-0 -bottom-1 h-[2px] bg-[#500000] transition-all duration-300 group-hover:w-full" />
-          </Link>
-          <Link to="/login" className=" px-6 py-2.5 rounded-lg bg-[#500000] text-white hover:bg-[#700000] transition-all text-center*">
-            Login
-          </Link>
+              Solutions
+            </Link>
+            <Link to="/contact" className="text-gray-700 hover:text-[#500000] transition-colors font-medium">
+              Contact
+            </Link>
+            <Link to="/about" className="text-gray-700 hover:text-[#500000] transition-colors font-medium">
+              About
+            </Link>
+            <Link to="/login" className="text-gray-700 hover:text-[#500000] transition-colors font-semibold">
+              Login
+            </Link>
           </div>
         </div>
-       
       )}
     </nav>
   );
