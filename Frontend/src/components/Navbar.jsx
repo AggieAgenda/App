@@ -20,9 +20,9 @@ export default function Navbar() {
 
   
   return (
-    <nav className={`fixed top-8 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 ${
+    <nav className={`transition-all duration-300 ${
       isScrolled ? 'bg-gray-100/95 backdrop-blur-md shadow-lg' : 'bg-gray-100'
-    } rounded-full px-8 py-4`}>
+    } rounded-full px-8 py-4 mx-auto max-w-fit my-8`}>
       <div className="flex justify-between items-center gap-12">
         <Link to='/' className="text-2xl font-extrabold text-[#500000] hover:opacity-90 transition-opacity whitespace-nowrap">
           Aggie Agenda
