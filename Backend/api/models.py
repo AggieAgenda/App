@@ -4,16 +4,16 @@ from django.conf import settings
 
 
 
-class Event(models.Model):
-    title = models.CharField(max_length=200)
-    image = models.URLField(blank=True, null=True)
-    description = models.TextField()
-    link = models.URLField(blank=True, null=True)
-    date = models.DateField()
-    tags = models.JSONField(default=list)
+# class Event(models.Model):
+#     title = models.CharField(max_length=200)
+#     image = models.URLField(blank=True, null=True)
+#     description = models.TextField()
+#     link = models.URLField(blank=True, null=True)
+#     date = models.DateField()
+#     tags = models.JSONField(default=list)
 
-    def __str__(self):
-        return self.title
+#     def __str__(self):
+#         return self.title
 class OrganizationEntry(models.Model):
     name = models.CharField(max_length=100)
     # other organization information

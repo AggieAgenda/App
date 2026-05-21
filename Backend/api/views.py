@@ -13,7 +13,7 @@ from dj_rest_auth.registration.views import SocialLoginView
 import fitz
 from .syllabusReader import readPDF, extract_dates
 from .serializers import EventSerializer
-from .models import Event
+from events.models import Event
 from datetime import datetime
 
 

@@ -246,7 +246,7 @@ def create_event(request):
 
     try:
         data = request.data
-
+        print(data)
         title = data.get('title')
         description = data.get('description', '')
         location_name = data.get('location_name', '')

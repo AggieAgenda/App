@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django import forms
-from .models import Event
+from events.models import Event
 from api.utils.supabase import upload_event_image
 from django.db import transaction
 

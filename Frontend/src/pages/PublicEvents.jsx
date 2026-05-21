@@ -7,6 +7,15 @@ export default function PublicEvents(){
     const [searchQuery, setSearchQuery] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [showAddForm, setShowAddForm] = useState(false);
+    const [formData, setFormData] = useState({
+        title: "",
+        description: "",
+        location_name: "",
+        starts_at: "",
+        ends_at: "",
+        tags: []
+    });
 
     // Fetch events on component mount if empty
     useEffect(() => {
@@ -32,7 +41,49 @@ export default function PublicEvents(){
             setLoading(false);
         }
     };
-
+    const reload = async () =>{
+        return fetchEvents();
+    }
+    const addEvents = async() => {
+        if (!formData.title || !formData.starts_at) {
+            setError("Title and start time are required");
+            return;
+        }
+        
+        setLoading(true);
+        setError(null);
+        try {
+            console.log("this is formdata")
+            console.log(formData)
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/events/add/   `, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            });
+            if (!response.ok) {
+                throw new Error(`API error: ${response.status}`);
+            }
+            const data = await response.json();
+            setShowAddForm(false);
+            setFormData({
+                title: "",
+                description: "",
+                location_name: "",
+                starts_at: "",
+                ends_at: "",
+                tags: []
+            });
+            // Refresh events list
+            await fetchEvents();
+        } catch (err) {
+            setError(err.message);
+            console.error("Failed to create event:", err);
+        } finally {
+            setLoading(false);
+        }
+    };
     // Filter events based on search query
     const filteredEvents = events.filter(event => {
         const searchLower = searchQuery.toLowerCase();
@@ -49,7 +100,73 @@ export default function PublicEvents(){
       <NavBar />
       
       <div className="flex-grow max-w-4xl w-full mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-6">Events</h1>
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-3xl font-bold">Events</h1>
+          <button
+            onClick={() => console.log(reload)}
+            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors"
+          >Reload</button>
+          <button
+            onClick={() => setShowAddForm(!showAddForm)}
+            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors"
+          >
+            {showAddForm ? "Cancel" : "Add Event"}
+          </button>
+        </div>
+
+        {/* Add Event Form */}
+        {showAddForm && (
+          <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6 shadow-md">
+            <h2 className="text-xl font-semibold mb-4">Create New Event</h2>
+            <div className="space-y-4">
+              <input
+                type="text"
+                placeholder="Event Title *"
+                value={formData.title}
+                onChange={(e) => setFormData({...formData, title: e.target.value})}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              />
+              <textarea
+                placeholder="Description"
+                value={formData.description}
+                onChange={(e) => setFormData({...formData, description: e.target.value})}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                rows="3"
+              />
+              <input
+                type="text"
+                placeholder="Location"
+                value={formData.location_name}
+                onChange={(e) => setFormData({...formData, location_name: e.target.value})}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <input
+                type="datetime-local"
+                placeholder="Start Time *"
+                value={formData.starts_at}
+                onChange={(e) => setFormData({...formData, starts_at: e.target.value})}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              />
+              <input
+                type="datetime-local"
+                placeholder="End Time"
+                value={formData.ends_at}
+                onChange={(e) => setFormData({...formData, ends_at: e.target.value})}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <button
+                onClick={addEvents}
+                disabled={loading}
+                className="w-full bg-green-500 hover:bg-green-600 disabled:bg-gray-400 text-white font-semibold py-2 px-4 rounded-lg transition-colors"
+              >
+                {loading ? "Creating..." : "Create Event"}
+              </button>
+              
+            </div>
+          </div>
+        )}
         
         {/* Search Bar */}
         <div className="mb-6">
