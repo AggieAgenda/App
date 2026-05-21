@@ -238,7 +238,7 @@ def get_event(request):
     
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny]) # change back to IsAuthenticated
 def create_event(request):
     """
     Add a new event to database
