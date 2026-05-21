@@ -19,7 +19,7 @@ export default function PublicEvents(){
         setLoading(true);
         setError(null);
         try {
-            const response = await fetch("http://127.0.0.1:8000/api/events/");
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/events/`);
             if (!response.ok) {
                 throw new Error(`API error: ${response.status}`);
             }
