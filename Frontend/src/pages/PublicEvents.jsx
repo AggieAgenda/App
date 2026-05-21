@@ -28,12 +28,13 @@ export default function PublicEvents(){
         setLoading(true);
         setError(null);
         try {
-            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/events/`);
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/events/find/`);
+            console.log(response)
             if (!response.ok) {
                 throw new Error(`API error: ${response.status}`);
             }
             const data = await response.json();
-            setEvents(Array.isArray(data) ? data : data.results || []);
+            setEvents(Array.isArray(data) ? data : data.events || []);
         } catch (err) {
             setError(err.message);
             console.error("Failed to fetch events:", err);

@@ -210,6 +210,7 @@ def get_event(request):
     try:
         responseThing = []
         events_entries = Event.objects.all()
+        print(events_entries)
         for entry in events_entries:
             event_data = {
                 'id': str(entry.id),

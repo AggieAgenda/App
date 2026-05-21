@@ -264,7 +264,7 @@ class CalendarEventsView(APIView):
 class EventListAPIView(APIView):
     permission_classes = [AllowAny]
     def get(self, request):
-        events = Event.objects.all().order_by("date")
+        events = Event.objects.all().order_by("starts_at")
         serializer = EventSerializer(events, many=True)
         return Response(serializer.data)
 
