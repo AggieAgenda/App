@@ -210,6 +210,7 @@ def get_event(request):
     try:
         responseThing = []
         events_entries = Event.objects.all()
+        print(events_entries)
         for entry in events_entries:
             event_data = {
                 'id': str(entry.id),
@@ -238,7 +239,7 @@ def get_event(request):
     
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny]) # change back to IsAuthenticated
 def create_event(request):
     """
     Add a new event to database
@@ -246,7 +247,7 @@ def create_event(request):
 
     try:
         data = request.data
-
+        print(data)
         title = data.get('title')
         description = data.get('description', '')
         location_name = data.get('location_name', '')

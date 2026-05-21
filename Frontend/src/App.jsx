@@ -21,6 +21,7 @@ import OrganizationView from './pages/DashboardPages/OrganizationView.jsx';
 import Grades from './pages/DashboardPages/Grades.jsx'
 import NotFound from './pages/NotFound.jsx';
 import {Documentation, LearnMore,Solutions} from './pages/Documentation.jsx';
+import PublicEvents from './pages/PublicEvents.jsx';
 
  function App() {
     
@@ -39,6 +40,7 @@ import {Documentation, LearnMore,Solutions} from './pages/Documentation.jsx';
                 <Route path = "/signup" element = {<Signup/>} />
                 <Route path = "/about" element = {<About/>} />
                 <Route path = "/privacy" element = {<Privacy/>} />
+                <Route path = "/events" element = {<PublicEvents/>} />
                 <Route path= "*" element = {<NotFound/>} />
                 <Route path = '/dashboard'element = { <ProtectedRoute>   <Dashboard/> </ProtectedRoute>     }>
                     <Route path = 'overview' element = {<Overview/>}></Route>
