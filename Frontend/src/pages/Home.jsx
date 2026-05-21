@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 
+
 /** Hook: tells you when an element enters the viewport */
 function useInView({ threshold = 0.12, rootMargin = "0px 0px -8% 0px", once = true } = {}) {
   const ref = useRef(null);
@@ -169,6 +170,58 @@ export default function AggieAgendaHome() {
 
   return (
     <div className="relative bg-white min-h-screen">
+      <style>{`
+        @keyframes rotateGlow {
+          0% {
+            transform: translate(-50%, -50%) rotate(0deg);
+          }
+          100% {
+            transform: translate(-50%, -50%) rotate(360deg);
+          }
+        }
+
+        .animate-border-glow {
+          position: relative;
+          overflow: hidden;
+          isolation: isolate;
+        }
+
+        /* The circling gradient light */
+        .animate-border-glow::before {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 150%; /* Wider than the button so it covers the corners as it rotates */
+          height: 300%; 
+          background: conic-gradient(
+            from 0deg,
+            transparent 0%,
+            #8B5A5A 25%,   /* Maroon gradient */
+            #A67676 50%,   /* Lighter maroon */
+            transparent 75%,
+            transparent 100%
+          );
+          animation: rotateGlow 4s linear infinite;
+          z-index: -2;
+        }
+
+        /* The inner mask that matches the button's background */
+        .animate-border-glow::after {
+          content: '';
+          position: absolute;
+          inset: 2px; /* This determines the thickness of your border */
+          background: white; /* White background */
+          border-radius: 6px;  /* Slightly smaller than rounded-lg (8px) to look sharp */
+          z-index: -1;
+          transition: background 0.2s ease;
+        }
+
+        /* Update the mask background on hover to match hover:bg-[#6F4747] */
+        .animate-border-glow:hover::after {
+          background: #6F4747;
+        }
+      `}</style>
       {/* Scroll Progress Bar */}
       <div className="fixed top-0 left-0 right-0 z-[60] h-[2px] bg-transparent">
         <div
@@ -246,6 +299,17 @@ export default function AggieAgendaHome() {
                   Learn More
                 </button>
               </Link>
+              
+            </div>
+            <div className="pt-4">
+              <Link to="/events">
+                  <button className="animate-border-glow inline-flex items-center gap-2 px-6 py-2.5  text-gray-600  text-sm font-medium rounded-lg transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#8B5A5A]/30 focus-visible:ring-offset-2">
+                     {/* Span ensures text stays perfectly on top of the pseudo-elements */}
+                    <span className="relative z-10">
+                      See Events Right Now no login needed!
+                    </span>
+                  </button>
+                </Link>
             </div>
           </div>
 
