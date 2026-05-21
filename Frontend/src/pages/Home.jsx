@@ -197,8 +197,8 @@ export default function AggieAgendaHome() {
           background: conic-gradient(
             from 0deg,
             transparent 0%,
-            #ff7b00 25%,   /* Change these colors to match your theme */
-            #ffae00 50%,
+            #8B5A5A 25%,   /* Maroon gradient */
+            #A67676 50%,   /* Lighter maroon */
             transparent 75%,
             transparent 100%
           );
@@ -211,7 +211,7 @@ export default function AggieAgendaHome() {
           content: '';
           position: absolute;
           inset: 2px; /* This determines the thickness of your border */
-          background: #8B5A5A; /* Matches your bg-[#8B5A5A] */
+          background: white; /* White background */
           border-radius: 6px;  /* Slightly smaller than rounded-lg (8px) to look sharp */
           z-index: -1;
           transition: background 0.2s ease;
@@ -303,10 +303,10 @@ export default function AggieAgendaHome() {
             </div>
             <div className="pt-4">
               <Link to="/events">
-                  <button className="animate-border-glow inline-flex items-center gap-2 px-6 py-2.5 text-white text-sm font-medium rounded-lg transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#8B5A5A]/30 focus-visible:ring-offset-2">
+                  <button className="animate-border-glow inline-flex items-center gap-2 px-6 py-2.5  text-gray-600  text-sm font-medium rounded-lg transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#8B5A5A]/30 focus-visible:ring-offset-2">
                      {/* Span ensures text stays perfectly on top of the pseudo-elements */}
                     <span className="relative z-10">
-                      See Events Right Now no login needed
+                      See Events Right Now no login needed!
                     </span>
                   </button>
                 </Link>
