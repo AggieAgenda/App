@@ -39,40 +39,36 @@ App/
 - Node.js and npm
 - [Google Calendar API credentials](https://developers.google.com/calendar/quickstart/js)
 
-### Backend Setup
+### Local Development
+
+Run the backend and frontend in separate terminals.
+
+Backend setup:
+
+- Environment example: [Backend/.env.example](Backend/.env.example)
+- Setup docs: [Backend/README.md](Backend/README.md)
 
 ```bash
-# Navigate to backend directory
-cd App/Backend
-
-# Create and activate virtual environment
-python -m venv ../app_env
-source ../app_env/bin/activate  # Mac/Linux
-# or
-../app_env/Scripts/activate     # Windows
-
-# Install dependencies
+cd Backend
+python -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
-
-# Configure environment variables
-# Create a .env file in the Backend directory with your credentials
-
-# Start the server
+cp .env.example .env
+python manage.py migrate
 python manage.py runserver
 ```
 
 The backend will run on `http://localhost:8000`
 
-### Frontend Setup
+Frontend setup:
+
+- Environment example: [Frontend/.env.example](Frontend/.env.example)
+- Setup docs: [Frontend/README.md](Frontend/README.md)
 
 ```bash
-# Navigate to frontend directory
-cd App/Frontend
-
-# Install dependencies
+cd Frontend
 npm install
-
-# Start development server
+cp .env.example .env
 npm run dev
 ```
 
